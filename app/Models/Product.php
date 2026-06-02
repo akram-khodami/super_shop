@@ -51,4 +51,10 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class);
     }
+
+    public function thumbnail()
+    {
+        return $this->hasOne(ProductImage::class)
+            ->orderBy('sort_order');
+    }
 }

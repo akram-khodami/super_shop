@@ -1,0 +1,56 @@
+<aside
+    class="w-64 bg-slate-900 text-white min-h-screen"
+>
+
+    <div class="p-6 border-b border-slate-800">
+
+        <h2 class="font-bold text-xl">
+            Admin Panel
+        </h2>
+
+    </div>
+
+    <nav class="p-4">
+
+        <ul class="space-y-2">
+
+            <li>
+                <a
+                    href="{{ route('dashboard') }}"
+                    class="block px-4 py-2 rounded hover:bg-slate-800"
+                >
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a
+                    href="{{ route('admin.products.index') }}"
+                    class="block px-4 py-2 rounded hover:bg-slate-800"
+                >
+                    Products
+                </a>
+            </li>
+
+            <li>
+                <a
+                    href="#"
+                    class="block px-4 py-2 rounded hover:bg-slate-800"
+                >
+                    Categories
+                </a>
+            </li>
+
+            <li>
+                <a
+                    href="#"
+                    class="block px-4 py-2 rounded hover:bg-slate-800"
+                >
+                    Brands
+                </a>
+            </li>
+
+        </ul>
+
+    </nav>
+</aside>
