@@ -10,23 +10,23 @@
 
 <body class="bg-slate-50 flex flex-col min-h-screen">
 
-    @include('partials.navbar')
+@include('partials.navbar')
 
-    <main class="flex-1 max-w-7xl mx-auto w-full px-4 py-8">
-        @yield('content')
-    </main>
+<main class="flex-1">
+    @yield('content')
+</main>
 
-    @include('partials.footer')
-    <script>
-        const btn = document.getElementById('mobile-menu-btn');
-        const menu = document.getElementById('mobile-menu');
+@include('partials.footer')
+<script>
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
 
-        if (btn) {
-            btn.addEventListener('click', () => {
-                menu.classList.toggle('hidden');
-            });
-        }
-    </script>
+    if (btn) {
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    }
+</script>
 </body>
 
 </html>
