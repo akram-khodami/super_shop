@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Http\Requests\Admin\StoreProductRequest;
 use App\Http\Requests\Admin\UpdateProductRequest;
+use App\Models\ProductImage;
 use App\Services\ProductService;
 
 class ProductController extends Controller
@@ -129,5 +130,19 @@ class ProductController extends Controller
                 'success',
                 'Product deleted successfully'
             );
+    }
+
+    public function destroyImage(ProductImage $image)
+    {
+        Storage::disk('public')
+            ->delete($image->image);
+
+        $image->delete();
+
+        return back()->with(
+            'success',
+            'Image deleted successfully'
+        );
+
     }
 }

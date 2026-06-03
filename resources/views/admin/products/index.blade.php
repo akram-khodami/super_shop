@@ -87,7 +87,7 @@
                                 href="{{ route('admin.products.edit',$product) }}"
                                 class="px-3 py-1 bg-yellow-500 text-white rounded"
                             >
-                                Edit
+                                &#9999
                             </a>
 
                             <form
@@ -101,7 +101,7 @@
                                     onclick="return confirm('Delete?')"
                                     class="px-3 py-1 bg-red-600 text-white rounded"
                                 >
-                                    Delete
+                                    &#10060;
                                 </button>
                             </form>
 

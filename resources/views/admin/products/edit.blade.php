@@ -199,26 +199,35 @@
 
             </div>
 
-            @if($product->images->count())
+            @foreach($product->images as $image)
 
-                <div class="mb-6">
+                <div class="relative">
 
-                    <div class="flex gap-3 flex-wrap">
+                    <img
+                        src="{{ asset('storage/'.$image->image) }}"
+                        class="w-24 h-24 rounded border object-cover"
+                    >
 
-                        @foreach($product->images as $image)
+                    <form
+                        action="{{ route('admin.products.images.destroy',$image) }}"
+                        method="POST"
+                        class="absolute -top-2 -right-2"
+                    >
+                        @csrf
+                        @method('DELETE')
 
-                            <img
-                                src="{{ asset('storage/'.$image->image) }}"
-                                class="w-24 h-24 rounded object-cover border"
-                            >
+                        <button
+                            onclick="return confirm('Delete image?')"
+                            class="bg-red-600 text-white w-6 h-6 rounded-full"
+                        >
+                            ×
+                        </button>
 
-                        @endforeach
-
-                    </div>
+                    </form>
 
                 </div>
 
-            @endif
+            @endforeach
 
             <button
                 class="mt-6 bg-indigo-600 text-white px-6 py-3 rounded-lg"

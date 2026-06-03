@@ -16,7 +16,16 @@
 
             <li>
                 <a
-                    href="{{ route('dashboard') }}"
+                    href="{{ route('home') }}"
+                    class="block px-4 py-2 rounded hover:bg-slate-800"
+                >
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a
+                    href="{{ route('admin.dashboard') }}"
                     class="block px-4 py-2 rounded hover:bg-slate-800"
                 >
                     Dashboard
@@ -34,7 +43,7 @@
 
             <li>
                 <a
-                    href="#"
+                    href="{{ route('admin.categories.index') }}"
                     class="block px-4 py-2 rounded hover:bg-slate-800"
                 >
                     Categories
@@ -43,11 +52,24 @@
 
             <li>
                 <a
-                    href="#"
+                    href="{{ route('admin.brands.index') }}"
                     class="block px-4 py-2 rounded hover:bg-slate-800"
                 >
                     Brands
                 </a>
+            </li>
+
+            <li>
+                <!-- Authentication -->
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <x-dropdown-link :href="route('logout')"
+                                     onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                        {{ __('Log Out') }}
+                    </x-dropdown-link>
+                </form>
             </li>
 
         </ul>

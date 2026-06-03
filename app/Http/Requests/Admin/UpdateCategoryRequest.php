@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -12,7 +12,7 @@ class UpdateCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,25 @@ class UpdateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+
+            'name' => [
+                'required',
+                'max:255'
+            ],
+
+            'description' => [
+                'nullable'
+            ],
+
+            'image' => [
+                'nullable',
+                'image'
+            ],
+
+            'is_active' => [
+                'nullable',
+                'boolean'
+            ],
         ];
     }
 }

@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBrandRequest extends FormRequest
+class UpdateBrandRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,23 @@ class StoreBrandRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+
+            'name' => [
+                'required',
+                'max:255'
+            ],
+
+            'description' => [
+                'nullable'
+            ],
+            'logo' => [
+                'nullable',
+                'image'
+            ],
+            'is_active' => [
+                'nullable',
+                'boolean'
+            ],
         ];
     }
 }

@@ -49,7 +49,7 @@
                 @endguest
 
                 @auth
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('admin.dashboard') }}">
                         Dashboard
                     </a>
                 @endauth

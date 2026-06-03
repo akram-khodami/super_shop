@@ -39,12 +39,8 @@ class ProductService
         });
     }
 
-    public function update(
-        Product $product,
-        array $data
-    ): Product
+    public function update(Product $product, array $data): Product
     {
-
         $images = $data['images'] ?? [];
 
         unset($data['images']);
@@ -53,20 +49,22 @@ class ProductService
 
         $product->update($data);
 
-        foreach ($images as $index => $image) {
+        if (!empty($images)) {
 
-            $path = $image->store(
-                'products',
-                'public'
-            );
+            foreach ($images as $index => $image) {
 
-            ProductImage::create([
-                'product_id' => $product->id,
-                'image' => $path,
-                'sort_order' => $index,
-            ]);
+                $path = $image->store(
+                    'products',
+                    'public'
+                );
+
+                $product->images()->create([
+                    'image' => $path,
+                    'sort_order' => $index,
+                ]);
+            }
         }
 
-        return $product;
+        return $product->fresh();
     }
 }
