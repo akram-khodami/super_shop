@@ -11,13 +11,14 @@ use App\Http\Requests\Admin\StoreProductRequest;
 use App\Http\Requests\Admin\UpdateProductRequest;
 use App\Models\ProductImage;
 use App\Services\ProductService;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $products = Product::query()
             ->with([
@@ -25,12 +26,26 @@ class ProductController extends Controller
                 'brand',
                 'thumbnail'
             ])
+            ->filter(
+                $request->all()
+            )
             ->latest()
-            ->paginate(15);
+            ->paginate(15)
+            ->withQueryString();
+
+        $categories = Category::orderBy('name')
+            ->get();
+
+        $brands = Brand::orderBy('name')
+            ->get();
 
         return view(
             'admin.products.index',
-            compact('products')
+            compact(
+                'products',
+                'categories',
+                'brands'
+            )
         );
     }
 
@@ -124,12 +139,10 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        return redirect()
-            ->route('admin.products.index')
-            ->with(
-                'success',
-                'Product deleted successfully'
-            );
+        return back()->with(
+            'success',
+            'Product moved to trash'
+        );
     }
 
     public function destroyImage(ProductImage $image)
@@ -144,5 +157,17 @@ class ProductController extends Controller
             'Image deleted successfully'
         );
 
+    }
+
+    public function restore($id)
+    {
+        Product::onlyTrashed()
+            ->findOrFail($id)
+            ->restore();
+
+        return back()->with(
+            'success',
+            'Product restored'
+        );
     }
 }

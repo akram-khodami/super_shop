@@ -31,6 +31,10 @@ Route::middleware(['auth'])
             'products',
             AdminProductController::class
         );
+        Route::patch(
+            'products/{product}/restore',
+            [ProductController::class, 'restore']
+        )->name('products.restore');
         Route::resource(
             'categories',
             CategoryController::class

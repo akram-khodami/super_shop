@@ -42,4 +42,5 @@ class StoreBrandRequest extends FormRequest
             ],
         ];
     }
+
 }

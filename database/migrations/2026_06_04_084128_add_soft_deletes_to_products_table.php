@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('brands', function (Blueprint $table) {
-            $table->text('description')->nullable();
+        Schema::table('products', function (Blueprint $table) {
+
+            $table->softDeletes();
+
         });
     }
 
@@ -21,7 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('brands', function (Blueprint $table) {
+        Schema::table('products', function (Blueprint $table) {
             //
         });
     }
