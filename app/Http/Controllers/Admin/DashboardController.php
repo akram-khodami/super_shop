@@ -15,24 +15,35 @@ class DashboardController extends Controller
 
     public function index()
     {
-        return view(
-            'admin.dashboard.index',
-            [
-                'productsCount' => Product::count(),
+        return view('admin.dashboard.index', [
 
-                'categoriesCount' => Category::count(),
+            'productsCount' => Product::count(),
 
-                'brandsCount' => Brand::count(),
+            'categoriesCount' => Category::count(),
 
-                'outOfStockCount' => Product::where(
-                    'stock',
-                    0
-                )->count(),
+            'brandsCount' => Brand::count(),
 
-                'latestProducts' => Product::latest()
-                    ->take(10)
-                    ->get(),
-            ]
-        );
+            'outOfStockCount' => Product::where(
+                'stock',
+                0
+            )->count(),
+
+            'lowStockProducts' => Product::query()
+                ->where('stock', '>', 0)
+                ->where('stock', '<=', 5)
+                ->latest()
+                ->take(10)
+                ->get(),
+
+            'latestProducts' => Product::query()
+                ->with(['category'])
+                ->latest()
+                ->take(10)
+                ->get(),
+
+            'latestCategories' => Category::latest()
+                ->take(10)
+                ->get(),
+        ]);
     }
 }
