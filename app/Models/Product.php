@@ -57,4 +57,16 @@ class Product extends Model
         return $this->hasOne(ProductImage::class)
             ->orderBy('sort_order');
     }
+
+    public function getThumbnailUrlAttribute(): string
+    {
+        return $this->thumbnail
+            ? asset('storage/' . $this->thumbnail->image)
+            : asset('images/no-image.jpg');
+    }
+
+    public function getFormattedPriceAttribute(): string
+    {
+        return number_format($this->price) . ' تومان';
+    }
 }
