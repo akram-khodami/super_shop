@@ -2,81 +2,114 @@
 
 @section('content')
 
+    {{-- Welcome --}}
+    <div
+        class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-8 rounded-2xl shadow-lg mb-8"
+    >
+        <h1 class="text-3xl font-bold">
+            Dashboard
+        </h1>
+
+        <p class="mt-2 text-indigo-100">
+            Welcome back 👋 Manage your store efficiently.
+        </p>
+    </div>
+
+    {{-- Stats --}}
     <div class="grid md:grid-cols-4 gap-6">
 
-        <div class="bg-white p-6 rounded-xl shadow">
-            <div class="text-gray-500">
-                Products
+        <div
+            class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-2xl shadow-lg hover:scale-105 transition"
+        >
+            <div class="flex justify-between items-center">
+                <span>Products</span>
+                <span class="text-3xl">📦</span>
             </div>
 
-            <div class="text-3xl font-bold mt-2">
+            <div class="text-4xl font-bold mt-4">
                 {{ $productsCount }}
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow">
-            <div class="text-gray-500">
-                Categories
+        <div
+            class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-2xl shadow-lg hover:scale-105 transition"
+        >
+            <div class="flex justify-between items-center">
+                <span>Categories</span>
+                <span class="text-3xl">📂</span>
             </div>
 
-            <div class="text-3xl font-bold mt-2">
+            <div class="text-4xl font-bold mt-4">
                 {{ $categoriesCount }}
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow">
-            <div class="text-gray-500">
-                Brands
+        <div
+            class="bg-gradient-to-r from-violet-500 to-violet-600 text-white p-6 rounded-2xl shadow-lg hover:scale-105 transition"
+        >
+            <div class="flex justify-between items-center">
+                <span>Brands</span>
+                <span class="text-3xl">🏷️</span>
             </div>
 
-            <div class="text-3xl font-bold mt-2">
+            <div class="text-4xl font-bold mt-4">
                 {{ $brandsCount }}
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow">
-            <div class="text-gray-500">
-                Out Of Stock
+        <div
+            class="bg-gradient-to-r from-red-500 to-red-600 text-white p-6 rounded-2xl shadow-lg hover:scale-105 transition"
+        >
+            <div class="flex justify-between items-center">
+                <span>Out Of Stock</span>
+                <span class="text-3xl">⚠️</span>
             </div>
 
-            <div class="text-3xl font-bold mt-2 text-red-600">
+            <div class="text-4xl font-bold mt-4">
                 {{ $outOfStockCount }}
             </div>
         </div>
 
     </div>
 
-    <div class="bg-white rounded-xl shadow mt-8">
+    {{-- Latest Products --}}
+    <div
+        class="bg-white rounded-2xl shadow-lg border border-gray-100 mt-8 overflow-hidden"
+    >
 
-        <div class="p-4 border-b font-semibold">
+        <div
+            class="p-5 bg-gray-50 border-b font-semibold text-gray-700"
+        >
             Latest Products
         </div>
 
         <table class="w-full">
 
-            <thead>
+            <thead class="bg-gray-100">
+
             <tr>
-                <th class="p-3 text-left">Name</th>
-                <th class="p-3 text-left">Category</th>
-                <th class="p-3 text-left">Price</th>
+                <th class="p-4 text-left">Name</th>
+                <th class="p-4 text-left">Category</th>
+                <th class="p-4 text-left">Price</th>
             </tr>
+
             </thead>
 
             <tbody>
 
             @foreach($latestProducts as $product)
 
-                <tr class="border-b">
+                <tr class="border-b hover:bg-gray-50 transition">
 
-                    <td class="p-3">
+                    <td class="p-4 font-medium">
                         {{ $product->name }}
                     </td>
 
-                    <td class="p-3">
+                    <td class="p-4">
                         {{ $product->category?->name }}
                     </td>
 
-                    <td class="p-3">
+                    <td class="p-4 text-green-600 font-semibold">
                         {{ number_format($product->price) }}
                     </td>
 
@@ -90,88 +123,84 @@
 
     </div>
 
-    <div class="bg-white rounded-xl shadow mt-8">
+    {{-- Bottom Section --}}
+    <div class="grid lg:grid-cols-2 gap-8 mt-8">
 
-        <div class="p-4 border-b font-semibold text-orange-600">
-            Low Stock Products
-        </div>
+        {{-- Low Stock --}}
+        <div
+            class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
+        >
 
-        <table class="w-full">
+            <div
+                class="p-5 bg-orange-50 border-b text-orange-700 font-semibold"
+            >
+                Low Stock Products
+            </div>
 
-            <thead>
+            <div class="divide-y">
 
-            <tr>
-                <th class="p-3 text-left">Product</th>
-                <th class="p-3 text-left">Stock</th>
-            </tr>
+                @forelse($lowStockProducts as $product)
 
-            </thead>
-
-            <tbody>
-
-            @forelse($lowStockProducts as $product)
-
-                <tr class="border-b">
-
-                    <td class="p-3">
-                        {{ $product->name }}
-                    </td>
-
-                    <td class="p-3">
-
-                    <span
-                        class="bg-orange-100 text-orange-700 px-2 py-1 rounded"
+                    <div
+                        class="p-4 flex justify-between items-center"
                     >
-                        {{ $product->stock }}
-                    </span>
 
-                    </td>
+                        <span>
+                            {{ $product->name }}
+                        </span>
 
-                </tr>
+                        <span
+                            class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-medium"
+                        >
+                            {{ $product->stock }}
+                        </span>
 
-            @empty
+                    </div>
 
-                <tr>
+                @empty
 
-                    <td colspan="2" class="p-3">
+                    <div class="p-4 text-gray-500">
                         No low stock products
-                    </td>
+                    </div>
 
-                </tr>
+                @endforelse
 
-            @endforelse
+            </div>
 
-            </tbody>
-
-        </table>
-
-    </div>
-
-    <div class="bg-white rounded-xl shadow mt-8">
-
-        <div class="p-4 border-b font-semibold">
-            Latest Categories
         </div>
 
-        <div class="divide-y">
+        {{-- Categories --}}
+        <div
+            class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
+        >
 
-            @foreach($latestCategories as $category)
+            <div
+                class="p-5 bg-gray-50 border-b font-semibold"
+            >
+                Latest Categories
+            </div>
 
-                <div
-                    class="p-4 flex justify-between"
-                >
+            <div class="divide-y">
 
-                <span>
-                    {{ $category->name }}
-                </span>
+                @foreach($latestCategories as $category)
 
-                    <span class="text-gray-500">
-                    {{ $category->created_at->diffForHumans() }}
-                </span>
+                    <div
+                        class="p-4 flex justify-between items-center hover:bg-gray-50"
+                    >
 
-                </div>
+                        <span class="font-medium">
+                            {{ $category->name }}
+                        </span>
 
-            @endforeach
+                        <span class="text-sm text-gray-500">
+                            {{ $category->created_at->diffForHumans() }}
+                        </span>
+
+                    </div>
+
+                @endforeach
+
+            </div>
 
         </div>
 
