@@ -4,8 +4,26 @@
     <div class="max-w-4xl mx-auto">
 
         <h1 class="text-2xl font-bold mb-6">
-            Create Product
+            Edit Product
         </h1>
+
+        <div class="flex gap-3 mb-6">
+
+            <a
+                href="{{ route('admin.products.index') }}"
+                class="bg-gray-200 px-4 py-2 rounded"
+            >
+                Back
+            </a>
+
+            <a
+                href="{{ route('admin.products.inventory',$product) }}"
+                class="bg-blue-600 text-white px-4 py-2 rounded"
+            >
+                Inventory Management
+            </a>
+
+        </div>
 
         <form
             action="{{ route('admin.products.update',$product) }}"

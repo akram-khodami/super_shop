@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -35,6 +36,20 @@ Route::middleware(['auth'])
             'products/{product}/restore',
             [ProductController::class, 'restore']
         )->name('products.restore');
+        Route::get(
+            'products/{product}/inventory',
+            [InventoryController::class, 'show']
+        )->name('products.inventory');
+
+        Route::post(
+            'products/{product}/inventory/increase',
+            [InventoryController::class, 'increase']
+        )->name('products.inventory.increase');
+
+        Route::post(
+            'products/{product}/inventory/decrease',
+            [InventoryController::class, 'decrease']
+        )->name('products.inventory.decrease');
         Route::resource(
             'categories',
             CategoryController::class

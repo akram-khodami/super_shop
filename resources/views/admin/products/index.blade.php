@@ -257,7 +257,33 @@
                         </td>
 
                         <td class="p-3">
-                            {{ $product->stock }}
+
+                            @if($product->stock == 0)
+
+                                <span
+                                    class="bg-red-100 text-red-700 px-2 py-1 rounded"
+                                >
+                                    Out of Stock
+                                </span>
+
+                            @elseif($product->stock <= 5)
+
+                                <span
+                                    class="bg-orange-100 text-orange-700 px-2 py-1 rounded"
+                                >
+                                    {{ $product->stock }}
+                                </span>
+
+                            @else
+
+                                <span
+                                    class="bg-green-100 text-green-700 px-2 py-1 rounded"
+                                >
+                                    {{ $product->stock }}
+                                </span>
+
+                            @endif
+
                         </td>
 
                         <td class="p-3">
@@ -316,6 +342,13 @@
                                 </form>
 
                             @endif
+
+                            <a
+                                href="{{ route('admin.products.inventory', $product) }}"
+                                class="bg-blue-600 text-white px-3 py-1 rounded"
+                            >
+                                Inventory
+                            </a>
 
                         </td>
 

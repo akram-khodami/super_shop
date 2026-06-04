@@ -60,6 +60,13 @@ class Product extends Model
             ->orderBy('sort_order');
     }
 
+    public function stockMovements()
+    {
+        return $this->hasMany(
+            StockMovement::class
+        );
+    }
+
     public function getThumbnailUrlAttribute(): string
     {
         return $this->thumbnail
