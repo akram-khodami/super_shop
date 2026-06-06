@@ -132,3 +132,19 @@
     </label>
 
 </div>
+<div>
+
+    <label
+        class="block mb-2 font-medium"
+    >
+        Variant Image
+    </label>
+
+    <input
+        type="file"
+        name="image"
+        accept="image/*"
+        class="w-full border rounded-lg p-2"
+    >
+
+</div>

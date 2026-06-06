@@ -2,64 +2,64 @@
 
 @section('content')
 
-<div class="max-w-5xl mx-auto py-8">
+    <div class="max-w-5xl mx-auto py-8">
 
-    <div class="flex justify-between items-center mb-8">
+        <div class="flex justify-between items-center mb-8">
 
-        <div>
+            <div>
 
-            <h1 class="text-3xl font-bold">
-                Create Variant
-            </h1>
+                <h1 class="text-3xl font-bold">
+                    Create Variant
+                </h1>
 
-            <p class="text-slate-500 mt-1">
-                {{ $product->name }}
-            </p>
+                <p class="text-slate-500 mt-1">
+                    {{ $product->name }}
+                </p>
 
-        </div>
+            </div>
 
-        <a
-            href="{{ route(
+            <a
+                href="{{ route(
                 'admin.products.edit',
                 $product
             ) }}"
-            class="px-5 py-2 bg-slate-100 rounded-xl"
-        >
-            Back
-        </a>
+                class="px-5 py-2 bg-slate-100 rounded-xl"
+            >
+                Back
+            </a>
 
-    </div>
+        </div>
 
-    <form
-        action="{{ route(
+        <form
+            action="{{ route(
             'admin.products.variants.store',
             $product
         ) }}"
-        method="POST"
-    >
-
-        @csrf
-
-        <div
-            class="bg-white rounded-3xl border border-slate-200 p-8"
+            method="POST" enctype="multipart/form-data"
         >
 
-            @include('admin.variants._form')
+            @csrf
 
-        </div>
-
-        <div class="mt-6">
-
-            <button
-                class="px-8 py-3 bg-indigo-600 text-white rounded-xl"
+            <div
+                class="bg-white rounded-3xl border border-slate-200 p-8"
             >
-                Create Variant
-            </button>
 
-        </div>
+                @include('admin.variants._form')
 
-    </form>
+            </div>
 
-</div>
+            <div class="mt-6">
+
+                <button
+                    class="px-8 py-3 bg-indigo-600 text-white rounded-xl"
+                >
+                    Create Variant
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 @endsection

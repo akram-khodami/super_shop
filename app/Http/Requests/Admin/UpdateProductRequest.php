@@ -34,18 +34,6 @@ class UpdateProductRequest extends FormRequest
 
             'description' => ['nullable'],
 
-            'sku' => [
-                'required',
-                Rule::unique('products')
-                    ->ignore($this->product)
-            ],
-
-            'price' => ['required', 'numeric'],
-
-            'sale_price' => ['nullable', 'numeric'],
-
-            'stock' => ['required', 'integer'],
-
             'featured' => ['nullable', 'boolean'],
 
             'is_active' => ['nullable', 'boolean'],

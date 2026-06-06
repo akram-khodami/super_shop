@@ -15,6 +15,13 @@ class ProductVariant extends Model
         );
     }
 
+    public function stockMovements()
+    {
+        return $this->hasMany(
+            StockMovement::class
+        );
+    }
+
     public function attributeValues()
     {
         return $this->belongsToMany(

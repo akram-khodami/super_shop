@@ -35,7 +35,7 @@
             'admin.products.variants.update',
             [$product,$variant]
         ) }}"
-            method="POST"
+            method="POST" enctype="multipart/form-data"
         >
 
             @csrf
@@ -49,6 +49,15 @@
 
             </div>
 
+            @if($variant->image)
+
+                <img
+                    src="{{ asset('storage/'.$variant->image) }}"
+                    class="h-24 w-24 object-cover rounded-lg mb-4"
+                >
+
+            @endif
+
             <div class="mt-6 flex gap-3">
 
                 <button
@@ -58,6 +67,8 @@
                 </button>
 
             </div>
+
+
 
         </form>
 

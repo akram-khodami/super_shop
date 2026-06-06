@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 @section('content')
-    <div class="max-w-7xl mx-auto px-4">
+    <div class="max-w-7xl mx-auto px-4 bg-black/10 rounded-xl shadow p-4">
 
         <div class="flex justify-between mb-6">
 
@@ -223,9 +223,9 @@
 
                     <th class="text-left p-3">Category</th>
 
-                    <th class="text-left p-3">Price</th>
+                    <th class="p-3">Brand</th>
 
-                    <th class="text-left p-3">Stock</th>
+                    <th class="p-3">Stock</th>
 
                     <th class="p-3">Image</th>
 
@@ -253,7 +253,7 @@
                         </td>
 
                         <td class="p-3">
-                            {{ $product->price }}
+                            {{ $product->brand?->name }}
                         </td>
 
                         <td class="p-3">
@@ -342,13 +342,6 @@
                                 </form>
 
                             @endif
-
-                            <a
-                                href="{{ route('admin.products.inventory', $product) }}"
-                                class="bg-blue-600 text-white px-3 py-1 rounded"
-                            >
-                                Inventory
-                            </a>
 
                         </td>
 

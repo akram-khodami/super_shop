@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 @section('content')
 
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-7xl mx-auto px-4 bg-black/10 rounded-xl shadow p-4">
 
         <h1 class="text-2xl font-bold mb-6">
             Create Product
@@ -35,19 +35,6 @@
                         {{ $message }}
                     </small>
                     @enderror
-                </div>
-
-                <div>
-                    <label class="block mb-2">
-                        SKU
-                    </label>
-
-                    <input
-                        type="text"
-                        name="sku"
-                        value="{{ old('sku') }}"
-                        class="w-full rounded border-gray-300"
-                    >
                 </div>
 
                 <div>
@@ -96,44 +83,6 @@
 
                     </select>
 
-                </div>
-
-                <div>
-                    <label class="block mb-2">
-                        Price
-                    </label>
-
-                    <input
-                        type="number"
-                        step="0.01"
-                        name="price"
-                        class="w-full rounded border-gray-300"
-                    >
-                </div>
-
-                <div>
-                    <label class="block mb-2">
-                        Sale Price
-                    </label>
-
-                    <input
-                        type="number"
-                        step="0.01"
-                        name="sale_price"
-                        class="w-full rounded border-gray-300"
-                    >
-                </div>
-
-                <div>
-                    <label class="block mb-2">
-                        Stock
-                    </label>
-
-                    <input
-                        type="number"
-                        name="stock"
-                        class="w-full rounded border-gray-300"
-                    >
                 </div>
 
             </div>

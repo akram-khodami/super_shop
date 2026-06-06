@@ -2,35 +2,35 @@
 
 namespace App\Services;
 
-use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\StockMovement;
 use Illuminate\Support\Facades\DB;
 
 class InventoryService
 {
     public function increase(
-        Product $product,
+        ProductVariant $variant,
         int $quantity,
         ?string $note = null
     ): void
     {
 
         DB::transaction(function () use (
-            $product,
+            $variant,
             $quantity,
             $note
         ) {
 
-            $before = $product->stock;
+            $before = $variant->stock;
 
             $after = $before + $quantity;
 
-            $product->update([
+            $variant->update([
                 'stock' => $after
             ]);
 
             StockMovement::create([
-                'product_id' => $product->id,
+                'product_variant_id' => $variant->id,
                 'type' => 'in',
                 'quantity' => $quantity,
                 'before_stock' => $before,
@@ -42,31 +42,31 @@ class InventoryService
     }
 
     public function decrease(
-        Product $product,
+        ProductVariant $variant,
         int $quantity,
         ?string $note = null
     ): void
     {
 
         DB::transaction(function () use (
-            $product,
+            $variant,
             $quantity,
             $note
         ) {
 
-            $before = $product->stock;
+            $before = $variant->stock;
 
             $after = max(
                 0,
                 $before - $quantity
             );
 
-            $product->update([
+            $variant->update([
                 'stock' => $after
             ]);
 
             StockMovement::create([
-                'product_id' => $product->id,
+                'product_variant_id' => $variant->id,
                 'type' => 'out',
                 'quantity' => $quantity,
                 'before_stock' => $before,

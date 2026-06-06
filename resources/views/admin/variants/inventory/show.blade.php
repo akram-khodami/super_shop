@@ -8,11 +8,12 @@
             <div>
 
                 <h1 class="text-2xl font-bold">
-                    {{ $product->name }}
+
+                    {{ $variant->product->name }} {{ $variant->title }}
                 </h1>
 
                 <p class="text-gray-500 mt-1">
-                    SKU: {{ $product->sku }}
+                    SKU: {{ $variant->sku }}
                 </p>
 
             </div>
@@ -23,7 +24,7 @@
                 class="inline-flex items-center px-4 py-2 rounded-xl bg-indigo-100 text-indigo-700 font-semibold"
             >
                 Current Stock:
-                {{ $product->stock }}
+                {{ $variant->stock }}
             </span>
 
             </div>
@@ -41,7 +42,7 @@
 
             <form
                 method="POST"
-                action="{{ route('admin.products.inventory.increase',$product) }}"
+                action="{{ route('admin.variants.inventory.increase',$variant) }}"
                 class="space-y-4"
             >
                 @csrf
@@ -96,7 +97,7 @@
 
             <form
                 method="POST"
-                action="{{ route('admin.products.inventory.decrease',$product) }}"
+                action="{{ route('admin.variants.inventory.decrease',$variant) }}"
                 class="space-y-4"
             >
                 @csrf

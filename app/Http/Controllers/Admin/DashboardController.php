@@ -23,20 +23,21 @@ class DashboardController extends Controller
 
             'brandsCount' => Brand::count(),
 
-            'outOfStockCount' => Product::where(
-                'stock',
-                0
+            'outOfStockCount' => Product::whereDoesntHave(
+                'variants',
+                fn ($q) => $q->where('stock', '>', 0)
             )->count(),
 
             'lowStockProducts' => Product::query()
-                ->where('stock', '>', 0)
-                ->where('stock', '<=', 5)
+                ->withSum('variants', 'stock')
+                ->having('variants_sum_stock', '<=', 5)
+                ->having('variants_sum_stock', '>', 0)
                 ->latest()
                 ->take(10)
                 ->get(),
 
             'latestProducts' => Product::query()
-                ->with(['category'])
+                ->with(['category', 'brand'])
                 ->latest()
                 ->take(10)
                 ->get(),

@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="max-w-7xl mx-auto py-8">
+    <div class="max-w-7xl mx-auto px-4 bg-black/10 rounded-xl shadow p-4">
 
         {{-- Header --}}
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
@@ -24,13 +24,6 @@
                     class="px-5 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm hover:bg-slate-50 transition"
                 >
                     Back
-                </a>
-
-                <a
-                    href="{{ route('admin.products.inventory',$product) }}"
-                    class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700 transition"
-                >
-                    Inventory Management
                 </a>
 
             </div>
@@ -125,19 +118,6 @@
 
                                     <div>
                                         <label class="block text-sm font-medium text-slate-700 mb-2">
-                                            SKU
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            name="sku"
-                                            value="{{ old('sku',$product->sku) }}"
-                                            class="w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500"
-                                        >
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700 mb-2">
                                             Category
                                         </label>
 
@@ -189,60 +169,6 @@
 
                                         </select>
 
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            {{-- Pricing --}}
-                            <div class="mb-10">
-
-                                <h2 class="text-lg font-semibold text-slate-800 mb-5">
-                                    Pricing
-                                </h2>
-
-                                <div class="grid md:grid-cols-3 gap-6">
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700 mb-2">
-                                            Price
-                                        </label>
-
-                                        <input
-                                            type="number"
-                                            step="0.01"
-                                            name="price"
-                                            value="{{ old('price',$product->price) }}"
-                                            class="w-full rounded-xl border-slate-200 bg-slate-50"
-                                        >
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700 mb-2">
-                                            Sale Price
-                                        </label>
-
-                                        <input
-                                            type="number"
-                                            step="0.01"
-                                            name="sale_price"
-                                            value="{{ old('sale_price',$product->sale_price) }}"
-                                            class="w-full rounded-xl border-slate-200 bg-slate-50"
-                                        >
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700 mb-2">
-                                            Stock
-                                        </label>
-
-                                        <input
-                                            type="number"
-                                            name="stock"
-                                            value="{{ old('stock',$product->stock) }}"
-                                            class="w-full rounded-xl border-slate-200 bg-slate-50"
-                                        >
                                     </div>
 
                                 </div>
@@ -451,13 +377,6 @@
                         <div class="space-y-3">
 
                             <a
-                                href="{{ route('admin.products.inventory',$product) }}"
-                                class="block bg-white/15 border border-white/20 rounded-xl px-4 py-3 hover:bg-white/25 transition"
-                            >
-                                Manage Inventory
-                            </a>
-
-                            <a
                                 href="{{ route('admin.products.variants.create',$product) }}"
                                 class="block bg-white/15 border border-white/20 rounded-xl px-4 py-3 hover:bg-white/25 transition"
                             >
@@ -608,6 +527,10 @@
                             Status
                         </th>
 
+                        <th>
+                            Image
+                        </th>
+
                         <th class="text-right px-6 py-4 text-sm font-semibold text-slate-600">
                             Actions
                         </th>
@@ -668,6 +591,24 @@
 
                             </td>
 
+                            <td class="px-4 py-3">
+
+                                @if($variant->image)
+
+                                    <img
+                                        src="{{ asset('storage/'.$variant->image) }}"
+                                        class="h-14 w-14 rounded-lg object-cover"
+                                    >
+
+                                @else
+
+                                    <span class="text-gray-400">
+            No Image
+        </span>
+
+                                @endif
+
+                            </td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2">
 
@@ -693,6 +634,13 @@
                                         >
                                             Delete
                                         </button>
+
+                                        <a
+                                            href="{{ route('admin.variants.inventory',$variant) }}"
+                                            class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700 transition"
+                                        >
+                                            Manage Inventory
+                                        </a>
 
                                     </form>
                                 </div>

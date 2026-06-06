@@ -3,23 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Services\InventoryService;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
-    public function show(Product $product)
+    public function show(ProductVariant $variant)
     {
-        $movements = $product
+        $variant->load('product');
+
+        $movements = $variant
             ->stockMovements()
             ->latest()
             ->paginate(20);
 
+
         return view(
-            'admin.products.inventory.show',
+            'admin.variants.inventory.show',
             compact(
-                'product',
+                'variant',
                 'movements'
             )
         );
@@ -27,7 +30,7 @@ class InventoryController extends Controller
 
     public function increase(
         Request $request,
-        Product $product,
+        ProductVariant $variant,
         InventoryService $inventoryService
     )
     {
@@ -44,7 +47,7 @@ class InventoryController extends Controller
         ]);
 
         $inventoryService->increase(
-            $product,
+            $variant,
             $request->quantity,
             $request->note
         );
@@ -57,7 +60,7 @@ class InventoryController extends Controller
 
     public function decrease(
         Request $request,
-        Product $product,
+        ProductVariant $variant,
         InventoryService $inventoryService
     )
     {
@@ -74,7 +77,7 @@ class InventoryController extends Controller
         ]);
 
         if (
-            $request->quantity > $product->stock
+            $request->quantity > $variant->stock
         ) {
             return back()->withErrors([
                 'quantity' =>
@@ -83,7 +86,7 @@ class InventoryController extends Controller
         }
 
         $inventoryService->decrease(
-            $product,
+            $variant,
             $request->quantity,
             $request->note
         );

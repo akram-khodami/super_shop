@@ -39,20 +39,26 @@ Route::middleware(['auth'])
             'products/{product}/restore',
             [ProductController::class, 'restore']
         )->name('products.restore');
-        Route::get(
-            'products/{product}/inventory',
-            [InventoryController::class, 'show']
-        )->name('products.inventory');
 
-        Route::post(
-            'products/{product}/inventory/increase',
-            [InventoryController::class, 'increase']
-        )->name('products.inventory.increase');
+        Route::prefix(
+            'variants/{variant}'
+        )->group(function () {
 
-        Route::post(
-            'products/{product}/inventory/decrease',
-            [InventoryController::class, 'decrease']
-        )->name('products.inventory.decrease');
+            Route::get(
+                'inventory',
+                [InventoryController::class, 'show']
+            )->name('variants.inventory');;
+
+            Route::post('inventory/increase',
+                [InventoryController::class, 'increase']
+            )->name('variants.inventory.increase');
+
+            Route::post(
+                'inventory/decrease',
+                [InventoryController::class, 'decrease']
+            )->name('variants.inventory.decrease');
+
+        });
 
         Route::prefix('products/{product}')
             ->name('products.')

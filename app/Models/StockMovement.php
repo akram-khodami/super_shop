@@ -8,10 +8,11 @@ class StockMovement extends Model
 {
     protected $guarded = [];
 
-    public function product()
+    public function variant()
     {
         return $this->belongsTo(
-            Product::class
+            ProductVariant::class,
+            'product_variant_id'
         );
     }
 
