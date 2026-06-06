@@ -49,6 +49,9 @@ class UpdateProductRequest extends FormRequest
             'featured' => ['nullable', 'boolean'],
 
             'is_active' => ['nullable', 'boolean'],
+
+            'attributes' => 'sometimes|array',
+            'attributes.*' => 'integer|exists:product_attributes,id',
         ];
     }
 }

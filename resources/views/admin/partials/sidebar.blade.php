@@ -60,6 +60,15 @@
             </li>
 
             <li>
+                <a
+                    href="{{ route('admin.attributes.index') }}"
+                    class="block px-4 py-2 rounded hover:bg-slate-800"
+                >
+                    Attributes
+                </a>
+            </li>
+
+            <li>
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

@@ -1,0 +1,117 @@
+@extends('admin.layouts.app')
+
+@section('content')
+
+    <div class="max-w-7xl mx-auto py-8">
+
+        <div class="flex justify-between mb-6">
+
+            <h1 class="text-2xl font-bold">
+                Attributes
+            </h1>
+
+            <a
+                href="{{ route('admin.attributes.create') }}"
+                class="bg-indigo-600 text-white px-5 py-2 rounded-xl"
+            >
+                Add Attribute
+            </a>
+
+        </div>
+
+        <div class="bg-white rounded-2xl shadow">
+
+            <table class="w-full">
+
+                <thead>
+
+                <tr>
+
+                    <th class="p-4 text-left">
+                        Name
+                    </th>
+
+                    <th class="p-4 text-left">
+                        Values
+                    </th>
+
+                    <th class="p-4">
+                        Actions
+                    </th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                @foreach($attributes as $attribute)
+
+                    <tr class="border-t">
+
+                        <td class="p-4">
+                            {{ $attribute->name }}
+                        </td>
+
+                        <td class="p-4">
+                            {{ $attribute->values_count ?? 0 }}
+                        </td>
+
+                        <td class="p-4">
+
+                            <div class="flex items-center gap-2">
+
+                                <a
+                                    href="{{ route(
+                'admin.attributes.edit',
+                $attribute
+            ) }}"
+                                    class="px-3 py-2 rounded-lg             bg-indigo-100 text-indigo-700"
+                                >
+                                    Edit
+                                </a>
+
+                                <form
+                                    action="{{ route(
+                'admin.attributes.destroy',
+                $attribute
+            ) }}"
+                                    method="POST"
+                                >
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button
+                                        onclick="return confirm('Delete attribute?')"
+                                        class="px-3 py-2 rounded-lg      bg-red-100 text-red-700"
+                                    >
+                                        Delete
+                                    </button>
+
+                                    <a href="{{ route(        'admin.attributes.values.index',        $attribute    ) }}"
+                                       class="px-3 py-2 rounded-lg      bg-green-100 text-green-700"
+
+                                    >
+                                        Values
+                                    </a>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                @endforeach
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+@endsection

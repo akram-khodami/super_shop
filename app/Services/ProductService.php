@@ -49,6 +49,11 @@ class ProductService
 
         $product->update($data);
 
+
+        $product->attributes()->sync(
+            $data['attributes'] ?? []
+        );
+
         if (!empty($images)) {
 
             foreach ($images as $index => $image) {

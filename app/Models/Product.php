@@ -79,6 +79,23 @@ class Product extends Model
         return number_format($this->price) . ' تومان';
     }
 
+    public function variants()
+    {
+        return $this->hasMany(
+            ProductVariant::class
+        );
+    }
+
+    public function attributes()
+    {
+        return $this->belongsToMany(
+            ProductAttribute::class,
+            'product_product_attribute',  // اسم جدول pivot
+            'product_id',                  // foreign key مربوط به این مدل
+            'product_attribute_id'         // foreign key مربوط به مدل مقابل
+        );
+    }
+
     public function scopeFilter(Builder $query, array $filters): Builder
     {
         return $query

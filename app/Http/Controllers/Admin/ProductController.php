@@ -9,9 +9,11 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Http\Requests\Admin\StoreProductRequest;
 use App\Http\Requests\Admin\UpdateProductRequest;
+use App\Models\ProductAttribute;
 use App\Models\ProductImage;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -98,14 +100,24 @@ class ProductController extends Controller
 
         $brands = Brand::orderBy('name')->get();
 
-        $product->load('images');
+        $product->load([
+            'images',
+            'variants',
+            'attributes',
+        ]);
+
+        $attributes = ProductAttribute::with('values')
+            ->orderBy('name')
+            ->get();
 
         return view(
             'admin.products.edit',
             compact(
                 'product',
                 'categories',
-                'brands'
+                'brands',
+                'attributes'
+
             )
         );
     }
@@ -119,6 +131,7 @@ class ProductController extends Controller
         ProductService $service
     )
     {
+
         $service->update(
             $product,
             $request->validated()

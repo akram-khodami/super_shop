@@ -1,259 +1,729 @@
 @extends('admin.layouts.app')
+
 @section('content')
 
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-7xl mx-auto py-8">
 
-        <h1 class="text-2xl font-bold mb-6">
-            Edit Product
-        </h1>
+        {{-- Header --}}
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
 
-        <div class="flex gap-3 mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">
+                    Edit Product
+                </h1>
 
-            <a
-                href="{{ route('admin.products.index') }}"
-                class="bg-gray-200 px-4 py-2 rounded"
-            >
-                Back
-            </a>
+                <p class="text-slate-500 mt-1">
+                    Manage product information, inventory, images and variants
+                </p>
+            </div>
 
-            <a
-                href="{{ route('admin.products.inventory',$product) }}"
-                class="bg-blue-600 text-white px-4 py-2 rounded"
-            >
-                Inventory Management
-            </a>
+            <div class="flex gap-3">
+
+                <a
+                    href="{{ route('admin.products.index') }}"
+                    class="px-5 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm hover:bg-slate-50 transition"
+                >
+                    Back
+                </a>
+
+                <a
+                    href="{{ route('admin.products.inventory',$product) }}"
+                    class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700 transition"
+                >
+                    Inventory Management
+                </a>
+
+            </div>
 
         </div>
 
+        <div class="grid md:grid-cols-3 gap-5 mb-8">
+
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-3xl p-6">
+                <div class="text-slate-500 text-sm">
+                    Product Images
+                </div>
+
+                <div class="text-3xl font-bold mt-2">
+                    {{ $product->images->count() }}
+                </div>
+
+            </div>
+
+            <div class="bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100 rounded-3xl p-6">
+
+                <div class="text-slate-500 text-sm">
+                    Variants
+                </div>
+
+                <div class="text-3xl font-bold mt-2">
+                    {{ $product->variants->count() }}
+                </div>
+
+            </div>
+
+            <div class="bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-100 rounded-3xl p-6">
+
+                <div class="text-slate-500 text-sm">
+                    Total Stock
+                </div>
+
+                <div class="text-3xl font-bold mt-2">
+                    {{ $product->stock }}
+                </div>
+
+            </div>
+
+        </div>
+
+        {{-- Main Card --}}
         <form
             action="{{ route('admin.products.update',$product) }}"
             method="POST"
             enctype="multipart/form-data"
-            class="bg-white rounded-xl shadow p-6"
         >
 
             @csrf
             @method('PUT')
 
-            <div class="grid md:grid-cols-2 gap-6">
+            <div class="grid lg:grid-cols-3 gap-8">
 
-                <div>
-                    <label class="block mb-2">
-                        Name
-                    </label>
+                {{-- Left Column --}}
+                <div class="lg:col-span-2">
 
-                    <input
-                        type="text"
-                        name="name"
-                        value="{{ old('name',$product->name) }}"
-                        class="w-full rounded border-gray-300"
+                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+
+                        <div class="p-8">
+
+                            {{-- Product Information --}}
+                            <div class="mb-10">
+
+                                <h2 class="text-lg font-semibold text-slate-800 mb-5">
+                                    Product Information
+                                </h2>
+
+                                <div class="grid md:grid-cols-2 gap-6">
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                                            Product Name
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value="{{ old('name',$product->name) }}"
+                                            class="w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500"
+                                        >
+
+                                        @error('name')
+                                        <small class="text-red-500">
+                                            {{ $message }}
+                                        </small>
+                                        @enderror
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                                            SKU
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="sku"
+                                            value="{{ old('sku',$product->sku) }}"
+                                            class="w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500"
+                                        >
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                                            Category
+                                        </label>
+
+                                        <select
+                                            name="category_id"
+                                            class="w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500"
+                                        >
+
+                                            @foreach($categories as $category)
+
+                                                <option
+                                                    value="{{ $category->id }}"
+                                                    @selected(old(
+                                                'category_id',$product->category_id)==$category->id)
+                                                >
+                                                {{ $category->name }}
+                                                </option>
+
+                                            @endforeach
+
+                                        </select>
+
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                                            Brand
+                                        </label>
+
+                                        <select
+                                            name="brand_id"
+                                            class="w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500"
+                                        >
+
+                                            <option value="">
+                                                Select Brand
+                                            </option>
+
+                                            @foreach($brands as $brand)
+
+                                                <option
+                                                    value="{{ $brand->id }}"
+                                                    @selected(old('brand_id',$product->brand_id)==$brand->id)
+                                                >
+                                                {{ $brand->name }}
+                                                </option>
+
+                                            @endforeach
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            {{-- Pricing --}}
+                            <div class="mb-10">
+
+                                <h2 class="text-lg font-semibold text-slate-800 mb-5">
+                                    Pricing
+                                </h2>
+
+                                <div class="grid md:grid-cols-3 gap-6">
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                                            Price
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            step="0.01"
+                                            name="price"
+                                            value="{{ old('price',$product->price) }}"
+                                            class="w-full rounded-xl border-slate-200 bg-slate-50"
+                                        >
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                                            Sale Price
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            step="0.01"
+                                            name="sale_price"
+                                            value="{{ old('sale_price',$product->sale_price) }}"
+                                            class="w-full rounded-xl border-slate-200 bg-slate-50"
+                                        >
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-2">
+                                            Stock
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            name="stock"
+                                            value="{{ old('stock',$product->stock) }}"
+                                            class="w-full rounded-xl border-slate-200 bg-slate-50"
+                                        >
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            {{-- Description --}}
+                            <div class="mb-10">
+
+                                <label class="block text-sm font-medium text-slate-700 mb-2">
+                                    Description
+                                </label>
+
+                                <textarea
+                                    name="description"
+                                    rows="7"
+                                    class="w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white"
+                                >{{ old('description',$product->description) }}</textarea>
+
+                            </div>
+
+                            {{-- Images --}}
+                            <div class="mb-10">
+
+                                <label class="block text-sm font-medium text-slate-700 mb-2">
+                                    Product Images
+                                </label>
+
+                                <div
+                                    class="border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center hover:border-indigo-400 transition">
+
+                                    <input
+                                        type="file"
+                                        name="images[]"
+                                        multiple
+                                        accept="image/*"
+                                        class="w-full"
+                                    >
+
+                                    <p class="mt-3 text-sm text-slate-500">
+                                        Drag & drop images here or click to upload
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    {{--Product Attributes--}}
+                    <div
+                        class="bg-white rounded-3xl border border-slate-200
+           shadow-sm mt-10 p-8"
                     >
 
-                    @error('name')
-                    <small class="text-red-500">
-                        {{ $message }}
-                    </small>
-                    @enderror
+                        <h2
+                            class="text-xl font-semibold mb-6"
+                        >
+                            Product Attributes
+                        </h2>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+
+                            @foreach($attributes as $attribute)
+
+                                <label
+                                    class="flex items-center gap-3"
+                                >
+
+                                    <input
+                                        type="checkbox"
+                                        name="attributes[]"
+                                        value="{{ $attribute->id }}"
+
+                                        @checked(
+                                        $product
+                                        ->attributes
+                                    ->contains($attribute->id)
+                                    )
+                                    >
+
+                                    <span>
+                    {{ $attribute->name }}
+                </span>
+
+                                </label>
+
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div>
-                    <label class="block mb-2">
-                        SKU
-                    </label>
+                {{-- Right Sidebar --}}
+                <div class="space-y-6">
 
-                    <input
-                        type="text"
-                        name="sku"
-                        value="{{ old('sku',$product->sku) }}"
-                        class="w-full rounded border-gray-300"
-                    >
-                </div>
+                    {{-- Product Status --}}
+                    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
 
-                <div>
-                    <label class="block mb-2">
-                        Category
-                    </label>
+                        <h3 class="font-semibold text-slate-800 mb-4">
+                            Product Status
+                        </h3>
 
-                    <select
-                        name="category_id"
-                        class="w-full rounded border-gray-300"
-                    >
+                        <div class="space-y-4">
 
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}"
-                                    @selected( old('category_id',$product->category_id)==$category->id)>
-                            {{ $category->name }}
-                            </option>
+                            <input type="hidden" name="featured" value="0">
 
-                        @endforeach
+                            <label class="flex items-center gap-3">
 
-                    </select>
+                                <input
+                                    type="checkbox"
+                                    name="featured"
+                                    value="1"
+                                    class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                    @checked(old('featured',$product->featured))
+                                >
 
-                </div>
+                                <span>
+                    Featured Product
+                </span>
 
-                <div>
-                    <label class="block mb-2">
-                        Brand
-                    </label>
+                            </label>
 
-                    <select
-                        name="brand_id"
-                        class="w-full rounded border-gray-300"
-                    >
+                            <input type="hidden" name="is_active" value="0">
 
-                        <option value="">
-                            Select Brand
-                        </option>
+                            <label class="flex items-center gap-3">
 
-                        @foreach($brands as $brand)
+                                <input
+                                    type="checkbox"
+                                    name="is_active"
+                                    value="1"
+                                    class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                    @checked(old('is_active',$product->is_active))
+                                >
 
-                            <option value="{{ $brand->id }}"
-                                    @selected( old('brand_id',$product->brand_id) == $brand->id)>
-                            {{ $brand->name }}
-                            </option>
+                                <span>
+                    Active Product
+                </span>
 
-                        @endforeach
+                            </label>
 
-                    </select>
+                        </div>
 
-                </div>
+                    </div>
 
-                <div>
-                    <label class="block mb-2">
-                        Price
-                    </label>
+                    {{-- Statistics --}}
+                    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
 
-                    <input
-                        type="number"
-                        step="0.01"
-                        name="price"
-                        value="{{ old('price',$product->price) }}"
-                        class="w-full rounded border-gray-300"
-                    >
-                </div>
+                        <h3 class="font-semibold text-slate-800 mb-5">
+                            Statistics
+                        </h3>
 
-                <div>
-                    <label class="block mb-2">
-                        Sale Price
-                    </label>
+                        <div class="space-y-4">
 
-                    <input
-                        type="number"
-                        step="0.01"
-                        name="sale_price"
-                        value="{{ old('sale_price',$product->sale_price) }}"
-                        class="w-full rounded border-gray-300"
-                    >
-                </div>
+                            <div class="flex justify-between">
 
-                <div>
-                    <label class="block mb-2">
-                        Stock
-                    </label>
+                <span class="text-slate-500">
+                    Images
+                </span>
 
-                    <input
-                        type="number"
-                        name="stock"
-                        value="{{ old('stock',$product->stock) }}"
-                        class="w-full rounded border-gray-300"
-                    >
-                </div>
+                                <span class="font-semibold">
+                    {{ $product->images->count() }}
+                </span>
 
-            </div>
+                            </div>
 
-            <div class="mt-6">
+                            <div class="flex justify-between">
 
-                <label class="block mb-2">
-                    Description
-                </label>
+                <span class="text-slate-500">
+                    Variants
+                </span>
 
-                <textarea
-                    name="description"
-                    rows="6"
-                    class="w-full rounded border-gray-300"
-                >{{ old('description',$product->description) }}</textarea>
+                                <span class="font-semibold">
+                    {{ $product->variants->count() }}
+                </span>
 
-            </div>
+                            </div>
 
-            <div class="mt-6 flex gap-4">
+                            <div class="flex justify-between">
 
-                <label>
-                    <input
-                        type="checkbox"
-                        name="featured"
-                        value="1"
-                    >
+                <span class="text-slate-500">
+                    Stock
+                </span>
 
-                    Featured
-                </label>
+                                <span class="font-semibold">
+                    {{ $product->stock }}
+                </span>
 
-                <label>
-                    <input
-                        type="checkbox"
-                        name="is_active"
-                        value="1"
-                        checked
-                    >
+                            </div>
 
-                    Active
-                </label>
+                        </div>
 
-            </div>
+                    </div>
 
+                    {{-- Quick Actions --}}
+                    <div class="bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl p-6 text-white">
 
-            <div class="mt-6">
+                        <h3 class="font-semibold mb-3">
+                            Quick Actions
+                        </h3>
 
-                <label class="block mb-2">
-                    Product Images
-                </label>
+                        <div class="space-y-3">
 
-                <input
-                    type="file"
-                    name="images[]"
-                    multiple
-                    accept="image/*"
-                    class="w-full"
-                >
+                            <a
+                                href="{{ route('admin.products.inventory',$product) }}"
+                                class="block bg-white/15 border border-white/20 rounded-xl px-4 py-3 hover:bg-white/25 transition"
+                            >
+                                Manage Inventory
+                            </a>
 
-            </div>
+                            <a
+                                href="{{ route('admin.products.variants.create',$product) }}"
+                                class="block bg-white/15 border border-white/20 rounded-xl px-4 py-3 hover:bg-white/25 transition"
+                            >
+                                Add Variant
+                            </a>
 
-            @foreach($product->images as $image)
+                        </div>
 
-                <div class="relative">
+                    </div>
 
-                    <img
-                        src="{{ asset('storage/'.$image->image) }}"
-                        class="w-24 h-24 rounded border object-cover"
-                    >
-
-                    <form
-                        action="{{ route('admin.products.images.destroy',$image) }}"
-                        method="POST"
-                        class="absolute -top-2 -right-2"
-                    >
-                        @csrf
-                        @method('DELETE')
+                    <div class="sticky top-6">
 
                         <button
-                            onclick="return confirm('Delete image?')"
-                            class="bg-red-600 text-white w-6 h-6 rounded-full"
+                            type="submit"
+                            class="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold shadow-lg hover:shadow-xl transition"
                         >
-                            ×
+                            Save Product
                         </button>
 
-                    </form>
+                    </div>
 
                 </div>
 
-            @endforeach
+            </div>
 
-            <button
-                class="mt-6 bg-indigo-600 text-white px-6 py-3 rounded-lg"
-            >
-                Save Product
-            </button>
 
         </form>
+
+
+        {{-- Product Gallery --}}
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm mt-10 p-8">
+
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-lg font-semibold text-slate-800">
+                        Product Gallery
+                    </h2>
+
+                    <p class="text-sm text-slate-500">
+                        Manage all uploaded product images
+                    </p>
+                </div>
+
+                <div class="text-sm text-slate-500">
+                    {{ $product->images->count() }} Images
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-5">
+
+                @foreach($product->images as $image)
+
+                    <div
+                        class="group relative bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition"
+                    >
+
+                        <img
+                            src="{{ asset('storage/'.$image->image) }}"
+                            class="w-full h-44 object-cover group-hover:scale-105 transition duration-300"
+                        >
+
+                        <div
+                            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
+                        >
+
+                            <form
+                                action="{{ route('admin.products.images.destroy',$image) }}"
+                                method="POST"
+                            >
+                                @csrf
+                                @method('DELETE')
+
+                                <button
+                                    onclick="return confirm('Delete image?')"
+                                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl shadow"
+                                >
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+        </div>
+
+        {{-- Variants Section --}}
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm mt-10">
+
+            <div class="p-6 border-b border-slate-200">
+
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                    <div>
+
+                        <h2 class="text-xl font-bold text-slate-800">
+                            Product Variants
+                        </h2>
+
+                        <p class="text-slate-500 text-sm mt-1">
+                            Manage sizes, colors and product variations
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="{{ route('admin.products.variants.create',$product) }}"
+                        class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition shadow"
+                    >
+                        + Add Variant
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full">
+
+                    <thead class="bg-slate-50">
+
+                    <tr>
+
+                        <th class="text-left px-6 py-4 text-sm font-semibold text-slate-600">
+                            Variant
+                        </th>
+
+                        <th class="text-left px-6 py-4 text-sm font-semibold text-slate-600">
+                            SKU
+                        </th>
+
+                        <th class="text-left px-6 py-4 text-sm font-semibold text-slate-600">
+                            Price
+                        </th>
+
+                        <th class="text-left px-6 py-4 text-sm font-semibold text-slate-600">
+                            Stock
+                        </th>
+
+                        <th class="text-left px-6 py-4 text-sm font-semibold text-slate-600">
+                            Status
+                        </th>
+
+                        <th class="text-right px-6 py-4 text-sm font-semibold text-slate-600">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    @forelse($product->variants as $variant)
+
+                        <tr class="border-t border-slate-100 hover:bg-indigo-50/40 transition">
+
+                            <td class="px-6 py-4">
+
+                                <div class="font-medium text-slate-800">
+                                    {{ $variant->title }}
+                                </div>
+
+                            </td>
+
+                            <td class="px-6 py-4 text-slate-500">
+                                {{ $variant->sku }}
+                            </td>
+
+                            <td class="px-6 py-4 font-medium text-slate-800">
+                                {{ number_format($variant->price) }}
+                            </td>
+
+                            <td class="px-6 py-4">
+                        <span
+                            class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm"
+                        >
+                            {{ $variant->stock }}
+                        </span>
+                            </td>
+
+                            <td class="px-6 py-4">
+
+                                @if($variant->is_active)
+
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold"
+                                    >
+                                Active
+                            </span>
+
+                                @else
+
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold"
+                                    >
+                                Inactive
+                            </span>
+
+                                @endif
+
+                            </td>
+
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex justify-end gap-2">
+
+                                    <a
+                                        href="{{ route('admin.products.variants.edit',[$product,$variant]) }}"
+                                        class="inline-flex items-center px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+                                    >
+                                        Edit
+                                    </a>
+                                    <form
+                                        method="POST"
+                                        action="{{ route(
+        'admin.products.variants.destroy',
+        [$product,$variant]
+    ) }}"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button
+                                            onclick="return confirm('Delete Variant?')"
+                                            class="px-4 py-2 rounded-xl bg-red-100 text-red-700"
+                                        >
+                                            Delete
+                                        </button>
+
+                                    </form>
+                                </div>
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+
+                            <td colspan="6" class="text-center py-10">
+
+                                <div class="text-slate-400">
+                                    No variants created yet
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
 
     </div>
 

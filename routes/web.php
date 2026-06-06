@@ -4,7 +4,10 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Admin\ProductAttributeController;
+use App\Http\Controllers\Admin\ProductAttributeValueController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -50,6 +53,28 @@ Route::middleware(['auth'])
             'products/{product}/inventory/decrease',
             [InventoryController::class, 'decrease']
         )->name('products.inventory.decrease');
+
+        Route::prefix('products/{product}')
+            ->name('products.')
+            ->group(function () {
+
+                Route::resource(
+                    'variants',
+                    ProductVariantController::class
+                )->except('index', 'show');
+
+            });
+
+        Route::resource(
+            'attributes',
+            ProductAttributeController::class
+        );
+        Route::resource(
+            'attributes.values',
+            ProductAttributeValueController::class
+        );
+
+
         Route::resource(
             'categories',
             CategoryController::class
