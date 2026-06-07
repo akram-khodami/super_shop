@@ -25,11 +25,9 @@ class UpdateProductVariantRequest extends FormRequest
             'is_active' => ['boolean'],
             'attribute_values' => ['required', 'array', 'min:1'],
             'attribute_values.*' => ['required', 'exists:product_attribute_values,id'],
-            'image' => [
-                'nullable',
-                'image',
-                'max:2048',
-            ],
+
+            'images' => ['nullable', 'array'],
+            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 

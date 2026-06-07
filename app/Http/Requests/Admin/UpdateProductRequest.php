@@ -40,6 +40,10 @@ class UpdateProductRequest extends FormRequest
 
             'attributes' => 'sometimes|array',
             'attributes.*' => 'integer|exists:product_attributes,id',
+
+            'images' => ['nullable', 'array'],
+            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+
         ];
     }
 }

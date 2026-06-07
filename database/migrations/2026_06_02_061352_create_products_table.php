@@ -29,13 +29,6 @@ return new class extends Migration
 
             $table->longText('description')->nullable();
 
-            $table->string('sku')->unique();
-
-            $table->decimal('price', 12, 2);
-
-            $table->decimal('sale_price', 12, 2)
-                ->nullable();
-
             $table->unsignedInteger('stock')->default(0);
 
             $table->boolean('featured')->default(false);
@@ -43,6 +36,11 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
 
             $table->timestamps();
+
+            $table->index('is_active');
+            $table->index('featured');
+            $table->index(['category_id', 'is_active']);
+
         });
     }
 

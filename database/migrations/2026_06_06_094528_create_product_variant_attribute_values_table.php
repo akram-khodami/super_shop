@@ -26,6 +26,7 @@ return new class extends Migration
                     ->onDelete('cascade');
 
                 $table->timestamps();
+                $table->unique(['product_variant_id', 'product_attribute_value_id'], 'variant_attribute_unique');
 
             }
         );

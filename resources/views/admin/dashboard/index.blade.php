@@ -90,7 +90,6 @@
             <tr>
                 <th class="p-4 text-left">Name</th>
                 <th class="p-4 text-left">Category</th>
-                <th class="p-4 text-left">Price</th>
             </tr>
 
             </thead>
@@ -107,10 +106,6 @@
 
                     <td class="p-4">
                         {{ $product->category?->name }}
-                    </td>
-
-                    <td class="p-4 text-green-600 font-semibold">
-                        {{ number_format($product->price) }}
                     </td>
 
                 </tr>

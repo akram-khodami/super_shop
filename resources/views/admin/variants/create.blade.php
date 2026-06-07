@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="max-w-5xl mx-auto py-8">
+    <div class="max-w-7xl mx-auto px-4 bg-black/10 rounded-xl shadow p-4">
 
         <div class="flex justify-between items-center mb-8">
 

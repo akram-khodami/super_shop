@@ -71,6 +71,11 @@ Route::middleware(['auth'])
 
             });
 
+        Route::delete(
+            'variant-images/{image}',
+            [ProductVariantController::class, 'destroyImage']
+        )->name('variants.images.destroy');
+
         Route::resource(
             'attributes',
             ProductAttributeController::class

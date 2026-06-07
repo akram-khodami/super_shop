@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProductVariant extends Model
 {
@@ -36,4 +37,23 @@ class ProductVariant extends Model
             ->pluck('value')
             ->implode(' / ');
     }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductVariantImage::class);
+    }
+
+    public function thumbnail()
+    {
+        return $this->hasOne(ProductVariantImage::class)
+            ->orderBy('sort_order');
+    }
+
+    public function getThumbnailUrlAttribute(): string
+    {
+        return $this->thumbnail
+            ? asset('storage/' . $this->thumbnail->image)
+            : asset('images/no-image.jpg');
+    }
+
 }

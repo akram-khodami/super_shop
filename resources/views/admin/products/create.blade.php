@@ -128,19 +128,10 @@
 
 
             <div class="mt-6">
-
-                <label class="block mb-2">
-                    Product Images
-                </label>
-
-                <input
-                    type="file"
+                <x-image-uploader
                     name="images[]"
-                    multiple
-                    accept="image/*"
-                    class="w-full"
-                >
-
+                    label="Product Images"
+                />
             </div>
 
             <button

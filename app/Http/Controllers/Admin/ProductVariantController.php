@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\StoreProductVariantRequest;
 use App\Http\Requests\Admin\UpdateProductVariantRequest;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\ProductVariantImage;
 use App\Services\ProductVariantService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -58,7 +59,7 @@ class ProductVariantController extends Controller
     {
         $this->ensureVariantBelongsToProduct($product, $variant);
 
-        $variant->load('attributeValues');
+        $variant->load(['attributeValues', 'images',]);
         $selectedValues = $variant->attributeValues->pluck('id')->toArray();
 
         return view('admin.variants.edit', compact('product', 'variant', 'selectedValues'));
@@ -96,4 +97,19 @@ class ProductVariantController extends Controller
             abort(404);
         }
     }
+
+    public function destroyImage(ProductVariantImage $image)
+    {
+        Storage::disk('public')
+            ->delete($image->image);
+
+        $image->delete();
+
+        return back()->with(
+            'success',
+            'Image deleted successfully'
+        );
+
+    }
+
 }

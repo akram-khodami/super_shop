@@ -132,19 +132,13 @@
     </label>
 
 </div>
-<div>
 
-    <label
-        class="block mb-2 font-medium"
-    >
-        Variant Image
-    </label>
+{{-- Images --}}
+<div class="mt-6">
 
-    <input
-        type="file"
-        name="image"
-        accept="image/*"
-        class="w-full border rounded-lg p-2"
-    >
+    <x-image-uploader
+        name="images[]"
+        label="Variant Images"
+    />
 
 </div>

@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="max-w-5xl mx-auto py-8">
+    <div class="max-w-7xl mx-auto px-4 bg-black/10 rounded-xl shadow p-4">
 
         <div class="flex justify-between items-center mb-8">
 
@@ -47,16 +47,18 @@
 
                 @include('admin.variants._form')
 
+
+                @if($variant->image)
+
+                    <img
+                        src="{{ asset('storage/'.$variant->image) }}"
+                        class="h-24 w-24 object-cover rounded-lg mb-4"
+                    >
+
+                @endif
+
             </div>
 
-            @if($variant->image)
-
-                <img
-                    src="{{ asset('storage/'.$variant->image) }}"
-                    class="h-24 w-24 object-cover rounded-lg mb-4"
-                >
-
-            @endif
 
             <div class="mt-6 flex gap-3">
 
@@ -69,8 +71,14 @@
             </div>
 
 
-
         </form>
+
+        <x-gallery
+            :images="$variant->images"
+            title="Variant Gallery"
+            subtitle="Manage variant images"
+            delete-route="admin.variants.images.destroy"
+        />
 
     </div>
 

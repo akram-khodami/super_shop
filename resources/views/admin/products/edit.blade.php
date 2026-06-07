@@ -191,30 +191,10 @@
                             </div>
 
                             {{-- Images --}}
-                            <div class="mb-10">
-
-                                <label class="block text-sm font-medium text-slate-700 mb-2">
-                                    Product Images
-                                </label>
-
-                                <div
-                                    class="border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center hover:border-indigo-400 transition">
-
-                                    <input
-                                        type="file"
-                                        name="images[]"
-                                        multiple
-                                        accept="image/*"
-                                        class="w-full"
-                                    >
-
-                                    <p class="mt-3 text-sm text-slate-500">
-                                        Drag & drop images here or click to upload
-                                    </p>
-
-                                </div>
-
-                            </div>
+                            <x-image-uploader
+                                name="images[]"
+                                label="Product Images"
+                            />
 
                         </div>
                     </div>
@@ -407,67 +387,10 @@
 
 
         {{-- Product Gallery --}}
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm mt-10 p-8">
-
-            <div class="flex items-center justify-between mb-8">
-                <div>
-                    <h2 class="text-lg font-semibold text-slate-800">
-                        Product Gallery
-                    </h2>
-
-                    <p class="text-sm text-slate-500">
-                        Manage all uploaded product images
-                    </p>
-                </div>
-
-                <div class="text-sm text-slate-500">
-                    {{ $product->images->count() }} Images
-                </div>
-
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-5">
-
-                @foreach($product->images as $image)
-
-                    <div
-                        class="group relative bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition"
-                    >
-
-                        <img
-                            src="{{ asset('storage/'.$image->image) }}"
-                            class="w-full h-44 object-cover group-hover:scale-105 transition duration-300"
-                        >
-
-                        <div
-                            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
-                        >
-
-                            <form
-                                action="{{ route('admin.products.images.destroy',$image) }}"
-                                method="POST"
-                            >
-                                @csrf
-                                @method('DELETE')
-
-                                <button
-                                    onclick="return confirm('Delete image?')"
-                                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl shadow"
-                                >
-                                    Delete
-                                </button>
-
-                            </form>
-
-                        </div>
-
-                    </div>
-
-                @endforeach
-
-            </div>
-
-        </div>
+        <x-gallery
+            :images="$product->images"
+            delete-route="admin.products.images.destroy"
+        />
 
         {{-- Variants Section --}}
         <div class="bg-white rounded-3xl border border-slate-200 shadow-sm mt-10">
@@ -618,12 +541,9 @@
                                     >
                                         Edit
                                     </a>
-                                    <form
-                                        method="POST"
-                                        action="{{ route(
-        'admin.products.variants.destroy',
-        [$product,$variant]
-    ) }}"
+                                    <form method="POST"
+                                          action="{{ route('admin.products.variants.destroy', [$product,$variant]) }}"
+                                          enctype="multipart/form-data"
                                     >
                                         @csrf
                                         @method('DELETE')

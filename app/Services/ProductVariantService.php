@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\ProductVariantImage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -23,31 +24,38 @@ class ProductVariantService
             ]);
         }
 
-        $imagePath = null;
+        return DB::transaction(function () use ($product, $data) {
 
-        if (request()->hasFile('image')) {
+            $images = $data['images'] ?? [];
 
-            $imagePath = request()
-                ->file('image')
-                ->store(
-                    'variants',
-                    'public'
-                );
-        }
+            unset($data['images']);
 
-        return DB::transaction(function () use ($product, $data, $imagePath) {
             $variant = $product->variants()->create([
                 'sku' => $data['sku'] ?? null,
                 'price' => $data['price'],
                 'sale_price' => $data['sale_price'] ?? null,
                 'stock' => $data['stock'],
                 'is_active' => $data['is_active'] ?? true,
-                'image' => $imagePath,
             ]);
 
             if (!empty($data['attribute_values'])) {
                 $variant->attributeValues()->sync($data['attribute_values']);
             }
+
+            foreach ($images as $index => $image) {
+
+                $path = $image->store(
+                    'products/variants',
+                    'public'
+                );
+
+                ProductVariantImage::create([
+                    'product_variant_id' => $variant->id,
+                    'image' => $path,
+                    'sort_order' => $index,
+                ]);
+            }
+
 
             return $variant;
         });
@@ -55,42 +63,37 @@ class ProductVariantService
 
     public function update(ProductVariant $variant, array $data): ProductVariant
     {
-        $imagePath = $variant->image;
+        $images = $data['images'] ?? [];
 
-        if (
-        request()->hasFile('image')
-        ) {
+        unset($data['images']);
 
-            if (
-                $variant->image &&
-                Storage::disk('public')
-                    ->exists($variant->image)
-            ) {
-
-                Storage::disk('public')
-                    ->delete($variant->image);
-            }
-
-            $imagePath = request()
-                ->file('image')
-                ->store(
-                    'variants',
-                    'public'
-                );
-        }
-
-        return DB::transaction(function () use ($variant, $data, $imagePath) {
+        return DB::transaction(function () use ($variant, $data, $images) {
             $variant->update([
                 'sku' => $data['sku'] ?? null,
                 'price' => $data['price'],
                 'sale_price' => $data['sale_price'] ?? null,
                 'stock' => $data['stock'],
                 'is_active' => $data['is_active'] ?? $variant->is_active,
-                'image' => $imagePath,
             ]);
 
             if (!empty($data['attribute_values'])) {
                 $variant->attributeValues()->sync($data['attribute_values']);
+            }
+
+            if (!empty($images)) {
+
+                foreach ($images as $index => $image) {
+
+                    $path = $image->store(
+                        'products/variants',
+                        'public'
+                    );
+
+                    $variant->images()->create([
+                        'image' => $path,
+                        'sort_order' => $index,
+                    ]);
+                }
             }
 
             return $variant;

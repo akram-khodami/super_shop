@@ -11,17 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('stock_movements', function (Blueprint $table) {
-
-            $table->dropForeign(['product_id']);
-
-            $table->dropColumn('product_id');
-
-            $table->foreignId('product_variant_id')
-                ->after('id')
-                ->constrained()
-                ->cascadeOnDelete();
-
+        Schema::table('product_variant_attribute_values', function (Blueprint $table) {
+            $table->unique(['product_variant_id', 'product_attribute_value_id'], 'variant_attribute_unique');
         });
     }
 
@@ -30,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('product_variant_attribute_values', function (Blueprint $table) {
+            //
+        });
     }
 };

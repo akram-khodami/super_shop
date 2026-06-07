@@ -23,6 +23,7 @@ class DashboardController extends Controller
 
             'brandsCount' => Brand::count(),
 
+            //محصولاتی که هیچ variants دارای موجودی ندارند
             'outOfStockCount' => Product::whereDoesntHave(
                 'variants',
                 fn ($q) => $q->where('stock', '>', 0)

@@ -39,9 +39,6 @@ return new class extends Migration
             $table->unsignedInteger('stock')
                 ->default(0);
 
-            $table->string('image')
-                ->nullable();
-
             $table->boolean('is_default')
                 ->default(false);
 
@@ -49,6 +46,9 @@ return new class extends Migration
                 ->default(true);
 
             $table->timestamps();
+
+            $table->index(['product_id', 'is_active']);
+            $table->index('stock');
         });
     }
 
