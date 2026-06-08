@@ -26,7 +26,9 @@ class StoreBrandRequest extends FormRequest
 
             'name' => [
                 'required',
-                'max:255'
+                'string',
+                'max:255',
+                'unique:brands',
             ],
 
             'description' => [

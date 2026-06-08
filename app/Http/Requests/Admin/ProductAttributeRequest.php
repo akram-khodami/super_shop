@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProductAttributeRequest extends FormRequest
 {
@@ -22,12 +23,15 @@ class ProductAttributeRequest extends FormRequest
      */
     public function rules(): array
     {
+        $attributeId = $this->route('attribute');
+
         return [
 
             'name' => [
                 'required',
                 'string',
                 'max:255',
+                Rule::unique('product_attributes')->ignore($attributeId),
             ],
 
         ];

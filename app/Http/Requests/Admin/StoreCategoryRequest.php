@@ -26,7 +26,9 @@ class StoreCategoryRequest extends FormRequest
 
             'name' => [
                 'required',
-                'max:255'
+                'string',
+                'max:255',
+                'unique:categories',
             ],
 
             'description' => [

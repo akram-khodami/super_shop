@@ -10,10 +10,11 @@ trait HandlesFileUpload
     protected function uploadFile(?UploadedFile $file, string $directory, ?string $oldPath = null): ?string
     {
         if (!$file) {
-            return null;
+            return $oldPath;
         }
 
         if ($oldPath) {
+
             Storage::disk('public')->delete($oldPath);
         }
 
