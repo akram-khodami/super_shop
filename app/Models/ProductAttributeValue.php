@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ProductAttributeValue extends Model
+class ProductAttributeValue extends BaseModel
 {
     protected $fillable = [
         'product_attribute_id',
@@ -25,4 +23,5 @@ class ProductAttributeValue extends Model
             'product_variant_attribute_values'
         );
     }
+
 }

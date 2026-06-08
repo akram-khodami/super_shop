@@ -2,50 +2,24 @@
 
 namespace App\Http\Controllers\Admin;
 
-
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
-
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-
-    public function index()
+    public function index(): View
     {
         return view('admin.dashboard.index', [
-
             'productsCount' => Product::count(),
-
             'categoriesCount' => Category::count(),
-
             'brandsCount' => Brand::count(),
-
-            //محصولاتی که هیچ variants دارای موجودی ندارند
-            'outOfStockCount' => Product::whereDoesntHave(
-                'variants',
-                fn ($q) => $q->where('stock', '>', 0)
-            )->count(),
-
-            'lowStockProducts' => Product::query()
-                ->withSum('variants', 'stock')
-                ->having('variants_sum_stock', '<=', 5)
-                ->having('variants_sum_stock', '>', 0)
-                ->latest()
-                ->take(10)
-                ->get(),
-
-            'latestProducts' => Product::query()
-                ->with(['category', 'brand'])
-                ->latest()
-                ->take(10)
-                ->get(),
-
-            'latestCategories' => Category::latest()
-                ->take(10)
-                ->get(),
+            'outOfStockCount' => Product::outOfStock()->count(),
+            'lowStockProducts' => Product::lowStock()->with(['category', 'brand'])->latest()->limit(10)->get(),
+            'latestProducts' => Product::with(['category', 'brand'])->latest()->limit(10)->get(),
+            'latestCategories' => Category::withCount('products')->latest()->limit(10)->get(),
         ]);
     }
 }

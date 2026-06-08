@@ -148,14 +148,6 @@
                         Latest
                     </option>
 
-                    <option value="price_asc">
-                        Price ↑
-                    </option>
-
-                    <option value="price_desc">
-                        Price ↓
-                    </option>
-
                     <option value="name">
                         Name
                     </option>

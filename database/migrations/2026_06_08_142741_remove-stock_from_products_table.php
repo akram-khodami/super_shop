@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('product_images', function (Blueprint $table) {
-            $table->string('alt_text')->nullable();
-            $table->boolean('is_primary')->default(false);
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('stock');
         });
     }
 
@@ -22,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('product_images', function (Blueprint $table) {
+        Schema::table('products', function (Blueprint $table) {
             //
         });
     }

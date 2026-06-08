@@ -29,13 +29,12 @@ return new class extends Migration
 
             $table->longText('description')->nullable();
 
-            $table->unsignedInteger('stock')->default(0);
-
             $table->boolean('featured')->default(false);
 
             $table->boolean('is_active')->default(true);
 
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index('is_active');
             $table->index('featured');

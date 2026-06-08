@@ -5,118 +5,63 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProductAttributeRequest;
 use App\Models\ProductAttribute;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class ProductAttributeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        $attributes = ProductAttribute::withCount(
-            'values'
-        )
+        $attributes = ProductAttribute::query()
+            ->withCount('values')
             ->latest()
             ->paginate(15);
 
-        return view(
-            'admin.attributes.index',
-            compact('attributes')
-        );
+        return view('admin.attributes.index', compact('attributes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
         return view('admin.attributes.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(
-        ProductAttributeRequest $request
-    )
+    public function store(ProductAttributeRequest $request): RedirectResponse
     {
         ProductAttribute::create([
             'name' => $request->name,
-            'slug' => Str::slug($request->name),
+            'slug' => ProductAttribute::generateUniqueSlug($request->name),
         ]);
 
         return redirect()
             ->route('admin.attributes.index')
-            ->with(
-                'success',
-                'Attribute created'
-            );
+            ->with('success', 'ویژگی با موفقیت ایجاد شد.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(ProductAttribute $attribute): View
     {
-        //
+        return view('admin.attributes.edit', compact('attribute'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(
-        ProductAttribute $attribute
-    )
-    {
-        return view(
-            'admin.attributes.edit',
-            compact('attribute')
-        );
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(
-        ProductAttributeRequest $request,
-        ProductAttribute $attribute
-    )
+    public function update(ProductAttributeRequest $request, ProductAttribute $attribute): RedirectResponse
     {
         $attribute->update([
             'name' => $request->name,
-            'slug' => Str::slug($request->name),
+            'slug' => ProductAttribute::generateUniqueSlug($request->name, 'slug', $attribute->id),
         ]);
 
-        return back()
-            ->with(
-                'success',
-                'Attribute updated'
-            );
+        return redirect()
+            ->route('admin.attributes.index')
+            ->with('success', 'ویژگی با موفقیت به‌روزرسانی شد.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(
-        ProductAttribute $attribute
-    )
+    public function destroy(ProductAttribute $attribute): RedirectResponse
     {
         if ($attribute->values()->exists()) {
-
-            return back()->with(
-                'error',
-                'Delete attribute values first.'
-            );
+            return back()->with('error', 'امکان حذف ویژگی دارای مقدار وجود ندارد. ابتدا مقادیر را حذف کنید.');
         }
 
         $attribute->delete();
 
-        return back()
-            ->with(
-                'success',
-                'Attribute deleted'
-            );
+        return back()->with('success', 'ویژگی با موفقیت حذف شد.');
     }
 }

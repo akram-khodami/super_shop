@@ -2,7 +2,8 @@
 
 @section('content')
 
-    <div class="max-w-7xl mx-auto py-8">
+    <div class="max-w-7xl mx-auto px-4 bg-black/10 rounded-xl shadow p-4">
+
 
         <div class="flex justify-between mb-6">
 
@@ -89,7 +90,7 @@
                                         Delete
                                     </button>
 
-                                    <a href="{{ route(        'admin.attributes.values.index',        $attribute    ) }}"
+                                    <a href="{{ route('admin.attributes.values.index',$attribute) }}"
                                        class="px-3 py-2 rounded-lg      bg-green-100 text-green-700"
 
                                     >

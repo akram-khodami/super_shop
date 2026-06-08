@@ -9,21 +9,19 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantImage;
 use App\Services\ProductVariantService;
+use App\Traits\HandlesFileUpload;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProductVariantController extends Controller
 {
+    use HandlesFileUpload;
+
     private ProductVariantService $variantService;
 
-    public function __construct(
-        ProductVariantService $variantService
-    )
+    public function __construct(ProductVariantService $variantService)
     {
         $this->variantService = $variantService;
-
-        // $this->authorizeResource(ProductVariant::class, 'variant');
     }
 
     public function index(Product $product): View
@@ -45,21 +43,18 @@ class ProductVariantController extends Controller
 
     public function store(StoreProductVariantRequest $request, Product $product): RedirectResponse
     {
-        $variant = $this->variantService->create(
-            $product,
-            $request->validated()
-        );
+        $this->variantService->create($product, $request->validated());
 
         return redirect()
             ->route('admin.products.edit', $product)
-            ->with('success', __('messages.variant_created'));
+            ->with('success', 'تنوع با موفقیت ایجاد شد.');
     }
 
     public function edit(Product $product, ProductVariant $variant): View
     {
         $this->ensureVariantBelongsToProduct($product, $variant);
 
-        $variant->load(['attributeValues', 'images',]);
+        $variant->load(['attributeValues', 'images']);
         $selectedValues = $variant->attributeValues->pluck('id')->toArray();
 
         return view('admin.variants.edit', compact('product', 'variant', 'selectedValues'));
@@ -69,26 +64,28 @@ class ProductVariantController extends Controller
     {
         $this->ensureVariantBelongsToProduct($product, $variant);
 
-        $this->variantService->update(
-            $variant,
-            $request->validated()
-        );
+        $this->variantService->update($variant, $request->validated());
 
         return redirect()
             ->route('admin.products.edit', $product)
-            ->with('success', __('messages.variant_updated'));
+            ->with('success', 'تنوع با موفقیت بروزرسانی شد.');
     }
 
     public function destroy(Product $product, ProductVariant $variant): RedirectResponse
     {
         $this->ensureVariantBelongsToProduct($product, $variant);
 
-        Storage::disk('public')
-            ->delete($variant->image);
+        // حذف فایل‌ها قبل از حذف رکورد
+        $this->deleteFile($variant->image);
+
+        foreach ($variant->images as $image) {
+            $this->deleteFile($image->image);
+            $image->delete();
+        }
 
         $variant->delete();
 
-        return back()->with('success', __('messages.variant_deleted'));
+        return back()->with('success', 'تنوع با موفقیت حذف شد.');
     }
 
     private function ensureVariantBelongsToProduct(Product $product, ProductVariant $variant): void
@@ -98,18 +95,13 @@ class ProductVariantController extends Controller
         }
     }
 
-    public function destroyImage(ProductVariantImage $image)
+    public function destroyImage(ProductVariantImage $image): RedirectResponse
     {
-        Storage::disk('public')
-            ->delete($image->image);
-
+        $this->deleteFile($image->image);
         $image->delete();
 
-        return back()->with(
-            'success',
-            'Image deleted successfully'
-        );
-
+        return back()->with('success', 'تصویر با موفقیت حذف شد.');
     }
+
 
 }

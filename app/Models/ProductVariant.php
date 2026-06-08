@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProductVariant extends Model
 {
-    protected $guarded = [];
+//    protected $guarded = [];
+
+    protected $fillable = [
+        'product_id', 'sku', 'barcode', 'price', 'sale_price',
+        'stock', 'is_default', 'is_active'
+    ];
 
     public function product()
     {
@@ -46,6 +51,7 @@ class ProductVariant extends Model
     public function thumbnail()
     {
         return $this->hasOne(ProductVariantImage::class)
+            ->orderBy('is_primary', 'desc')
             ->orderBy('sort_order');
     }
 
@@ -54,6 +60,16 @@ class ProductVariant extends Model
         return $this->thumbnail
             ? asset('storage/' . $this->thumbnail->image)
             : asset('images/no-image.jpg');
+    }
+
+    public function getFormattedPriceAttribute(): string
+    {
+        return $this->price ? number_format($this->price) . ' تومان' : '---';
+    }
+
+    public function getFormattedSalePriceAttribute(): string
+    {
+        return $this->sale_price ? number_format($this->sale_price) . ' تومان' : '---';
     }
 
 }

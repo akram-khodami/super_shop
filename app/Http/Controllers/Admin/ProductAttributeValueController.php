@@ -6,122 +6,111 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProductAttributeValueRequest;
 use App\Models\ProductAttribute;
 use App\Models\ProductAttributeValue;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class ProductAttributeValueController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(
-        ProductAttribute $attribute
-    )
+    public function index(ProductAttribute $attribute): View
     {
         $values = $attribute
             ->values()
             ->latest()
             ->paginate(20);
 
-        return view(
-            'admin.attribute-values.index',
-            compact(
-                'attribute',
-                'values'
-            )
-        );
+        return view('admin.attribute-values.index', compact('attribute', 'values'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(
-        ProductAttribute $attribute
-    )
+    public function create(ProductAttribute $attribute): View
     {
-        return view(
-            'admin.attribute-values.create',
-            compact('attribute')
-        );
+        return view('admin.attribute-values.create', compact('attribute'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(
         ProductAttributeValueRequest $request,
         ProductAttribute $attribute
-    )
+    ): RedirectResponse
     {
+        // بررسی وجود مقدار تکراری برای همین ویژگی
+        if ($attribute->values()->where('value', $request->value)->exists()) {
+            return back()
+                ->withInput()
+                ->with('error', 'این مقدار قبلاً برای این ویژگی ثبت شده است.');
+        }
+
         $attribute->values()->create([
             'value' => $request->value,
         ]);
 
         return redirect()
-            ->route(
-                'admin.attributes.values.index',
-                $attribute
-            )
-            ->with(
-                'success',
-                'Value created'
-            );
+            ->route('admin.attributes.values.index', $attribute)
+            ->with('success', 'مقدار ویژگی با موفقیت ایجاد شد.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(
         ProductAttribute $attribute,
         ProductAttributeValue $value
-    )
+    ): View
     {
-        return view(
-            'admin.attribute-values.edit',
-            compact(
-                'attribute',
-                'value'
-            )
-        );
+        // اطمینان از تعلق مقدار به ویژگی
+        if ($value->product_attribute_id !== $attribute->id) {
+            abort(404);
+        }
+
+        return view('admin.attribute-values.edit', compact('attribute', 'value'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(
         ProductAttributeValueRequest $request,
         ProductAttribute $attribute,
         ProductAttributeValue $value
-    )
+    ): RedirectResponse
     {
+        // اطمینان از تعلق مقدار به ویژگی
+        if ($value->product_attribute_id !== $attribute->id) {
+            abort(404);
+        }
+
+        // بررسی مقدار تکراری (به جز خود این مقدار)
+        if ($attribute->values()
+            ->where('value', $request->value)
+            ->where('id', '!=', $value->id)
+            ->exists()
+        ) {
+            return back()
+                ->withInput()
+                ->with('error', 'این مقدار قبلاً برای این ویژگی ثبت شده است.');
+        }
+
         $value->update([
             'value' => $request->value,
         ]);
 
         return redirect()
-            ->route(
-                'admin.attributes.values.index',
-                $attribute
-            );
+            ->route('admin.attributes.values.index', $attribute)
+            ->with('success', 'مقدار ویژگی با موفقیت به‌روزرسانی شد.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(
         ProductAttribute $attribute,
         ProductAttributeValue $value
-    )
+    ): RedirectResponse
     {
+        // اطمینان از تعلق مقدار به ویژگی
+        if ($value->product_attribute_id !== $attribute->id) {
+            abort(404);
+        }
+
+        // بررسی استفاده شدن در محصولات (اگر رابطه وجود دارد)
+        if ($value->variants()->exists()) {
+            return back()->with(
+                'error',
+                'این مقدار در محصولات استفاده شده است. امکان حذف وجود ندارد.'
+            );
+        }
+
         $value->delete();
 
-        return back();
+        return back()->with('success', 'مقدار ویژگی با موفقیت حذف شد.');
     }
 }

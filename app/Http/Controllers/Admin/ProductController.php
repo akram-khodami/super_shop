@@ -3,184 +3,121 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProductImageRequest;
+use App\Http\Requests\Admin\StoreProductRequest;
+use App\Http\Requests\Admin\UpdateProductRequest;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
-use App\Http\Requests\Admin\StoreProductRequest;
-use App\Http\Requests\Admin\UpdateProductRequest;
 use App\Models\ProductAttribute;
 use App\Models\ProductImage;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
+    private function getCategoriesAndBrands(): array
+    {
+        return [
+            'categories' => Category::orderBy('name')->get(['id', 'name']),
+            'brands' => Brand::orderBy('name')->get(['id', 'name']),
+        ];
+    }
+
+    public function index(Request $request): View
     {
         $products = Product::query()
-            ->with([
-                'category',
-                'brand',
-                'thumbnail'
-            ])
-            ->filter(
-                $request->all()
-            )
+            ->with(['category', 'brand', 'thumbnail'])
+            ->filter($request->all())
             ->latest()
             ->paginate(15)
             ->withQueryString();
 
-        $categories = Category::orderBy('name')
-            ->get();
+        $data = $this->getCategoriesAndBrands();
 
-        $brands = Brand::orderBy('name')
-            ->get();
-
-        return view(
-            'admin.products.index',
-            compact(
-                'products',
-                'categories',
-                'brands'
-            )
-        );
+        return view('admin.products.index', array_merge(
+            compact('products'),
+            $data
+        ));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
-        $categories = Category::orderBy('name')->get();
-
-        $brands = Brand::orderBy('name')->get();
-
-        return view(
-            'admin.products.create',
-            compact('categories', 'brands')
-        );
+        return view('admin.products.create', $this->getCategoriesAndBrands());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(
-        StoreProductRequest $request,
-        ProductService $service
-    )
+    public function store(StoreProductRequest $request, ProductService $service): RedirectResponse
     {
-        $service->create(
-            $request->validated()
-        );
+        $service->create($request->validated());
 
         return redirect()
             ->route('admin.products.index')
-            ->with('success', 'Product created successfully');
+            ->with('success', 'محصول با موفقیت ایجاد شد.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
+    public function edit(Product $product): View
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Product $product)
-    {
-        $categories = Category::orderBy('name')->get();
-
-        $brands = Brand::orderBy('name')->get();
-
         $product->load([
             'images',
-            'variants',
+            'variants.attributeValues.attribute', // N+1 prevention
             'attributes',
         ]);
 
+        $data = $this->getCategoriesAndBrands();
+
         $attributes = ProductAttribute::with('values')
             ->orderBy('name')
-            ->get();
+            ->get(['id', 'name']);
 
-        return view(
-            'admin.products.edit',
-            compact(
-                'product',
-                'categories',
-                'brands',
-                'attributes'
-
-            )
-        );
+        return view('admin.products.edit', array_merge(
+            compact('product', 'attributes'),
+            $data
+        ));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(
         UpdateProductRequest $request,
         Product $product,
         ProductService $service
-    )
+    ): RedirectResponse
     {
-
-        $service->update(
-            $product,
-            $request->validated()
-        );
+        $service->update($product, $request->validated());
 
         return redirect()
             ->route('admin.products.index')
-            ->with(
-                'success',
-                'Product updated successfully'
+            ->with('success', 'محصول با موفقیت به‌روزرسانی شد.');
+    }
+
+    public function destroy(Product $product): RedirectResponse
+    {
+        if ($product->variants()->exists()) {
+            return back()->with(
+                'error',
+                'امکان حذف محصول دارای تنوع وجود ندارد. ابتدا تنوع ها را حذف کنید.'
             );
+        }
+
+        $product->delete(); // soft delete
+
+        return back()->with('success', 'محصول به سطل زباله منتقل شد.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Product $product)
+    public function destroyImage(ProductImage $image): RedirectResponse
     {
-        $product->delete();
-
-        return back()->with(
-            'success',
-            'Product moved to trash'
-        );
-    }
-
-    public function destroyImage(ProductImage $image)
-    {
-        Storage::disk('public')
-            ->delete($image->image);
-
+        Storage::disk('public')->delete($image->image);
         $image->delete();
 
-        return back()->with(
-            'success',
-            'Image deleted successfully'
-        );
-
+        return back()->with('success', 'تصویر با موفقیت حذف شد.');
     }
 
-    public function restore($id)
+    public function restore($id): RedirectResponse
     {
-        Product::onlyTrashed()
-            ->findOrFail($id)
-            ->restore();
+        $product = Product::onlyTrashed()->findOrFail($id);
+        $product->restore();
 
-        return back()->with(
-            'success',
-            'Product restored'
-        );
+        return back()->with('success', 'محصول با موفقیت بازیابی شد.');
     }
+
 }

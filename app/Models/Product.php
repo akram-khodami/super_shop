@@ -25,13 +25,6 @@ class Product extends Model
         'slug',
         'description',
 
-        'sku',
-
-        'price',
-        'sale_price',
-
-        'stock',
-
         'featured',
         'is_active',
 
@@ -60,23 +53,11 @@ class Product extends Model
             ->orderBy('sort_order');
     }
 
-    public function stockMovements()
-    {
-        return $this->hasMany(
-            StockMovement::class
-        );
-    }
-
     public function getThumbnailUrlAttribute(): string
     {
         return $this->thumbnail
             ? asset('storage/' . $this->thumbnail->image)
             : asset('images/no-image.jpg');
-    }
-
-    public function getFormattedPriceAttribute(): string
-    {
-        return number_format($this->price) . ' تومان';
     }
 
     public function variants()
@@ -94,6 +75,20 @@ class Product extends Model
             'product_id',                  // foreign key مربوط به این مدل
             'product_attribute_id'         // foreign key مربوط به مدل مقابل
         );
+    }
+
+    public function scopeOutOfStock(Builder $query): Builder
+    {
+        return $query->whereDoesntHave('variants', function ($q) {
+            $q->where('stock', '>', 0);
+        });
+    }
+
+    public function scopeLowStock(Builder $query, int $threshold = 5): Builder
+    {
+        return $query->withSum('variants', 'stock')
+            ->having('variants_sum_stock', '<=', $threshold)
+            ->having('variants_sum_stock', '>', 0);
     }
 
     public function scopeFilter(Builder $query, array $filters): Builder
@@ -128,20 +123,11 @@ class Product extends Model
                     request('status')
                 )
             )
-            ->when(
-                request('stock') === 'out',
-                fn ($q) => $q->where(
-                    'stock',
-                    0
-                )
+            ->when(request('stock') === 'out',
+                fn ($q) => $q->whereDoesntHave('variants', fn ($q2) => $q2->where('stock', '>', 0))
             )
-            ->when(
-                request('stock') === 'in',
-                fn ($q) => $q->where(
-                    'stock',
-                    '>',
-                    0
-                )
+            ->when(request('stock') === 'in',
+                fn ($q) => $q->whereHas('variants', fn ($q2) => $q2->where('stock', '>', 0))
             )
             ->when(
                 $filters['trash'] ?? null,
@@ -164,13 +150,8 @@ class Product extends Model
 
                     match($sort){
 
-                    'price_asc'
-                => $q->orderBy('price'),
 
-            'price_desc'
-                => $q->orderByDesc('price'),
-
-            'name'
+                    'name'
                 => $q->orderBy('name'),
 
             default

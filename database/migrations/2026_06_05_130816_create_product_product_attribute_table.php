@@ -22,6 +22,8 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
 
+            $table->unique(['product_id', 'product_attribute_id']);
+            
             $table->timestamps();
         });
     }

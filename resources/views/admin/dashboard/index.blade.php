@@ -185,6 +185,7 @@
 
                         <span class="font-medium">
                             {{ $category->name }}
+{{--                            {{ $category->products_count }}--}}
                         </span>
 
                         <span class="text-sm text-gray-500">

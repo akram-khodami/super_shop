@@ -6,139 +6,71 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Http\Requests\Admin\StoreCategoryRequest;
 use App\Http\Requests\Admin\UpdateCategoryRequest;
-use Illuminate\Support\Facades\Storage;
+use App\Traits\HandlesFileUpload;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    use HandlesFileUpload;
+
+    public function index(): View
     {
-        $categories = Category::latest()
+        $categories = Category::query()
+            ->latest()
             ->paginate(15);
 
-        return view(
-            'admin.categories.index',
-            compact('categories')
-        );
+        return view('admin.categories.index', compact('categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
-        return view(
-            'admin.categories.create'
-        );
+        return view('admin.categories.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCategoryRequest $request)
+    public function store(StoreCategoryRequest $request): RedirectResponse
     {
         $data = $request->validated();
 
-        $data['slug'] = str()->slug(
-            $data['name']
-        );
-
-        if ($request->hasFile('image')) {
-
-            $data['image'] = $request
-                ->file('image')
-                ->store(
-                    'categories',
-                    'public'
-                );
-        }
+        $data['slug'] = Category::generateUniqueSlug($data['name']);
+        $data['image'] = $this->uploadFile($request->file('image'), 'categories');
 
         Category::create($data);
 
         return redirect()
             ->route('admin.categories.index')
-            ->with(
-                'success',
-                'Category created'
-            );
+            ->with('success', 'دسته بندی با موفقیت ایجاد شد.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
+    public function edit(Category $category): View
     {
-        //
+        return view('admin.categories.edit', compact('category'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
-    {
-        return view(
-            'admin.categories.edit',
-            compact('category')
-        );
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCategoryRequest $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
         $data = $request->validated();
 
-        $data['slug'] = str()->slug(
-            $data['name']
+        $data['slug'] = Category::generateUniqueSlug($data['name'],'slug', $category->id);
+        $data['image'] = $this->uploadFile(
+            $request->file('image'),
+            'categories',
+            $category->image
         );
-
-        if ($request->hasFile('image')) {
-
-            if ($category->image) {
-
-                Storage::disk('public')
-                    ->delete($category->image);
-            }
-
-            $data['image'] = $request
-                ->file('image')
-                ->store(
-                    'categories',
-                    'public'
-                );
-        }
 
         $category->update($data);
 
         return redirect()
             ->route('admin.categories.index')
-            ->with(
-                'success',
-                'Category updated'
-            );
+            ->with('success', 'دسته بندی با موفقیت به‌روزرسانی شد.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(
-        Category $category
-    )
+    public function destroy(Category $category): RedirectResponse
     {
-        if ($category->image) {
-
-            Storage::disk('public')
-                ->delete($category->image);
-        }
-
+        $this->deleteFile($category->image);
         $category->delete();
 
-        return back()->with(
-            'success',
-            'Category deleted'
-        );
+        return back()->with('success', 'دسته بندی با موفقیت حذف شد.');
+
     }
 }

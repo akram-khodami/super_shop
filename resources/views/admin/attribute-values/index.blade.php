@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="max-w-7xl mx-auto py-8">
+    <div class="max-w-7xl mx-auto px-4 bg-black/10 rounded-xl shadow p-4">
 
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
 
@@ -97,6 +97,7 @@
                                 ) }}"
                                     method="POST"
                                 >
+
                                     @csrf
                                     @method('DELETE')
 

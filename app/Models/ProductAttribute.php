@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProductAttribute extends Model
+class ProductAttribute extends BaseModel
 {
     protected $fillable = [
         'name',
@@ -27,4 +27,5 @@ class ProductAttribute extends Model
             'product_id'              // foreign key مربوط به مدل Product
         );
     }
+
 }

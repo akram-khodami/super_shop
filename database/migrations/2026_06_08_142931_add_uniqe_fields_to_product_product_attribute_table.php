@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('product_variant_attribute_values', function (Blueprint $table) {
-            $table->unique(['product_variant_id', 'product_attribute_value_id'], 'variant_attribute_unique');
+        Schema::table('product_product_attribute', function (Blueprint $table) {
+            $table->unique(['product_id', 'product_attribute_id']);
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('product_variant_attribute_values', function (Blueprint $table) {
+        Schema::table('product_product_attribute', function (Blueprint $table) {
             //
         });
     }

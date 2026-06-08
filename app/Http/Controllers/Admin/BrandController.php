@@ -6,138 +6,70 @@ use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Http\Requests\Admin\StoreBrandRequest;
 use App\Http\Requests\Admin\UpdateBrandRequest;
-use Illuminate\Support\Facades\Storage;
+use App\Traits\HandlesFileUpload;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class BrandController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    use HandlesFileUpload;
+
+    public function index(): View
     {
-        $brands = Brand::latest()
+        $brands = Brand::query()
+            ->latest()
             ->paginate(15);
 
-        return view(
-            'admin.brands.index',
-            compact('brands')
-        );
+        return view('admin.brands.index', compact('brands'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
-        return view(
-            'admin.brands.create'
-        );
+        return view('admin.brands.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreBrandRequest $request)
+    public function store(StoreBrandRequest $request): RedirectResponse
     {
         $data = $request->validated();
 
-        $data['slug'] = str()->slug(
-            $data['name']
-        );
-
-        if ($request->hasFile('logo')) {
-
-            $data['logo'] = $request
-                ->file('logo')
-                ->store(
-                    'brands',
-                    'public'
-                );
-        }
+        $data['slug'] = Brand::generateUniqueSlug($data['name']);
+        $data['logo'] = $this->uploadFile($request->file('logo'), 'brands');
 
         Brand::create($data);
 
         return redirect()
             ->route('admin.brands.index')
-            ->with(
-                'success',
-                'Brand created'
-            );
+            ->with('success', 'برند با موفقیت ایجاد شد.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Brand $brand)
+    public function edit(Brand $brand): View
     {
-        //
+        return view('admin.brands.edit', compact('brand'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Brand $brand)
-    {
-        return view(
-            'admin.brands.edit',
-            compact('brand')
-        );
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateBrandRequest $request, Brand $brand)
+    public function update(UpdateBrandRequest $request, Brand $brand): RedirectResponse
     {
         $data = $request->validated();
 
-        $data['slug'] = str()->slug(
-            $data['name']
+        $data['slug'] = Brand::generateUniqueSlug($data['name'], 'slug', $brand->id);
+        $data['logo'] = $this->uploadFile(
+            $request->file('logo'),
+            'brands',
+            $brand->logo
         );
-
-        if ($request->hasFile('logo')) {
-
-            if ($brand->logo) {
-
-                Storage::disk('public')
-                    ->delete($brand->logo);
-            }
-
-            $data['logo'] = $request
-                ->file('logo')
-                ->store(
-                    'brands',
-                    'public'
-                );
-        }
 
         $brand->update($data);
 
         return redirect()
             ->route('admin.brands.index')
-            ->with(
-                'success',
-                'Brand updated'
-            );
+            ->with('success', 'برند با موفقیت به‌روزرسانی شد.');
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Brand $brand)
+    public function destroy(Brand $brand): RedirectResponse
     {
-        if ($brand->logo) {
-
-            Storage::disk('public')
-                ->delete($brand->logo);
-        }
-
+        $this->deleteFile($brand->logo);
         $brand->delete();
 
-        return back()->with(
-            'success',
-            'Brand deleted'
-        );
+        return back()->with('success', 'برند با موفقیت حذف شد.');
     }
 }

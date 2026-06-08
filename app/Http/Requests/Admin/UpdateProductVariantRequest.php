@@ -20,7 +20,7 @@ class UpdateProductVariantRequest extends FormRequest
                 Rule::unique('product_variants', 'sku')->ignore($this->route('variant'))
             ],
             'price' => ['required', 'numeric', 'min:0'],
-            'sale_price' => ['nullable', 'numeric', 'min:0', 'lt:price'],
+            'sale_price' => ['nullable', 'numeric', 'min:0', 'lte:price'],
             'stock' => ['required', 'integer', 'min:0'],
             'is_active' => ['boolean'],
             'attribute_values' => ['required', 'array', 'min:1'],
