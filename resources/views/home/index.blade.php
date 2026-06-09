@@ -1,7 +1,6 @@
-@extends('layouts.app')
-@section('content')
+<x-app-layout>
     @include('home.hero')
     @include('home.categories')
     @include('home.products')
     @include('home.banner')
-@endsection
+</x-app-layout>
