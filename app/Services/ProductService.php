@@ -17,7 +17,7 @@ class ProductService
 
             unset($data['images']);
 
-            $data['slug'] = str()->slug($data['name']);
+            $data['slug'] = str()->slug($data['name'], '-', null);
 
             $product = Product::create($data);
 
@@ -45,7 +45,7 @@ class ProductService
 
         unset($data['images']);
 
-        $data['slug'] = str()->slug($data['name']);
+        $data['slug'] = str()->slug($data['name'], '-', null);
 
         $product->update($data);
 

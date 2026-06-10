@@ -9,7 +9,7 @@ abstract class BaseModel extends Model
 {
     public static function generateUniqueSlug(string $name, string $column = 'slug', ?int $ignoreId = null): string
     {
-        $slug = Str::slug($name);
+        $slug = Str::slug($name, '-', null);
         $query = static::where($column, 'LIKE', "{$slug}%");
 
         if ($ignoreId) {

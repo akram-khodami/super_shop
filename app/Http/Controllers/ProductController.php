@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -12,6 +13,7 @@ class ProductController extends Controller
         $products = Product::query()
             ->with(['thumbnail', 'brand', 'variants'])
             ->where('is_active', true)
+            ->latest()
             ->paginate(12)
             ->through(function ($product) {
                 $firstVariant = $product->variants->first();
@@ -29,6 +31,11 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        // بررسی دسترسی (اختیاری)
+        if (!$product->is_active) {
+            abort(404);
+        }
+
         $product->load([
             'images',
             'brand',
@@ -38,26 +45,26 @@ class ProductController extends Controller
         ]);
 
         // آماده‌سازی داده‌های اضافی
-        $product->gallery = $product->images->take(5); // ۵ تصویر اول برای گالری
-
-        // گروه‌بندی attributeها برای نمایش بهتر
+        $product->gallery = $product->images->take(5);
         $product->grouped_attributes = $product->variants
             ->flatMap->attributeValues
             ->groupBy('attribute.name');
-
-        // پیدا کردن variant پیش‌فرض یا اولین
         $product->default_variant = $product->variants
                 ->firstWhere('is_default', true)
             ?? $product->variants->first();
 
         // محصولات مرتبط
-        $relatedProducts = Product::query()
-            ->where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)
-            ->where('is_active', true)
-            ->with('thumbnail')
-            ->limit(4)
-            ->get();
+        $relatedProducts = collect();
+
+        if ($product->category_id) {
+            $relatedProducts = Product::query()
+                ->where('category_id', $product->category_id)
+                ->where('id', '!=', $product->id)
+                ->where('is_active', true)
+                ->with('thumbnail')
+                ->limit(4)
+                ->get();
+        }
 
         return view('shop.products.show', compact('product', 'relatedProducts'));
     }
