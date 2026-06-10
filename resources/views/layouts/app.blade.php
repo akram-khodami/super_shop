@@ -6,12 +6,6 @@
     <title>{{ config('app.name') }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <style>
-        body {
-            direction: rtl;
-        }
-    </style>
 </head>
 
 <body class="bg-slate-50 flex flex-col min-h-screen">
