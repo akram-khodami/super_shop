@@ -25,7 +25,7 @@ class CartService
     {
         return $this->getOrCreateCart()
             ->load([
-                'items.variant.product',
+                'items.variant.products',
                 'items.variant.attributeValues.attribute',
             ]);
     }

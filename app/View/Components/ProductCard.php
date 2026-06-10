@@ -24,6 +24,6 @@ class ProductCard extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.product-card');
+        return view('components.admin.products.card');
     }
 }

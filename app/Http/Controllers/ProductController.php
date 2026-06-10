@@ -10,39 +10,55 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::query()
-            ->with([
-                'thumbnail',
-                'brand',
-                'variants'
-            ])
+            ->with(['thumbnail', 'brand', 'variants'])
             ->where('is_active', true)
             ->paginate(12)
             ->through(function ($product) {
-
                 $firstVariant = $product->variants->first();
 
-                $product->display_price = $firstVariant ?->price;
-            $product->display_sale_price = $firstVariant ?->sale_price;
-            $product->in_stock = $product->variants->sum('stock') > 0;
-            $product->thumbnail_url = $product->thumbnail_url;
+                $product->display_price = $firstVariant?->price;
+                $product->display_sale_price = $firstVariant?->sale_price;
+                $product->in_stock = $product->variants->sum('stock') > 0;
+                $product->thumbnail_url = $product->thumbnail_url;
 
-            return $product;
-        });
+                return $product;
+            });
 
         return view('shop.products.index', compact('products'));
     }
-
 
     public function show(Product $product)
     {
         $product->load([
             'images',
+            'brand',
+            'category',
             'variants.attributeValues.attribute',
+            'variants.images',
         ]);
 
-        return view(
-            'shop.products.show',
-            compact('product')
-        );
+        // آماده‌سازی داده‌های اضافی
+        $product->gallery = $product->images->take(5); // ۵ تصویر اول برای گالری
+
+        // گروه‌بندی attributeها برای نمایش بهتر
+        $product->grouped_attributes = $product->variants
+            ->flatMap->attributeValues
+            ->groupBy('attribute.name');
+
+        // پیدا کردن variant پیش‌فرض یا اولین
+        $product->default_variant = $product->variants
+                ->firstWhere('is_default', true)
+            ?? $product->variants->first();
+
+        // محصولات مرتبط
+        $relatedProducts = Product::query()
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('is_active', true)
+            ->with('thumbnail')
+            ->limit(4)
+            ->get();
+
+        return view('shop.products.show', compact('product', 'relatedProducts'));
     }
 }
