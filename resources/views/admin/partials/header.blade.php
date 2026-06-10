@@ -1,11 +1,9 @@
-<header
-    class="bg-white border-b px-6 py-4"
->
+<header class="bg-white border-b px-6 py-4">
 
     <div class="flex justify-between items-center">
 
         <h1 class="font-semibold text-lg">
-            Administration
+            {{__('messages.administration')}}
         </h1>
 
         <div>

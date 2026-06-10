@@ -7,14 +7,14 @@
         <div class="p-4 border-b flex justify-between">
 
             <h2 class="font-bold">
-                Categories
+                {{__('messages.categories')}}
             </h2>
 
             <a
                 href="{{ route('admin.categories.create') }}"
                 class="bg-indigo-600 text-white px-4 py-2 rounded"
             >
-                Create
+                {{__('messages.create')}}
             </a>
 
         </div>
@@ -25,13 +25,13 @@
 
             <tr>
 
-                <th class="p-3">Image</th>
+                <th class="p-3">{{__('messages.image')}}</th>
 
-                <th class="p-3">Name</th>
+                <th class="p-3">{{__('messages.name')}}</th>
 
-                <th class="p-3">Status</th>
+                <th class="p-3">{{__('messages.status')}}</th>
 
-                <th class="p-3">Actions</th>
+                <th class="p-3">{{__('messages.actions')}}</th>
 
             </tr>
 
@@ -63,13 +63,9 @@
                     <td class="p-3">
 
                         @if($category->is_active)
-
-                            Active
-
+                            {{__('messages.active')}}
                         @else
-
-                            Inactive
-
+                            {{__('messages.inactive')}}
                         @endif
 
                     </td>

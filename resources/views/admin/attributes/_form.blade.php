@@ -5,7 +5,7 @@
         <label
             class="block text-sm font-medium text-slate-700 mb-2"
         >
-            Attribute Name
+            {{__('messages.name')}}
         </label>
 
         <input

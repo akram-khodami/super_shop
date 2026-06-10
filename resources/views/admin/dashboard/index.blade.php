@@ -7,7 +7,7 @@
         class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-8 rounded-2xl shadow-lg mb-8"
     >
         <h1 class="text-3xl font-bold">
-            Dashboard
+            {{__('messages.dashboard')}}
         </h1>
 
         <p class="mt-2 text-indigo-100">
@@ -22,7 +22,7 @@
             class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-2xl shadow-lg hover:scale-105 transition"
         >
             <div class="flex justify-between items-center">
-                <span>Products</span>
+                <span>{{__('messages.products')}}</span>
                 <span class="text-3xl">📦</span>
             </div>
 
@@ -35,7 +35,7 @@
             class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-2xl shadow-lg hover:scale-105 transition"
         >
             <div class="flex justify-between items-center">
-                <span>Categories</span>
+                <span>{{__('messages.categories')}}</span>
                 <span class="text-3xl">📂</span>
             </div>
 
@@ -48,7 +48,7 @@
             class="bg-gradient-to-r from-violet-500 to-violet-600 text-white p-6 rounded-2xl shadow-lg hover:scale-105 transition"
         >
             <div class="flex justify-between items-center">
-                <span>Brands</span>
+                <span>{{__('messages.brands')}}</span>
                 <span class="text-3xl">🏷️</span>
             </div>
 
@@ -61,7 +61,7 @@
             class="bg-gradient-to-r from-red-500 to-red-600 text-white p-6 rounded-2xl shadow-lg hover:scale-105 transition"
         >
             <div class="flex justify-between items-center">
-                <span>Out Of Stock</span>
+                <span>{{__('messages.out_of_stock')}}</span>
                 <span class="text-3xl">⚠️</span>
             </div>
 
@@ -80,7 +80,7 @@
         <div
             class="p-5 bg-gray-50 border-b font-semibold text-gray-700"
         >
-            Latest Products
+            {{__('messages.latest_products')}}
         </div>
 
         <table class="w-full">
@@ -88,8 +88,8 @@
             <thead class="bg-gray-100">
 
             <tr>
-                <th class="p-4 text-left">Name</th>
-                <th class="p-4 text-left">Category</th>
+                <th class="p-4">{{__('messages.name')}}</th>
+                <th class="p-4">{{__('messages.category')}}</th>
             </tr>
 
             </thead>
@@ -129,7 +129,7 @@
             <div
                 class="p-5 bg-orange-50 border-b text-orange-700 font-semibold"
             >
-                Low Stock Products
+                {{__('messages.low_stock_products')}}
             </div>
 
             <div class="divide-y">
@@ -155,7 +155,7 @@
                 @empty
 
                     <div class="p-4 text-gray-500">
-                        No low stock products
+                        {{__('messages.no_low_stock_products')}}
                     </div>
 
                 @endforelse
@@ -172,7 +172,7 @@
             <div
                 class="p-5 bg-gray-50 border-b font-semibold"
             >
-                Latest Categories
+                {{__('messages.latest_categories')}}
             </div>
 
             <div class="divide-y">
@@ -185,7 +185,7 @@
 
                         <span class="font-medium">
                             {{ $category->name }}
-{{--                            {{ $category->products_count }}--}}
+                            {{--                            {{ $category->products_count }}--}}
                         </span>
 
                         <span class="text-sm text-gray-500">

@@ -9,12 +9,8 @@
             <div>
 
                 <h1 class="text-3xl font-bold text-slate-800">
-                    Edit Attribute
+                    {{__('messages.edit_attribute')}}
                 </h1>
-
-                <p class="text-slate-500 mt-1">
-                    Update attribute information
-                </p>
 
             </div>
 
@@ -23,7 +19,7 @@
                 class="px-5 py-2.5 bg-white border border-slate-200
                    rounded-xl shadow-sm hover:bg-slate-50"
             >
-                Back
+                {{__('messages.back')}}
             </a>
 
         </div>
@@ -52,7 +48,7 @@
                     class="px-8 py-3 rounded-xl bg-indigo-600
                        text-white hover:bg-indigo-700"
                 >
-                    Update Attribute
+                    {{__('messages.update_attribute')}}
                 </button>
 
                 <a
@@ -60,7 +56,7 @@
                     class="px-8 py-3 rounded-xl bg-slate-100
                        text-slate-700"
                 >
-                    Cancel
+                    {{__('messages.cancel')}}
                 </a>
 
             </div>

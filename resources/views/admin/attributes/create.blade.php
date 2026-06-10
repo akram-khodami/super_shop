@@ -9,12 +9,8 @@
             <div>
 
                 <h1 class="text-3xl font-bold text-slate-800">
-                    Create Attribute
+                    {{__('messages.add_attribute')}}
                 </h1>
-
-                <p class="text-slate-500 mt-1">
-                    Create a new product attribute
-                </p>
 
             </div>
 
@@ -23,7 +19,7 @@
                 class="px-5 py-2.5 bg-white border border-slate-200
                    rounded-xl shadow-sm hover:bg-slate-50"
             >
-                Back
+                {{__('messages.back')}}
             </a>
 
         </div>
@@ -51,7 +47,7 @@
                     class="px-8 py-3 rounded-xl bg-indigo-600
                        text-white hover:bg-indigo-700"
                 >
-                    Create Attribute
+                    {{__('messages.create_attribute')}}
                 </button>
 
             </div>

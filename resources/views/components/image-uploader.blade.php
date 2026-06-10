@@ -21,7 +21,7 @@
         >
 
         <p class="mt-3 text-sm text-slate-500">
-            Drag & drop images here or click to upload
+            {{__('messages.uploads_image_placeholder')}}
         </p>
     </div>
 </div>

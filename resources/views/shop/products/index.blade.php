@@ -4,11 +4,11 @@
 
         <div class="mb-8">
             <h1 class="text-3xl font-bold">
-                محصولات
+                {{__('messages.products')}}
             </h1>
 
             <p class="text-gray-500 mt-2">
-                جدیدترین محصولات فروشگاه
+                {{__('messages.the_newest_search_products')}}
             </p>
         </div>
 

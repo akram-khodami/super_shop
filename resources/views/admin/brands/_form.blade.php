@@ -2,7 +2,7 @@
 
     <div>
         <label class="block mb-2">
-            Name
+            {{__('messages.name')}}
         </label>
 
         <input
@@ -21,7 +21,7 @@
 
     <div>
         <label class="block mb-2">
-            Description
+            {{__('messages.description')}}
         </label>
 
         <textarea
@@ -40,7 +40,7 @@
 
     <div>
         <label class="block mb-2">
-            Logo
+            {{__('messages.logo')}}
         </label>
 
         <input
@@ -83,8 +83,7 @@
             )
             >
 
-            Active
-
+            {{__('messages.active')}}
         </label>
 
         @error('is_active')

@@ -23,20 +23,20 @@
         </h3>
 
         {{-- کامپوننت قیمت --}}
-            <x-shop.products.price
+        <x-shop.products.price
             :price="$product->display_price"
             :sale-price="$product->display_sale_price"
         />
 
         {{-- کامپوننت موجودی --}}
         <div class="mb-4">
-            <x-shop.products.stock-badge :in-stock="$product->in_stock" />
+            <x-shop.products.stock-badge :in-stock="$product->in_stock"/>
         </div>
 
         <div class="flex gap-2">
             <a href="{{ route('products.show', $product->id) }}"
                class="flex-1 text-center px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors">
-                مشاهده
+                {{__('messages.show')}}
             </a>
 
             @if($product->in_stock)
@@ -44,7 +44,7 @@
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <x-ui.button type="submit" variant="primary">
-                        افزودن
+                        {{__('messages.add')}}
                     </x-ui.button>
                 </form>
             @endif

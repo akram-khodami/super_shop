@@ -9,11 +9,11 @@
             <div>
 
                 <h1 class="text-3xl font-bold text-slate-800">
-                    Edit Value
+                    {{__('messages.edit_value')}}
                 </h1>
 
                 <p class="text-slate-500 mt-1">
-                    Attribute:
+                    {{__('messages.attribute')}} :
                     {{ $attribute->name }}
                 </p>
 
@@ -26,7 +26,7 @@
             ) }}"
                 class="px-5 py-2.5 bg-white border border-slate-200 rounded-xl"
             >
-                Back
+                {{__('messages.back')}}
             </a>
 
         </div>
@@ -56,7 +56,7 @@
                     type="submit"
                     class="px-8 py-3 bg-indigo-600 text-white rounded-xl"
                 >
-                    Update Value
+                    {{__('messages.update_value')}}
                 </button>
 
                 <a
@@ -66,7 +66,7 @@
                 ) }}"
                     class="px-8 py-3 bg-slate-100 text-slate-700 rounded-xl"
                 >
-                    Cancel
+                    {{__('messages.cancel')}}
                 </a>
 
             </div>

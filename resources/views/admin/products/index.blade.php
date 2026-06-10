@@ -5,14 +5,14 @@
         <div class="flex justify-between mb-6">
 
             <h1 class="text-2xl font-bold">
-                Products
+                {{__('messages.products')}}
             </h1>
 
             <a
                 href="{{ route('admin.products.create') }}"
                 class="bg-indigo-600 text-white px-4 py-2 rounded"
             >
-                Create Product
+                {{__('messages.create_product')}}
             </a>
 
         </div>
@@ -32,7 +32,7 @@
                     type="text"
                     name="search"
                     value="{{ request('search') }}"
-                    placeholder="Search..."
+                    placeholder="{{__('messages.search_word')}}"
                     class="rounded border-gray-300"
                 >
 
@@ -42,7 +42,7 @@
                 >
 
                     <option value="">
-                        All Categories
+                        {{__('messages.all_categories')}}
                     </option>
 
                     @foreach($categories as $category)
@@ -67,7 +67,7 @@
                 >
 
                     <option value="">
-                        All Brands
+                        {{__('messages.all_brands')}}
                     </option>
 
                     @foreach($brands as $brand)
@@ -92,7 +92,7 @@
                 >
 
                     <option value="">
-                        Status
+                        {{__('messages.status')}}
                     </option>
 
                     <option
@@ -100,7 +100,7 @@
                         @selected(request(
                     'status') === '1')
                     >
-                    Active
+                    {{__('messages.active')}}
                     </option>
 
                     <option
@@ -108,7 +108,7 @@
                         @selected(request(
                     'status') === '0')
                     >
-                    Inactive
+                    {{__('messages.inactive')}}
                     </option>
 
                 </select>
@@ -119,7 +119,7 @@
                 >
 
                     <option value="">
-                        Stock
+                        {{__('messages.stock')}}
                     </option>
 
                     <option
@@ -127,7 +127,7 @@
                         @selected(request(
                     'stock') === 'in')
                     >
-                    In Stock
+                    {{__('messages.in_stock')}}
                     </option>
 
                     <option
@@ -135,7 +135,7 @@
                         @selected(request(
                     'stock') === 'out')
                     >
-                    Out Of Stock
+                    {{__('messages.out_of_stock')}}
                     </option>
 
                 </select>
@@ -145,11 +145,11 @@
                     class="rounded border-gray-300"
                 >
                     <option value="">
-                        Latest
+                        {{__('messages.latest')}}
                     </option>
 
                     <option value="name">
-                        Name
+                        {{__('messages.name')}}
                     </option>
                 </select>
 
@@ -159,7 +159,7 @@
                 >
 
                     <option value="">
-                        All
+                        {{__('messages.all')}}
                     </option>
 
                     <option
@@ -167,7 +167,7 @@
                         @selected(request(
                     'trash')==='only')
                     >
-                    Trash
+                    {{__('messages.trash')}}
                     </option>
 
                     <option
@@ -175,7 +175,7 @@
                         @selected(request(
                     'trash')==='with')
                     >
-                    With Trash
+                    {{__('messages.with_trash')}}
                     </option>
 
                 </select>
@@ -186,14 +186,14 @@
                         type="submit"
                         class="bg-indigo-600 text-white px-4 py-2 rounded"
                     >
-                        Filter
+                        {{__('messages.filter')}}
                     </button>
 
                     <a
                         href="{{ route('admin.products.index') }}"
                         class="bg-gray-300 px-4 py-2 rounded"
                     >
-                        Reset
+                        {{__('messages.reset')}}
                     </a>
 
                 </div>
@@ -209,19 +209,19 @@
 
                 <tr class="border-b">
 
-                    <th class="text-left p-3">ID</th>
+                    <th class="text-left p-3">{{__('messages.id')}}</th>
 
-                    <th class="text-left p-3">Name</th>
+                    <th class="text-left p-3">{{__('messages.name')}}</th>
 
-                    <th class="text-left p-3">Category</th>
+                    <th class="text-left p-3">{{__('messages.category')}}</th>
 
-                    <th class="p-3">Brand</th>
+                    <th class="p-3">{{__('messages.brand')}}</th>
 
-                    <th class="p-3">Stock</th>
+                    <th class="p-3">{{__('messages.stock')}}</th>
 
-                    <th class="p-3">Image</th>
+                    <th class="p-3">{{__('messages.image')}}</th>
 
-                    <th class="p-3">Actions</th>
+                    <th class="p-3">{{__('messages.actions')}}</th>
                 </tr>
 
                 </thead>
@@ -255,7 +255,7 @@
                                 <span
                                     class="bg-red-100 text-red-700 px-2 py-1 rounded"
                                 >
-                                    Out of Stock
+                                    {{__('messages.out_of_stock')}}
                                 </span>
 
                             @elseif($product->stock <= 5)
@@ -328,7 +328,7 @@
                                     <button
                                         class="bg-green-600 text-white px-3 py-1 rounded"
                                     >
-                                        Restore
+                                        {{__('messages.restore')}}
                                     </button>
 
                                 </form>

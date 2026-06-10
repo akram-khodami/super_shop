@@ -3,14 +3,14 @@
     <label
         class="block text-sm font-medium text-slate-700 mb-2"
     >
-        Value
+        {{__('messages.value')}}
     </label>
 
     <input
         type="text"
         name="value"
         value="{{ old('value',$value->value ?? '') }}"
-        placeholder="Red"
+        placeholder=" {{__('messages.red')}}"
         class="w-full rounded-xl border-slate-200 bg-slate-50
                focus:bg-white focus:border-indigo-500
                focus:ring-indigo-500"

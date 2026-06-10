@@ -5,14 +5,14 @@
 
             <!-- Logo -->
             <a href="/" class="font-bold text-2xl text-indigo-600">
-                Shop
+                {{__('messages.shop')}}
             </a>
 
             <!-- Search Desktop -->
             <div class="hidden md:flex flex-1 mx-8">
                 <input
                     type="text"
-                    placeholder="Search products..."
+                    placeholder="{{__('messages.search_products')}}"
                     class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
                 >
             </div>
@@ -21,11 +21,11 @@
             <div class="hidden md:flex items-center gap-6">
 
                 <a href="/" class="hover:text-indigo-600">
-                    Home
+                    {{__('messages.home')}}
                 </a>
 
                 <a href="{{route('products.index')}}" class="hover:text-indigo-600">
-                    Products
+                    {{__('messages.products')}}
                 </a>
 
                 <a href="#" class="relative">
@@ -37,20 +37,20 @@
 
                 @guest
                     <a href="{{ route('login') }}">
-                        Login
+                        {{__('messages.login')}}
                     </a>
 
                     <a
                         href="{{ route('register') }}"
                         class="bg-indigo-600 text-white px-4 py-2 rounded-lg"
                     >
-                        Register
+                        {{__('messages.register')}}
                     </a>
                 @endguest
 
                 @auth
                     <a href="{{ route('admin.dashboard') }}">
-                        Dashboard
+                        {{__('messages.dashboard')}}
                     </a>
                 @endauth
 
@@ -85,11 +85,11 @@
 
             @guest
                 <a href="{{ route('login') }}" class="block">
-                    Login
+                    {{__('messages.login')}}
                 </a>
 
                 <a href="{{ route('register') }}" class="block">
-                    Register
+                    {{__('messages.register')}}
                 </a>
             @endguest
         </div>

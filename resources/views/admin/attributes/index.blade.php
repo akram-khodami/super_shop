@@ -8,14 +8,14 @@
         <div class="flex justify-between mb-6">
 
             <h1 class="text-2xl font-bold">
-                Attributes
+                {{__('messages.attributes')}}
             </h1>
 
             <a
                 href="{{ route('admin.attributes.create') }}"
                 class="bg-indigo-600 text-white px-5 py-2 rounded-xl"
             >
-                Add Attribute
+                {{__('messages.add_attribute')}}
             </a>
 
         </div>
@@ -28,16 +28,16 @@
 
                 <tr>
 
-                    <th class="p-4 text-left">
-                        Name
-                    </th>
-
-                    <th class="p-4 text-left">
-                        Values
+                    <th class="p-4">
+                        {{__('messages.name')}}
                     </th>
 
                     <th class="p-4">
-                        Actions
+                        {{__('messages.values')}}
+                    </th>
+
+                    <th class="p-4">
+                        {{__('messages.actions')}}
                     </th>
 
                 </tr>
@@ -69,7 +69,7 @@
             ) }}"
                                     class="px-3 py-2 rounded-lg             bg-indigo-100 text-indigo-700"
                                 >
-                                    Edit
+                                    {{__('messages.edit')}}
                                 </a>
 
                                 <form
@@ -87,14 +87,14 @@
                                         onclick="return confirm('Delete attribute?')"
                                         class="px-3 py-2 rounded-lg      bg-red-100 text-red-700"
                                     >
-                                        Delete
+                                        {{__('messages.delete')}}
                                     </button>
 
                                     <a href="{{ route('admin.attributes.values.index',$attribute) }}"
                                        class="px-3 py-2 rounded-lg      bg-green-100 text-green-700"
 
                                     >
-                                        Values
+                                        {{__('messages.values')}}
                                     </a>
 
                                 </form>

@@ -5,5 +5,5 @@
 'bg-green-100 text-green-700' => $inStock,
 'bg-red-100 text-red-700' => !$inStock,
 ])>
-{{ $inStock ? 'موجود' : 'ناموجود' }}
+{{ $inStock ? __('messages.available') : __('messages.unavailable')}}
 </span>

@@ -4,7 +4,7 @@
     <div class="max-w-7xl mx-auto px-4 bg-black/10 rounded-xl shadow p-4">
 
         <h1 class="text-2xl font-bold mb-6">
-            Create Product
+            {{__('messages.create')}}
         </h1>
 
         <form
@@ -20,7 +20,7 @@
 
                 <div>
                     <label class="block mb-2">
-                        Name
+                        {{__('messages.name')}}
                     </label>
 
                     <input
@@ -39,7 +39,7 @@
 
                 <div>
                     <label class="block mb-2">
-                        Category
+                        {{__('messages.category')}}
                     </label>
 
                     <select
@@ -61,7 +61,7 @@
 
                 <div>
                     <label class="block mb-2">
-                        Brand
+                        {{__('messages.brand')}}
                     </label>
 
                     <select
@@ -70,7 +70,8 @@
                     >
 
                         <option value="">
-                            Select Brand
+                            {{__('messages.select')}}
+                            {{__('messages.brand')}}
                         </option>
 
                         @foreach($brands as $brand)
@@ -90,7 +91,7 @@
             <div class="mt-6">
 
                 <label class="block mb-2">
-                    Description
+                    {{__('messages.description')}}
                 </label>
 
                 <textarea
@@ -109,8 +110,7 @@
                         name="featured"
                         value="1"
                     >
-
-                    Featured
+                    {{__('messages.featured')}}
                 </label>
 
                 <label>
@@ -120,8 +120,7 @@
                         value="1"
                         checked
                     >
-
-                    Active
+                    {{__('messages.active')}}
                 </label>
 
             </div>
@@ -130,14 +129,14 @@
             <div class="mt-6">
                 <x-image-uploader
                     name="images[]"
-                    label="Product Images"
+                    label="{{__('messages.product_images')}}"
                 />
             </div>
 
             <button
                 class="mt-6 bg-indigo-600 text-white px-6 py-3 rounded-lg"
             >
-                Save Product
+                {{__('messages.save')}}
             </button>
 
         </form>

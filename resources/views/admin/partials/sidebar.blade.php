@@ -5,7 +5,7 @@
     <div class="p-6 border-b border-slate-800">
 
         <h2 class="font-bold text-xl">
-            Admin Panel
+            {{__('messages.admin_panel')}}
         </h2>
 
     </div>
@@ -19,7 +19,7 @@
                     href="{{ route('home') }}"
                     class="block px-4 py-2 rounded hover:bg-slate-800"
                 >
-                    Home
+                    {{__('messages.home')}}
                 </a>
             </li>
 
@@ -28,7 +28,7 @@
                     href="{{ route('admin.dashboard') }}"
                     class="block px-4 py-2 rounded hover:bg-slate-800"
                 >
-                    Dashboard
+                    {{__('messages.dashboard')}}
                 </a>
             </li>
 
@@ -37,7 +37,7 @@
                     href="{{ route('admin.products.index') }}"
                     class="block px-4 py-2 rounded hover:bg-slate-800"
                 >
-                    Products
+                    {{__('messages.products')}}
                 </a>
             </li>
 
@@ -46,7 +46,7 @@
                     href="{{ route('admin.categories.index') }}"
                     class="block px-4 py-2 rounded hover:bg-slate-800"
                 >
-                    Categories
+                    {{__('messages.categories')}}
                 </a>
             </li>
 
@@ -55,7 +55,7 @@
                     href="{{ route('admin.brands.index') }}"
                     class="block px-4 py-2 rounded hover:bg-slate-800"
                 >
-                    Brands
+                    {{__('messages.brands')}}
                 </a>
             </li>
 
@@ -64,7 +64,7 @@
                     href="{{ route('admin.attributes.index') }}"
                     class="block px-4 py-2 rounded hover:bg-slate-800"
                 >
-                    Attributes
+                    {{__('messages.attributes')}}
                 </a>
             </li>
 
@@ -76,7 +76,7 @@
                     <x-dropdown-link :href="route('logout')"
                                      onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                        {{ __('messages.logout') }}
                     </x-dropdown-link>
                 </form>
             </li>

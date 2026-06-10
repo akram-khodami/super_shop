@@ -15,5 +15,5 @@
             {{ number_format($price) }}
         </span>
     @endif
-    <span class="text-sm text-gray-500">تومان</span>
+    <span class="text-sm text-gray-500">{{__('messages.toman')}}</span>
 </div>

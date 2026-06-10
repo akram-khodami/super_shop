@@ -7,14 +7,14 @@
         <div class="p-4 border-b flex justify-between">
 
             <h2 class="font-bold">
-                Brands
+                {{__('messages.brands')}}
             </h2>
 
             <a
                 href="{{ route('admin.brands.create') }}"
                 class="bg-indigo-600 text-white px-4 py-2 rounded"
             >
-                Create
+                {{__('messages.create')}}
             </a>
 
         </div>
@@ -25,13 +25,13 @@
 
             <tr>
 
-                <th class="p-3">Logo</th>
+                <th class="p-3">{{__('messages.logo')}}</th>
 
-                <th class="p-3">Name</th>
+                <th class="p-3">{{__('messages.name')}}</th>
 
-                <th class="p-3">Status</th>
+                <th class="p-3">{{__('messages.status')}}</th>
 
-                <th class="p-3">Actions</th>
+                <th class="p-3">{{__('messages.actions')}}</th>
 
             </tr>
 

@@ -9,11 +9,11 @@
             <div>
 
                 <h1 class="text-3xl font-bold text-slate-800">
-                    {{ $attribute->name }} Values
+                    {{ $attribute->name }} {{__('messages.values')}}
                 </h1>
 
                 <p class="text-slate-500 mt-1">
-                    Manage attribute values
+                    {{__('messages.manage_attribute_values')}}
                 </p>
 
             </div>
@@ -24,14 +24,14 @@
                     href="{{ route('admin.attributes.index') }}"
                     class="px-5 py-2.5 bg-white border border-slate-200 rounded-xl"
                 >
-                    Back
+                    {{__('messages.back')}}
                 </a>
 
                 <a
                     href="{{ route('admin.attributes.values.create',$attribute) }}"
                     class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl"
                 >
-                    Add Value
+                    {{__('messages.add_value')}}
                 </a>
 
             </div>
@@ -46,16 +46,16 @@
 
                 <tr>
 
-                    <th class="px-6 py-4 text-left">
-                        ID
+                    <th class="px-6 py-4">
+                        {{__('messages.id')}}
                     </th>
 
-                    <th class="px-6 py-4 text-left">
-                        Value
+                    <th class="px-6 py-4">
+                        {{__('messages.value')}}
                     </th>
 
-                    <th class="px-6 py-4 text-right">
-                        Actions
+                    <th class="px-6 py-4">
+                        {{__('messages.actions')}}
                     </th>
 
                 </tr>
@@ -87,7 +87,7 @@
                                 ) }}"
                                     class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-xl"
                                 >
-                                    Edit
+                                    {{__('messages.edit')}}
                                 </a>
 
                                 <form
@@ -105,7 +105,7 @@
                                         onclick="return confirm('Delete value?')"
                                         class="px-4 py-2 bg-red-100 text-red-700 rounded-xl"
                                     >
-                                        Delete
+                                        {{__('messages.delete')}}
                                     </button>
 
                                 </form>
@@ -121,7 +121,7 @@
                     <tr>
 
                         <td colspan="3" class="py-10 text-center text-slate-400">
-                            No values found
+                            {{__('messages.no_values_found')}}
                         </td>
 
                     </tr>
