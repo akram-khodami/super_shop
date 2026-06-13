@@ -4,7 +4,7 @@
     <div class="max-w-7xl mx-auto px-4">
 
         <h2 class="text-3xl font-bold mb-10">
-            Featured Categories
+            {{__('messages.featured_categories')}}
         </h2>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">

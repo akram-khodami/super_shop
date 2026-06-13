@@ -6,11 +6,11 @@
         <div class="flex justify-between items-center mb-10">
 
             <h2 class="text-3xl font-bold">
-                New Products
+                {{__('messages.new_products')}}
             </h2>
 
             <a href="{{route('products.index')}}" class="text-indigo-600">
-                View All
+                {{__('messages.view_all')}}
             </a>
 
         </div>

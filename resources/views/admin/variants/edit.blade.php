@@ -9,7 +9,7 @@
             <div>
 
                 <h1 class="text-3xl font-bold">
-                    Edit Variant
+                    {{__('messages.edit_variant')}}
                 </h1>
 
                 <p class="text-slate-500 mt-1">
@@ -25,7 +25,7 @@
             ) }}"
                 class="px-5 py-2 bg-slate-100 rounded-xl"
             >
-                Back
+                {{__('messages.back')}}
             </a>
 
         </div>
@@ -57,19 +57,17 @@
 
                 @endif
 
+                <div class="mt-6 flex gap-3">
+
+                    <button
+                        class="px-8 py-3 bg-indigo-600 text-white rounded-xl"
+                    >
+                        {{__('messages.save')}}
+                    </button>
+
+                </div>
+
             </div>
-
-
-            <div class="mt-6 flex gap-3">
-
-                <button
-                    class="px-8 py-3 bg-indigo-600 text-white rounded-xl"
-                >
-                    Update Variant
-                </button>
-
-            </div>
-
 
         </form>
 

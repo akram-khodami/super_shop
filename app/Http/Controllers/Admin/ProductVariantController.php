@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreProductVariantRequest;
 use App\Http\Requests\Admin\UpdateProductVariantRequest;
 use App\Models\Product;
-use App\Models\ProductVariant;
+use App\Models\Variant;
 use App\Models\ProductVariantImage;
 use App\Services\ProductVariantService;
 use App\Traits\HandlesFileUpload;
+use http\Env\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use function Laravel\Roster\json;
 
 class ProductVariantController extends Controller
 {
@@ -34,13 +36,29 @@ class ProductVariantController extends Controller
         return view('admin.variants.index', compact('product', 'variants'));
     }
 
+    //step1
     public function create(Product $product): View
     {
-        $product->load('attributes.values');
+        // بارگذاری ویژگی‌های محصول با رابطه‌های مورد نیاز
+        $product->load([
+            'productAttributes' => function ($query) {
+                $query->where('is_variant', true); // فقط ویژگی‌های تنوع‌ساز
+            },
+            'productAttributes.attribute',        // نام ویژگی (مثلاً "رنگ")
+            'productAttributes.values',   // مقادیر ویژگی (مثلاً "قرمز", "آبی")
+        ]);
 
-        return view('admin.variants.create', compact('product'));
+        // گرفتن اولین ویژگی تنوع‌ساز
+        $variantAttribute = $product->productAttributes->first();
+
+        // مقادیر این ویژگی
+        $variantValues = $variantAttribute ?->values ?? collect([]);
+
+    return view('admin.variants.create', compact('product', 'variantAttribute', 'variantValues'));
+
     }
 
+    //step2
     public function store(StoreProductVariantRequest $request, Product $product): RedirectResponse
     {
         $this->variantService->create($product, $request->validated());
@@ -50,17 +68,34 @@ class ProductVariantController extends Controller
             ->with('success', 'تنوع با موفقیت ایجاد شد.');
     }
 
-    public function edit(Product $product, ProductVariant $variant): View
+    //step3
+    public function edit(Product $product, Variant $variant): View
     {
         $this->ensureVariantBelongsToProduct($product, $variant);
 
-        $variant->load(['attributeValues', 'images']);
-        $selectedValues = $variant->attributeValues->pluck('id')->toArray();
+        // بارگذاری ویژگی‌های محصول با رابطه‌های مورد نیاز
+        $product->load([
+            'productAttributes' => function ($query) {
+                $query->where('is_variant', true); // فقط ویژگی‌های تنوع‌ساز
+            },
+            'productAttributes.attribute',        // نام ویژگی (مثلاً "رنگ")
+            'productAttributes.values',   // مقادیر ویژگی (مثلاً "قرمز", "آبی")
+            'images'
+        ]);
 
-        return view('admin.variants.edit', compact('product', 'variant', 'selectedValues'));
+        // گرفتن اولین ویژگی تنوع‌ساز
+        $variantAttribute = $product->productAttributes->first();
+
+        // مقادیر این ویژگی
+        $variantValues = $variantAttribute ?->values ?? collect([]);
+
+        $selectedValues = $variant->attributeValue->pluck('id')->toArray();
+
+
+        return view('admin.variants.edit', compact('product', 'variantAttribute', 'variantValues', 'variant','selectedValues'));
     }
 
-    public function update(UpdateProductVariantRequest $request, Product $product, ProductVariant $variant): RedirectResponse
+    public function update(UpdateProductVariantRequest $request, Product $product, Variant $variant): RedirectResponse
     {
         $this->ensureVariantBelongsToProduct($product, $variant);
 
@@ -71,7 +106,7 @@ class ProductVariantController extends Controller
             ->with('success', 'تنوع با موفقیت بروزرسانی شد.');
     }
 
-    public function destroy(Product $product, ProductVariant $variant): RedirectResponse
+    public function destroy(Product $product, Variant $variant): RedirectResponse
     {
         $this->ensureVariantBelongsToProduct($product, $variant);
 
@@ -88,7 +123,7 @@ class ProductVariantController extends Controller
         return back()->with('success', 'تنوع با موفقیت حذف شد.');
     }
 
-    private function ensureVariantBelongsToProduct(Product $product, ProductVariant $variant): void
+    private function ensureVariantBelongsToProduct(Product $product, Variant $variant): void
     {
         if ($variant->product_id !== $product->id) {
             abort(404);

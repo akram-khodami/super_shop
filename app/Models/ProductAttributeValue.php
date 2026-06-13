@@ -9,19 +9,14 @@ class ProductAttributeValue extends BaseModel
         'value',
     ];
 
-    public function attribute()
+    public function productAttribute()
     {
-        return $this->belongsTo(
-            ProductAttribute::class
-        );
+        return $this->belongsTo(ProductAttribute::class);
     }
 
-    public function variants()
+    // ✅ هر ProductAttributeValue حداکثر به یه Variant متصله
+    public function variantValue()
     {
-        return $this->belongsToMany(
-            ProductVariant::class,
-            'product_variant_attribute_values'
-        );
+        return $this->hasOne(VariantValue::class);
     }
-
 }

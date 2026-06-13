@@ -14,6 +14,6 @@ class ProductVariantImage extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(ProductVariant::class);
+        return $this->belongsTo(Variant::class);
     }
 }

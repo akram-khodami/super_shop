@@ -25,7 +25,7 @@ class CartService
     {
         return $this->getOrCreateCart()
             ->load([
-                'items.variant.products',
+                'items.variant.product',
                 'items.variant.attributeValues.attribute',
             ]);
     }
@@ -47,7 +47,7 @@ class CartService
 
         $item = $cart->items()
             ->where(
-                'product_variant_id',
+                'variant_id',
                 $variant->id
             )
             ->first();
@@ -72,7 +72,7 @@ class CartService
         }
 
         $cart->items()->create([
-            'product_variant_id' => $variant->id,
+            'variant_id' => $variant->id,
             'quantity' => $quantity,
         ]);
     }
@@ -82,6 +82,13 @@ class CartService
         int $quantity
     ): void
     {
+
+        if ($quantity <= 0) {
+
+            $this->remove($variant);
+
+            return;
+        }
 
         if ($quantity > $variant->stock) {
 
@@ -93,7 +100,7 @@ class CartService
         $this->getOrCreateCart()
             ->items()
             ->where(
-                'product_variant_id',
+                'variant_id',
                 $variant->id
             )
             ->update([
@@ -109,7 +116,7 @@ class CartService
         $this->getOrCreateCart()
             ->items()
             ->where(
-                'product_variant_id',
+                'variant_id',
                 $variant->id
             )
             ->delete();
@@ -140,8 +147,8 @@ class CartService
 
     public function itemsCount(): int
     {
-        return $this->getCart()
-            ->items
+        return $this->getOrCreateCart()
+            ->items()
             ->sum('quantity');
     }
 }

@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_variants', function (Blueprint $table) {
-
+        Schema::create('variants', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('product_id')
-                ->constrained()
-                ->cascadeOnDelete();
+                ->constrained();
 
             $table->string('sku')->unique();
 
@@ -36,6 +34,7 @@ return new class extends Migration
                 2
             )->nullable();
 
+
             $table->unsignedInteger('stock')
                 ->default(0);
 
@@ -45,10 +44,14 @@ return new class extends Migration
             $table->boolean('is_active')
                 ->default(true);
 
+            $table->unsignedBigInteger('cost_price')->nullable();
+            $table->decimal('weight', 8, 2)->nullable();
+
             $table->timestamps();
 
             $table->index(['product_id', 'is_active']);
             $table->index('stock');
+
         });
     }
 
@@ -57,6 +60,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_variants');
+        Schema::dropIfExists('variants');
     }
 };

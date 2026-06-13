@@ -5,22 +5,24 @@ namespace App\Services;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantImage;
+use App\Models\Variant;
+use App\Models\VariantValue;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProductVariantService
 {
-    public function create(Product $product, array $data): ProductVariant
+    public function create(Product $product, array $data): Variant
     {
 
         if (
         $this->variantExists(
             $product,
-            $data['attribute_values']
+            $data['attribute_value']
         )
         ) {
             throw ValidationException::withMessages([
-                'attribute_values' => 'این تنوع قبلاً ثبت شده است.'
+                'attribute_value' => 'این تنوع قبلاً ثبت شده است.'
             ]);
         }
 
@@ -38,8 +40,12 @@ class ProductVariantService
                 'is_active' => $data['is_active'] ?? true,
             ]);
 
-            if (!empty($data['attribute_values'])) {
-                $variant->attributeValues()->sync($data['attribute_values']);
+            if (!empty($data['attribute_value'])) {
+
+                VariantValue::firstOrCreate([
+                    'variant_id' => $variant->id,
+                    'product_attribute_value_id' => $data['attribute_value'],
+                ]);
             }
 
             foreach ($images as $index => $image) {
@@ -50,7 +56,7 @@ class ProductVariantService
                 );
 
                 ProductVariantImage::create([
-                    'product_variant_id' => $variant->id,
+                    'variant_id' => $variant->id,
                     'image' => $path,
                     'sort_order' => $index,
                 ]);
@@ -61,7 +67,7 @@ class ProductVariantService
         });
     }
 
-    public function update(ProductVariant $variant, array $data): ProductVariant
+    public function update(Variant $variant, array $data): Variant
     {
         $images = $data['images'] ?? [];
 
@@ -76,8 +82,11 @@ class ProductVariantService
                 'is_active' => $data['is_active'] ?? $variant->is_active,
             ]);
 
-            if (!empty($data['attribute_values'])) {
-                $variant->attributeValues()->sync($data['attribute_values']);
+            if (!empty($data['attribute_value'])) {
+                VariantValue::firstOrCreate([
+                    'variant_id' => $variant->id,
+                    'product_attribute_value_id' => $data['attribute_value'],
+                ]);
             }
 
             if (!empty($images)) {
@@ -102,18 +111,16 @@ class ProductVariantService
 
     private function variantExists(
         Product $product,
-        array $attributeValueIds,
+        int $attributeValueId,
         ?int $ignoreVariantId = null
     ): bool
     {
 
-        sort($attributeValueIds);
-
         return $product->variants()
-            ->with('attributeValues:id')
+            ->with('attributeValue:id')
             ->get()
             ->filter(function ($variant) use (
-                $attributeValueIds,
+                $attributeValueId,
                 $ignoreVariantId
             ) {
 
@@ -123,15 +130,6 @@ class ProductVariantService
                 ) {
                     return false;
                 }
-
-                $ids = $variant
-                    ->attributeValues
-                    ->pluck('id')
-                    ->sort()
-                    ->values()
-                    ->toArray();
-
-                return $ids === $attributeValueIds;
 
             })
             ->isNotEmpty();

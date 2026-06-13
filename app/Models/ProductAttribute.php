@@ -4,28 +4,32 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProductAttribute extends BaseModel
+class ProductAttribute extends Model
 {
     protected $fillable = [
-        'name',
-        'slug',
+        'attribute_id',
+        'product_id',
+        'is_variant',
     ];
 
+    //===All values of an attribute
     public function values()
     {
-        return $this->hasMany(
-            ProductAttributeValue::class
-        );
+        return $this->hasMany(ProductAttributeValue::class);
     }
 
-    public function products()
+    //===Only values of an attribute which use for variant(is_variant is true)
+    public function variantValues()
     {
-        return $this->belongsToMany(
-            Product::class,
-            'product_product_attribute',
-            'product_attribute_id',  // foreign key مربوط به این مدل
-            'product_id'              // foreign key مربوط به مدل Product
-        );
+        return $this->hasMany(ProductAttributeValue::class)
+            ->whereHas('productAttribute', function ($q) {
+                $q->where('is_variant', true);
+            });
     }
 
+    //checked
+    public function attribute()
+    {
+        return $this->belongsTo(Attribute::class);
+    }
 }

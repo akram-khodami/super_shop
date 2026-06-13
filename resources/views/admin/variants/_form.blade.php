@@ -1,43 +1,39 @@
 <div class="grid md:grid-cols-2 gap-6">
 
-    @foreach($product->attributes as $attribute)
+    <div>
 
-        <div>
+        <label
+            class="block text-sm font-medium text-slate-700 mb-2"
+        >
+            {{ $variantAttribute->attribute->name }}
+        </label>
 
-            <label
-                class="block text-sm font-medium text-slate-700 mb-2"
-            >
-                {{ $attribute->name }}
-            </label>
+        <select
+            name="attribute_value"
+            class="w-full rounded-xl border-slate-200 bg-slate-50"
+        >
 
-            <select
-                name="attribute_values[]"
-                class="w-full rounded-xl border-slate-200 bg-slate-50"
-            >
+            @foreach($variantValues as $value)
 
-                @foreach($attribute->values as $value)
+                <option
+                    value="{{ $value->id }}"
+                    @selected(
+                    isset($selectedValues)
+                    &&
+                    in_array(
+                    $value->id,
+                    $selectedValues
+                    )
+                    )
+                    >
+                    {{ $value->value }}
+                </option>
 
-                    <option
-                        value="{{ $value->id }}"
-                        @selected(
-                        isset($selectedValues)
-                        &&
-                        in_array(
-                        $value->id,
-                        $selectedValues
-                        )
-                        )
-                        >
-                        {{ $value->value }}
-                    </option>
+            @endforeach
 
-                @endforeach
+        </select>
 
-            </select>
-
-        </div>
-
-    @endforeach
+    </div>
 
 </div>
 
@@ -48,7 +44,7 @@
     <div>
 
         <label class="block mb-2">
-            SKU
+            {{__('messages.SKU')}}
         </label>
 
         <input
@@ -63,7 +59,7 @@
     <div>
 
         <label class="block mb-2">
-            Price
+            {{__('messages.price')}}
         </label>
 
         <input
@@ -79,7 +75,7 @@
     <div>
 
         <label class="block mb-2">
-            Sale Price
+            {{__('messages.sale_price')}}
         </label>
 
         <input
@@ -95,7 +91,7 @@
     <div>
 
         <label class="block mb-2">
-            Stock
+            {{__('messages.stock')}}
         </label>
 
         <input

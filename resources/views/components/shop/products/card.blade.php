@@ -40,13 +40,13 @@
             </a>
 
             @if($product->in_stock)
-                <form method="POST" action="{{ route('cart.store') }}">
+{{--                <form method="POST" action="{{ route('cart.store') }}">--}}
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <x-ui.button type="submit" variant="primary">
                         {{__('messages.add')}}
                     </x-ui.button>
-                </form>
+{{--                </form>--}}
             @endif
         </div>
     </div>

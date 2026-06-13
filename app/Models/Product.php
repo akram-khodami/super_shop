@@ -62,19 +62,23 @@ class Product extends Model
 
     public function variants()
     {
-        return $this->hasMany(
-            ProductVariant::class
-        );
+        return $this->hasMany(Variant::class);
     }
 
     public function attributes()
     {
         return $this->belongsToMany(
-            ProductAttribute::class,
-            'product_product_attribute',  // اسم جدول pivot
+            Attribute::class,
+            'product_attributes',  // اسم جدول pivot
             'product_id',                  // foreign key مربوط به این مدل
-            'product_attribute_id'         // foreign key مربوط به مدل مقابل
-        );
+            'attribute_id'         // foreign key مربوط به مدل مقابل
+        )->withPivot('is_variant');
+    }
+
+    //checked
+    public function productAttributes()
+    {
+        return $this->hasMany(ProductAttribute::class);
     }
 
     public function scopeOutOfStock(Builder $query): Builder

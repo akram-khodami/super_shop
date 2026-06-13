@@ -47,7 +47,7 @@
                     class="px-8 py-3 rounded-xl bg-indigo-600
                        text-white hover:bg-indigo-700"
                 >
-                    {{__('messages.create_attribute')}}
+                    {{__('messages.save')}}
                 </button>
 
             </div>

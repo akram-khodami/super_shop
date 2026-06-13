@@ -15,7 +15,7 @@
                 href="{{ route('admin.attributes.create') }}"
                 class="bg-indigo-600 text-white px-5 py-2 rounded-xl"
             >
-                {{__('messages.add_attribute')}}
+                {{__('messages.add')}}
             </a>
 
         </div>
@@ -30,10 +30,6 @@
 
                     <th class="p-4">
                         {{__('messages.name')}}
-                    </th>
-
-                    <th class="p-4">
-                        {{__('messages.values')}}
                     </th>
 
                     <th class="p-4">
@@ -52,10 +48,6 @@
 
                         <td class="p-4">
                             {{ $attribute->name }}
-                        </td>
-
-                        <td class="p-4">
-                            {{ $attribute->values_count ?? 0 }}
                         </td>
 
                         <td class="p-4">
@@ -89,13 +81,6 @@
                                     >
                                         {{__('messages.delete')}}
                                     </button>
-
-                                    <a href="{{ route('admin.attributes.values.index',$attribute) }}"
-                                       class="px-3 py-2 rounded-lg      bg-green-100 text-green-700"
-
-                                    >
-                                        {{__('messages.values')}}
-                                    </a>
 
                                 </form>
 

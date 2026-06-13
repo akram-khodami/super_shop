@@ -12,13 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_attributes', function (Blueprint $table) {
-
             $table->id();
-
-            $table->string('name');
-            $table->string('slug')->unique();
-
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('attribute_id')->constrained()->cascadeOnDelete();
+            $table->boolean('is_variant')->default(false);
             $table->timestamps();
+            $table->unique([
+                'product_id',
+                'attribute_id'
+            ]);
         });
     }
 

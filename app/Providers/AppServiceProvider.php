@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\CartService;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 
@@ -21,5 +23,16 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useTailwind();
+
+//        View::composer(
+//            'layouts.app',
+//            function ($view) {
+//
+//                $view->with(
+//                    'cartCount',
+//                    app(CartService::class)->itemsCount()
+//                );
+//            }
+//        );
     }
 }

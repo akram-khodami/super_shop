@@ -17,14 +17,13 @@ class UpdateProductVariantRequest extends FormRequest
     {
         return [
             'sku' => ['nullable', 'string', 'max:255',
-                Rule::unique('product_variants', 'sku')->ignore($this->route('variant'))
+                Rule::unique('variants', 'sku')->ignore($this->route('variant'))
             ],
             'price' => ['required', 'numeric', 'min:0'],
             'sale_price' => ['nullable', 'numeric', 'min:0', 'lte:price'],
             'stock' => ['required', 'integer', 'min:0'],
             'is_active' => ['boolean'],
-            'attribute_values' => ['required', 'array', 'min:1'],
-            'attribute_values.*' => ['required', 'exists:product_attribute_values,id'],
+            'attribute_value' => ['required', 'exists:product_attribute_values,id'],
 
             'images' => ['nullable', 'array'],
             'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],

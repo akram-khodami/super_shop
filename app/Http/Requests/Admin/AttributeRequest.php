@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateProductRequest extends FormRequest
+class AttributeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,25 +21,18 @@ class UpdateProductRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-
     public function rules(): array
     {
+        $attributeId = $this->route('attribute');
+
         return [
 
-            'category_id' => ['required', 'exists:categories,id'],
-
-            'brand_id' => ['nullable', 'exists:brands,id'],
-
-            'name' => ['required', 'string', 'max:255'],
-
-            'description' => ['nullable'],
-
-            'featured' => ['nullable', 'boolean'],
-
-            'is_active' => ['nullable', 'boolean'],
-
-            'images' => ['nullable', 'array'],
-            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('attributes')->ignore($attributeId),
+            ],
 
         ];
     }

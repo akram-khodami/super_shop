@@ -5,7 +5,7 @@
     <div class="bg-white p-6 rounded-xl shadow">
 
         <h1 class="text-2xl font-bold mb-6">
-            {{__('messages.create')}}
+            {{__('messages.create_category')}}
         </h1>
 
         <form

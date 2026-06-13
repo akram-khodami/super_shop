@@ -28,12 +28,20 @@
                     {{__('messages.products')}}
                 </a>
 
-                <a href="#" class="relative">
+                <a href="{{route('cart.index')}}" class="relative">
                     🛒
-                    <span class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full px-1">
-                        0
-                    </span>
+                    @php($cartCount=$cartCount??0)
+                    @if($cartCount > 0)
+
+                        <span
+                            class="absolute -top-2 -right-2  flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white"
+                        >
+                            {{ $cartCount }}
+                        </span>
+
+                    @endif
                 </a>
+
 
                 @guest
                     <a href="{{ route('login') }}">
@@ -70,7 +78,7 @@
         <div class="md:hidden pb-4">
             <input
                 type="text"
-                placeholder="Search..."
+                placeholder="{{__('messages.search_products')}}"
                 class="w-full rounded-lg border-gray-300"
             >
         </div>
@@ -80,8 +88,8 @@
             id="mobile-menu"
             class="hidden md:hidden pb-4 space-y-3"
         >
-            <a href="/" class="block">Home</a>
-            <a href="#" class="block">Products</a>
+            <a href="/" class="block">{{__('messages.home')}}</a>
+            <a href="#" class="block">{{__('messages.products')}}</a>
 
             @guest
                 <a href="{{ route('login') }}" class="block">

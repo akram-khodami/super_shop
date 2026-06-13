@@ -29,6 +29,7 @@
 </main>
 
 @include('partials.footer')
+@stack('scripts')
 <script>
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');

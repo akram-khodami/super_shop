@@ -209,11 +209,11 @@
 
                 <tr class="border-b">
 
-                    <th class="text-left p-3">{{__('messages.id')}}</th>
+                    <th class="text p-3">{{__('messages.id')}}</th>
 
-                    <th class="text-left p-3">{{__('messages.name')}}</th>
+                    <th class="text p-3">{{__('messages.name')}}</th>
 
-                    <th class="text-left p-3">{{__('messages.category')}}</th>
+                    <th class="text p-3">{{__('messages.category')}}</th>
 
                     <th class="p-3">{{__('messages.brand')}}</th>
 

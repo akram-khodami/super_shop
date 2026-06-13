@@ -4,64 +4,58 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProductAttributeRequest;
+use App\Models\Product;
 use App\Models\ProductAttribute;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
+use App\Models\ProductAttributeValue;
+use Illuminate\Support\Facades\DB;
 
 class ProductAttributeController extends Controller
 {
-    public function index(): View
+    public function store(ProductAttributeRequest $request, Product $product)
     {
-        $attributes = ProductAttribute::query()
-            ->withCount('values')
-            ->latest()
-            ->paginate(15);
+        $validated = $request->validated();
 
-        return view('admin.attributes.index', compact('attributes'));
+        //ToDo:use service class
+
+        DB::transaction(function () use ($product, $validated) {
+
+            $productAttribute = ProductAttribute::firstOrCreate([
+                'product_id' => $product->id,
+                'attribute_id' => $validated['attribute_id'],
+            ], [
+                'is_variant' => $validated['is_variant'] ?? false,
+            ]);
+
+            if ($productAttribute->wasRecentlyCreated === false) {
+                $productAttribute->update([
+                    'is_variant' => $validated['is_variant'] ?? false,
+                ]);
+            }
+
+            ProductAttributeValue::create([
+                'product_attribute_id' => $productAttribute->id,
+                'value' => $validated['value'],
+            ]);
+        });
+
+        return back()->with('success', __('messages.product_attribute_created_successfully'));
     }
 
-    public function create(): View
+    public function destroy(ProductAttribute $productAttribute)
     {
-        return view('admin.attributes.create');
-    }
+        // بررسی استفاده در تنوع‌ها
+        $usedInVariants = $productAttribute->values()
+            ->whereHas('variantValues')
+            ->exists();
 
-    public function store(ProductAttributeRequest $request): RedirectResponse
-    {
-        ProductAttribute::create([
-            'name' => $request->name,
-            'slug' => ProductAttribute::generateUniqueSlug($request->name),
-        ]);
-
-        return redirect()
-            ->route('admin.attributes.index')
-            ->with('success', 'ویژگی با موفقیت ایجاد شد.');
-    }
-
-    public function edit(ProductAttribute $attribute): View
-    {
-        return view('admin.attributes.edit', compact('attribute'));
-    }
-
-    public function update(ProductAttributeRequest $request, ProductAttribute $attribute): RedirectResponse
-    {
-        $attribute->update([
-            'name' => $request->name,
-            'slug' => ProductAttribute::generateUniqueSlug($request->name, 'slug', $attribute->id),
-        ]);
-
-        return redirect()
-            ->route('admin.attributes.index')
-            ->with('success', 'ویژگی با موفقیت به‌روزرسانی شد.');
-    }
-
-    public function destroy(ProductAttribute $attribute): RedirectResponse
-    {
-        if ($attribute->values()->exists()) {
-            return back()->with('error', 'امکان حذف ویژگی دارای مقدار وجود ندارد. ابتدا مقادیر را حذف کنید.');
+        if ($usedInVariants) {
+            return back()->with('error',
+                'این ویژگی در تنوع‌های محصول استفاده شده و قابل حذف نیست'
+            );
         }
 
-        $attribute->delete();
+        $productAttribute->delete();
 
-        return back()->with('success', 'ویژگی با موفقیت حذف شد.');
+        return back()->with('success', 'ویژگی با موفقیت از محصول حذف شد');
     }
 }

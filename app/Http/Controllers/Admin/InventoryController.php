@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdjustStockRequest;
-use App\Models\ProductVariant;
+use App\Models\Variant;
 use App\Services\InventoryService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -18,7 +18,7 @@ class InventoryController extends Controller
         $this->inventoryService = $inventoryService;
     }
 
-    public function show(ProductVariant $variant): View
+    public function show(Variant $variant): View
     {
         $variant->load('product');
 
@@ -31,7 +31,7 @@ class InventoryController extends Controller
 
     public function increase(
         AdjustStockRequest $request,
-        ProductVariant $variant
+        Variant $variant
     ): RedirectResponse
     {
         $this->inventoryService->increase(
@@ -47,7 +47,7 @@ class InventoryController extends Controller
 
     public function decrease(
         AdjustStockRequest $request,
-        ProductVariant $variant
+        Variant $variant
     ): RedirectResponse
     {
         $this->inventoryService->decrease(

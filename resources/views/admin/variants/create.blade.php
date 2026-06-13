@@ -9,7 +9,7 @@
             <div>
 
                 <h1 class="text-3xl font-bold">
-                    Create Variant
+                    {{__('messages.create_variant')}}
                 </h1>
 
                 <p class="text-slate-500 mt-1">
@@ -25,7 +25,7 @@
             ) }}"
                 class="px-5 py-2 bg-slate-100 rounded-xl"
             >
-                Back
+                {{__('messages.back')}}
             </a>
 
         </div>
@@ -53,7 +53,7 @@
                 <button
                     class="px-8 py-3 bg-indigo-600 text-white rounded-xl"
                 >
-                    Create Variant
+                    {{__('messages.save')}}
                 </button>
 
             </div>

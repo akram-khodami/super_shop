@@ -23,7 +23,8 @@
             <span
                 class="inline-flex items-center px-4 py-2 rounded-xl bg-indigo-100 text-indigo-700 font-semibold"
             >
-                Current Stock:
+                {{__('messages.current_stock')}}
+                :
                 {{ $variant->stock }}
             </span>
 
@@ -37,7 +38,7 @@
         <div class="bg-white rounded-2xl shadow-sm border p-6">
 
             <h2 class="text-lg font-semibold text-green-600 mb-4">
-                Increase Stock
+                {{__('messages.increase_stock')}}
             </h2>
 
             <form
@@ -50,7 +51,7 @@
                 <div>
 
                     <label class="block mb-2 text-sm font-medium">
-                        Quantity
+                        {{__('messages.quantity')}}
                     </label>
 
                     <input
@@ -66,7 +67,7 @@
                 <div>
 
                     <label class="block mb-2 text-sm font-medium">
-                        Note
+                        {{__('messages.note')}}
                     </label>
 
                     <input
@@ -81,7 +82,7 @@
                 <button
                     class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg"
                 >
-                    Add Stock
+                    {{__('messages.add_stock')}}
                 </button>
 
             </form>
@@ -92,7 +93,7 @@
         <div class="bg-white rounded-2xl shadow-sm border p-6">
 
             <h2 class="text-lg font-semibold text-red-600 mb-4">
-                Decrease Stock
+                {{__('messages.decrease_stock')}}
             </h2>
 
             <form
@@ -105,7 +106,7 @@
                 <div>
 
                     <label class="block mb-2 text-sm font-medium">
-                        Quantity
+                        {{__('messages.quantity')}}
                     </label>
 
                     <input
@@ -121,7 +122,7 @@
                 <div>
 
                     <label class="block mb-2 text-sm font-medium">
-                        Note
+                        {{__('messages.note')}}
                     </label>
 
                     <input
@@ -136,7 +137,7 @@
                 <button
                     class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg"
                 >
-                    Remove Stock
+                    {{__('messages.remove_stock')}}
                 </button>
 
             </form>
@@ -150,7 +151,7 @@
         <div class="px-6 py-4 border-b">
 
             <h2 class="font-semibold">
-                Stock History
+                {{__('messages.stock_history')}}
             </h2>
 
         </div>
@@ -163,31 +164,31 @@
                 <tr>
 
                     <th class="px-4 py-3 text-left">
-                        Date
+                        {{__('messages.date')}}
                     </th>
 
                     <th class="px-4 py-3 text-left">
-                        Type
+                        {{__('messages.type')}}
                     </th>
 
                     <th class="px-4 py-3 text-left">
-                        Qty
+                        {{__('messages.quantity')}}
                     </th>
 
                     <th class="px-4 py-3 text-left">
-                        Before
+                        {{__('messages.before')}}
                     </th>
 
                     <th class="px-4 py-3 text-left">
-                        After
+                        {{__('messages.after')}}
                     </th>
 
                     <th class="px-4 py-3 text-left">
-                        User
+                        {{__('messages.user')}}
                     </th>
 
                     <th class="px-4 py-3 text-left">
-                        Note
+                        {{__('messages.note')}}
                     </th>
 
                 </tr>

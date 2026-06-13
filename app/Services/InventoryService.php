@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\ProductVariant;
+use App\Models\Variant;
 use App\Models\StockMovement;
 use Illuminate\Support\Facades\DB;
 
 class InventoryService
 {
     public function increase(
-        ProductVariant $variant,
+        Variant $variant,
         int $quantity,
         ?string $note = null
     ): void
@@ -30,7 +30,7 @@ class InventoryService
             ]);
 
             StockMovement::create([
-                'product_variant_id' => $variant->id,
+                'variant_id' => $variant->id,
                 'type' => 'in',
                 'quantity' => $quantity,
                 'before_stock' => $before,
@@ -42,7 +42,7 @@ class InventoryService
     }
 
     public function decrease(
-        ProductVariant $variant,
+        Variant $variant,
         int $quantity,
         ?string $note = null
     ): void
@@ -66,7 +66,7 @@ class InventoryService
             ]);
 
             StockMovement::create([
-                'product_variant_id' => $variant->id,
+                'variant_id' => $variant->id,
                 'type' => 'out',
                 'quantity' => $quantity,
                 'before_stock' => $before,

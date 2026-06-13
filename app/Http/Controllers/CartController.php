@@ -16,9 +16,16 @@ class CartController extends Controller
 
 public function index()
 {
-    return response()->json([
-        'data' => $this->cartService->getCart(),
-    ]);
+    $cart = $this->cartService->getCart();
+
+    return view(
+        'shop.cart.index',
+        [
+            'cart' => $cart,
+            'total' => $this->cartService->total(),
+            'count' => $this->cartService->itemsCount(),
+        ]
+    );
 }
 
 public function store(

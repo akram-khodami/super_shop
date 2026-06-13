@@ -15,7 +15,7 @@ return new class extends Migration
 
             $table->id();
 
-            $table->foreignId('product_variant_id')
+            $table->foreignId('variant_id')
                 ->constrained()
                 ->cascadeOnDelete();
 
@@ -40,6 +40,8 @@ return new class extends Migration
                 ->nullOnDelete();
 
             $table->timestamps();
+
+            $table->index('created_at');
         });
     }
 

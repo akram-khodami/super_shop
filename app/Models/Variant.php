@@ -2,11 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class ProductVariant extends Model
+class Variant extends Model
 {
+    /** @use HasFactory<\Database\Factories\VariantFactory> */
+    use HasFactory;
+
+
 //    protected $guarded = [];
 
     protected $fillable = [
@@ -28,19 +34,17 @@ class ProductVariant extends Model
         );
     }
 
-    public function attributeValues()
+    //  هر تنوع فقط یه رنگ داره
+    public function attributeValue():HasOne
     {
-        return $this->belongsToMany(
-            ProductAttributeValue::class,
-            'product_variant_attribute_values'
-        );
+        return $this->hasOne(VariantValue::class);
     }
 
-    public function getTitleAttribute()
+// برای دسترسی راحت‌تر به مقدار ویژگی
+    // ✅ اسم متفاوت با رابطه
+    public function getVariantValueAttribute()
     {
-        return $this->attributeValues
-            ->pluck('value')
-            ->implode(' / ');
+        return $this->attributeValue?->productAttributeValue?->value;
     }
 
     public function images(): HasMany
