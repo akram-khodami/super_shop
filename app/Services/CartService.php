@@ -3,14 +3,13 @@
 namespace App\Services;
 
 use App\Models\Cart;
-use App\Models\ProductVariant;
+use App\Models\Variant;
 
 class CartService
 {
     public function getOrCreateCart(): Cart
     {
         if (auth()->check()) {
-
             return Cart::firstOrCreate([
                 'user_id' => auth()->id(),
             ]);
@@ -26,99 +25,99 @@ class CartService
         return $this->getOrCreateCart()
             ->load([
                 'items.variant.product',
-                'items.variant.attributeValues.attribute',
+                'items.variant.images',
+//                'items.getItemName',
+                'items.variant.attributeValue.productAttributeValue',
             ]);
     }
 
-    public function add(
-        ProductVariant $variant,
-        int $quantity = 1
-    ): void
+    public function add(Variant $variant, int $quantity = 1): array
     {
-
         if ($variant->stock < $quantity) {
-
-            throw new \Exception(
-                'Insufficient stock.'
-            );
+            return [
+                'status' => false,
+                'message' => 'موجودی کافی نیست',
+            ];
         }
 
         $cart = $this->getOrCreateCart();
 
-        $item = $cart->items()
-            ->where(
-                'variant_id',
-                $variant->id
-            )
-            ->first();
+        $item = $cart->items()->where('variant_id', $variant->id)->first();
 
         if ($item) {
-
-            $newQuantity =
-                $item->quantity + $quantity;
+            $newQuantity = $item->quantity + $quantity;
 
             if ($newQuantity > $variant->stock) {
-
-                throw new \Exception(
-                    'Insufficient stock.'
-                );
+                return [
+                    'status' => false,
+                    'message' => 'موجودی کافی نیست',
+                ];
             }
 
-            $item->update([
-                'quantity' => $newQuantity
-            ]);
-
-            return;
+            $item->update(['quantity' => $newQuantity]);
+            return [
+                'status' => true,
+                'message' => ''
+            ];
         }
 
         $cart->items()->create([
             'variant_id' => $variant->id,
             'quantity' => $quantity,
         ]);
+
+        return [
+            'status' => true,
+            'message' => ''
+        ];
     }
 
-    public function updateQuantity(
-        ProductVariant $variant,
-        int $quantity
-    ): void
+    public function updateQuantity(Variant $variant, int $quantity, string $action = 'increase'): array
     {
+        $cart = $this->getOrCreateCart();
+        $item = $cart->items()->where('variant_id', $variant->id)->first();
 
-        if ($quantity <= 0) {
-
-            $this->remove($variant);
-
-            return;
+        if (!$item) {
+            return [
+                'status' => false,
+                'message' => 'آیتم در سبد یافت نشد',
+            ];
         }
 
-        if ($quantity > $variant->stock) {
+        $newQuantity = $action === 'increase'
+            ? $item->quantity + $quantity
+            : $item->quantity - $quantity;
 
-            throw new \Exception(
-                'Insufficient stock.'
-            );
+        // اگر تعداد صفر یا منفی شد، حذف کن
+        if ($newQuantity <= 0) {
+            $item->delete();
+            return [
+                'status' => true,
+                'message' => 'محصول از سبد خرید حذف شد',
+            ];
         }
 
-        $this->getOrCreateCart()
-            ->items()
-            ->where(
-                'variant_id',
-                $variant->id
-            )
-            ->update([
-                'quantity' => $quantity
-            ]);
+        // بررسی موجودی
+        if ($newQuantity > $variant->stock) {
+            return [
+                'status' => false,
+                'message' => 'موجودی کافی نیست',
+            ];
+        }
+
+        $item->update(['quantity' => $newQuantity]);
+
+        return [
+            'status' => true,
+            'message' => __('messages.cart_updated'),
+        ];
     }
 
-    public function remove(
-        ProductVariant $variant
-    ): void
+    public function remove(Variant $variant): void
     {
-
         $this->getOrCreateCart()
             ->items()
-            ->where(
-                'variant_id',
-                $variant->id
-            )
+            ->where('variant_id', $variant->id)
             ->delete();
     }
 
@@ -134,14 +133,8 @@ class CartService
         return $this->getCart()
             ->items
             ->sum(function ($item) {
-
-                $price =
-                    $item->variant->sale_price
-                    ?? $item->variant->price;
-
-                return
-                    $price *
-                    $item->quantity;
+                $price = $item->variant->sale_price ?? $item->variant->price;
+                return $price * $item->quantity;
             });
     }
 

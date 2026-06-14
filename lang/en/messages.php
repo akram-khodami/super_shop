@@ -2,7 +2,6 @@
 
 return [
 
-    //============public============
     'shop' => 'Shop',
     'admin_panel' => 'Admin Panel',
     'administration' => 'Administration',
@@ -121,7 +120,7 @@ return [
     'featured_categories' => 'Featured Categories',
     'new_products' => 'New Products',
     'view_all' => 'view_all',
-    'no_low_stock_products' => 'محصولات با موجودی کم',
+    'no_low_stock_products' => 'No low stock products',
     'product_gallery' => 'Product Gallery',
     'manage_all_uploaded_images' => 'Manage all uploaded images',
     'variants_section_subtitle' => 'Manage sizes, colors and product variations',
@@ -130,12 +129,12 @@ return [
     'sale_price' => 'sale_price',
     'SKU' => 'SKU',
     'variant' => 'Variant',
+    'manage_inventory' => 'Manage Inventory',
     'current_stock' => 'Current Stock',
     'increase_stock' => 'Increase Stock',
     'quantity' => 'Quantity',
     'add_stock' => 'Add Stock',
     'decrease_stock' => 'Decrease Stock',
-    'note' => 'Note',
     'remove_stock' => 'Remove Stock',
     'stock_history' => 'Stock History',
     'date' => 'Date',
@@ -146,9 +145,13 @@ return [
     'note' => 'Note',
     //====action messages
     'attributes_created_successfully' => 'Attributes created successfully.',
-    'attributes_updated_successfully' => 'ویژگی با موفقیت به‌روزرسانی شد.',
-    'attributes_removed_successfully' => 'ویژگی با موفقیت حذف شد.',
-    'attributes_cant_be_removed' => 'ویژگی با موفقیت حذف نشد.',
-    'product_created_successfully' => 'محصول با موفقیت ایجاد شد.',
-    'product_attribute_created_successfully' => 'ویژگی محصول با موفقیت اضافه شد',
+    'attributes_updated_successfully' => 'Attribute updated successfully.',
+    'attributes_removed_successfully' => 'Attribute removed successfully.',
+    'attributes_cant_be_removed' => 'Attribute cannot be removed successfully.',
+    'product_created_successfully' => 'Product created successfully.',
+    'product_attribute_created_successfully' => 'Product attribute added successfully',
+    'product_added_to_cart' => 'Product added to cart.',
+    'cart_updated' => 'Cart updated.',
+    'item_removed' => 'Item removed.',
+    'cart_cleared' => 'Cart cleared.',
 ];

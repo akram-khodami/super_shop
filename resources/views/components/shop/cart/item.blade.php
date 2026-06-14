@@ -1,96 +1,59 @@
-@props([
-'item'
-])
+@props(['item'])
 
-<div class="rounded-xl border bg-white p-4 shadow-sm">
+@php($variant = $item->variant)
 
+<div class="rounded-xl border bg-white p-4 shadow-sm cart-item-row" data-variant-id="{{ $variant->id }}">
     <div class="flex gap-4">
 
-        <img
-            src="{{ $item['variant']->thumbnail_url }}"
-            alt="{{ $item['product']->name }}"
-            class="size-24 rounded-lg object-cover"
-        >
+        <img src="{{ $variant->thumbnail_url }}"
+             alt="{{ $variant->product->name }}"
+             class="size-24 rounded-lg object-cover">
 
         <div class="flex-1">
-
             <div class="flex items-start justify-between">
-
                 <div>
-
-                    <h3 class="font-semibold">
-                        {{ $item['product']->name }}
-                    </h3>
-
-                    @if($item['variant']->title)
-                        <p class="mt-1 text-sm text-gray-500">
-                            {{ $item['variant']->title }}
-                        </p>
-                    @endif
-
+                    <h3 class="font-semibold">{{ $variant->product->name }}</h3>
+                    <p class="mt-1 text-sm text-gray-500">
+                        {{ $variant->attributeValue->productAttributeValue->value ?? '' }}
+                    </p>
                 </div>
 
-                <form
-                    action="{{ route('cart.remove', $item['variant']) }}"
-                    method="POST"
-                >
-                    @csrf
-                    @method('DELETE')
-
-                    <button
-                        class="text-red-500 hover:text-red-700"
-                    >
-                        حذف
-                    </button>
-                </form>
-
+                <button class="cart-remove-btn text-red-500 hover:text-red-700 text-sm transition-colors"
+                        data-variant-id="{{ $variant->id }}">
+                    حذف
+                </button>
             </div>
 
             <div class="mt-4 flex items-center justify-between">
-
                 <div class="font-bold">
-                    {{ number_format($item['price']) }}
+                    @if($variant->sale_price)
+                        <span class="text-red-600">{{ number_format($variant->sale_price) }}</span>
+                        <span class="text-gray-400 line-through text-sm mr-1">{{ number_format($variant->price) }}</span>
+                    @else
+                        {{ number_format($variant->price) }}
+                    @endif
                     تومان
                 </div>
 
-                <form
-                    action="{{ route('cart.update', $item['variant']) }}"
-                    method="POST"
-                >
-                    @csrf
+                <div class="flex items-center overflow-hidden rounded-lg border">
+                    <button class="cart-qty-btn px-3 py-2 hover:bg-gray-100"
+                            data-action="decrease"
+                            data-variant-id="{{ $variant->id }}">
+                        −
+                    </button>
 
-                    <div class="flex items-center overflow-hidden rounded-lg border">
+                    <span class="cart-qty-text min-w-12 text-center"
+                          data-variant-id="{{ $variant->id }}">
+                        {{ $item->quantity }}
+                    </span>
 
-                        <button
-                            name="action"
-                            value="decrease"
-                            class="px-3 py-2 hover:bg-gray-100"
-                        >
-                            −
-                        </button>
-
-                        <span
-                            class="min-w-12 text-center"
-                        >
-                            {{ $item['quantity'] }}
-                        </span>
-
-                        <button
-                            name="action"
-                            value="increase"
-                            class="px-3 py-2 hover:bg-gray-100"
-                        >
-                            +
-                        </button>
-
-                    </div>
-
-                </form>
-
+                    <button class="cart-qty-btn px-3 py-2 hover:bg-gray-100"
+                            data-action="increase"
+                            data-variant-id="{{ $variant->id }}">
+                        +
+                    </button>
+                </div>
             </div>
-
         </div>
-
     </div>
-
 </div>

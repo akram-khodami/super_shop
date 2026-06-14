@@ -28,6 +28,10 @@ class UpdateCartItemRequest extends FormRequest
                 'integer',
                 'min:1',
             ],
+            'action' => [
+                'string',
+                'in:increase,decrease',
+            ]
         ];
     }
 }

@@ -22,13 +22,13 @@
             {{ $product->name }}
         </h3>
 
-        {{-- کامپوننت قیمت --}}
+        {{-- price componnent --}}
         <x-shop.products.price
             :price="$product->display_price"
             :sale-price="$product->display_sale_price"
         />
 
-        {{-- کامپوننت موجودی --}}
+        {{-- stock componnent --}}
         <div class="mb-4">
             <x-shop.products.stock-badge :in-stock="$product->in_stock"/>
         </div>
@@ -40,13 +40,13 @@
             </a>
 
             @if($product->in_stock)
-{{--                <form method="POST" action="{{ route('cart.store') }}">--}}
+                <form method="POST" action="{{ route('cart.store',$product->default_variant) }}">
                     @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <x-ui.button type="submit" variant="primary">
-                        {{__('messages.add')}}
-                    </x-ui.button>
-{{--                </form>--}}
+                    <input type="hidden" name="quantity" value="1">
+{{--                    <x-ui.button type="submit" variant="primary">--}}
+{{--                        {{__('messages.add')}}--}}
+{{--                    </x-ui.button>--}}
+                </form>
             @endif
         </div>
     </div>

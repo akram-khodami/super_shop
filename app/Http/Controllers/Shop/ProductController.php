@@ -24,6 +24,7 @@ class ProductController extends Controller
                 $product->display_sale_price = $firstVariant ?->sale_price;
                 $product->in_stock = $product->variants->sum('stock') > 0;
                 $product->thumbnail_url = $product->thumbnail_url;
+                $product->default_variant = $firstVariant;
 
                 return $product;
             });
@@ -45,10 +46,10 @@ class ProductController extends Controller
             'variants.images',
         ]);
 
-        // گالری
+        //Gallery
         $product->gallery = $product->images->take(5);
 
-        // ویژگی‌های توصیفی
+        //Descriptive features
         $productAttributes = ProductAttribute::with(['attribute:id,name', 'values'])
             ->where('product_id', $product->id)
             ->where('is_variant', false)
@@ -60,7 +61,7 @@ class ProductController extends Controller
                 ];
             });
 
-        // ویژگی تنوع‌ساز
+        //Diversifying feature
         $variantAttribute = ProductAttribute::with(['attribute:id,name', 'values'])
             ->where('product_id', $product->id)
             ->where('is_variant', true)

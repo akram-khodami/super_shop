@@ -26,4 +26,9 @@ class CartItem extends Model
             'variant_id'
         );
     }
+
+    public function getItemName()
+    {
+        return $this->variant()->product()->name;
+    }
 }

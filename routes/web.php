@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductAttributeValueController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductVariantController;
-use App\Http\Controllers\CartController;
+use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\ProfileController;

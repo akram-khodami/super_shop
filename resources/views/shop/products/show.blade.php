@@ -173,7 +173,6 @@
 
     @push('scripts')
         <script>
-
             // تغییر تصویر اصلی
             function changeMainImage(url) {
                 document.getElementById('main-image').src = url;
@@ -181,7 +180,6 @@
 
             // انتخاب تنوع
             function selectVariant(valueId) {
-
                 const variants = window.variantsData;
                 const variant = variants.find(v => v.value_id == valueId);
 
@@ -202,20 +200,20 @@
                 const priceBox = document.getElementById('price-box');
                 if (variant.sale_price) {
                     priceBox.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <span class="text-3xl font-bold text-red-600">${variant.formatted_sale}</span>
-                        <span class="text-lg text-gray-400 line-through">${variant.formatted_price}</span>
-                        <span class="bg-red-100 text-red-600 px-2 py-1 rounded-lg text-sm">
-                            ${Math.round(((variant.price - variant.sale_price) / variant.price) * 100)}% تخفیف
-                        </span>
-                    </div>
-                    <span class="text-gray-500 mr-1">تومان</span>
-                `;
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl font-bold text-red-600">${variant.formatted_sale}</span>
+                    <span class="text-lg text-gray-400 line-through">${variant.formatted_price}</span>
+                    <span class="bg-red-100 text-red-600 px-2 py-1 rounded-lg text-sm">
+                        ${Math.round(((variant.price - variant.sale_price) / variant.price) * 100)}% تخفیف
+                    </span>
+                </div>
+                <span class="text-gray-500 mr-1">تومان</span>
+            `;
                 } else if (variant.price) {
                     priceBox.innerHTML = `
-                    <span class="text-3xl font-bold">${variant.formatted_price}</span>
-                    <span class="text-gray-500 mr-1">تومان</span>
-                `;
+                <span class="text-3xl font-bold">${variant.formatted_price}</span>
+                <span class="text-gray-500 mr-1">تومان</span>
+            `;
                 }
 
                 // آپدیت تصویر اصلی
@@ -254,6 +252,61 @@
                     selectedLabel.textContent = selectedBtn.textContent.trim();
                 }
             }
+
+            // افزودن به سبد خرید
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener('click', function () {
+                    const variantId = this.dataset.currentVariantId;
+
+                    if (!variantId) {
+                        showToast('لطفاً یک تنوع را انتخاب کنید', 'error');
+                        return;
+                    }
+
+                    // غیرفعال کردن دکمه
+                    this.disabled = true;
+                    this.classList.add('opacity-50', 'cursor-not-allowed');
+                    const originalText = this.textContent;
+                    this.textContent = '⏳ در حال افزودن...';
+
+                fetch(`/cart/items/${variantId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ quantity: 1 })
+                    })
+                        .then(async response => {
+                            const data = await response.json();
+
+                            if (!response.ok) {
+                                throw new Error(data.message || 'خطای سرور');
+                            }
+
+                            return data;
+                        })
+                        .then(data => {
+                            showToast(data.message || '✅ محصول به سبد خرید اضافه شد', 'success');
+
+                            // اگه خواستی شمارنده سبد رو آپدیت کنی:
+                            // document.getElementById('cart-count').textContent = data.count;
+                        })
+                        .catch(error => {
+                            console.error('خطا:', error);
+                            showToast(error.message || '❌ خطا در افزودن به سبد خرید', 'error');
+                        })
+                        .finally(() => {
+                            // فعال کردن دوباره دکمه
+                            this.disabled = false;
+                            this.classList.remove('opacity-50', 'cursor-not-allowed');
+                            this.textContent = originalText;
+                        });
+                });
+            }
         </script>
+
     @endpush
 </x-app-layout>

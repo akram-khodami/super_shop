@@ -2,7 +2,6 @@
 
 return [
 
-    //============عمومی============
     'shop' => 'فروشگاه',
     'admin_panel' => 'پنل مدیریت',
     'administration' => 'مدیریت',
@@ -131,13 +130,11 @@ return [
     'SKU' => 'SKU',
     'variant' => 'تنوع',
     'manage_inventory' => 'مدیرت موجودی',
-    'manage_inventory' => 'مدیریت موجودی',
     'current_stock' => 'موجودی فعلی',
     'increase_stock' => 'افزایش موجودی',
     'quantity' => 'مقدار',
     'add_stock' => 'افزودن موجودی',
     'decrease_stock' => 'کاهش موجودی',
-    'note' => 'Note',
     'remove_stock' => 'حذف موجودی',
     'stock_history' => 'تاریخچه موجودی',
     'date' => 'تاریخ',
@@ -153,4 +150,8 @@ return [
     'attributes_cant_be_removed' => 'ویژگی با موفقیت حذف نشد.',
     'product_created_successfully' => 'محصول با موفقیت ایجاد شد.',
     'product_attribute_created_successfully' => 'ویژگی محصول با موفقیت اضافه شد',
+    'product_added_to_cart' => 'محصول به سبد خرید اضافه شد.',
+    'cart_updated' => 'سبد خرید بروز شد.',
+    'item_removed' => 'آیتم حذف شد.',
+    'cart_cleared' => 'سبد پاک شد.',
 ];
