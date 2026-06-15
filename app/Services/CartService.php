@@ -26,8 +26,7 @@ class CartService
             ->load([
                 'items.variant.product',
                 'items.variant.images',
-//                'items.getItemName',
-                'items.variant.attributeValue.productAttributeValue',
+                'items.variant.variantAttributeValue.productAttributeValue',
             ]);
     }
 

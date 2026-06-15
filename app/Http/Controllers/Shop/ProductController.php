@@ -42,7 +42,7 @@ class ProductController extends Controller
             'images',
             'brand',
             'category',
-            'variants.attributeValue.productAttributeValue',
+            'variants.variantAttributeValue.productAttributeValue',
             'variants.images',
         ]);
 

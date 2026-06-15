@@ -155,4 +155,6 @@ return [
     'cart_updated' => 'سبد خرید بروز شد.',
     'item_removed' => 'آیتم حذف شد.',
     'cart_cleared' => 'سبد پاک شد.',
+    'variant_was_successfully_created'=>'تنوع با موفقیت ایجاد شد.',
+    'this_variety_has_already_been_registered_for_this_product'=>'این تنوع قبلاً برای این محصول ثبت شده است.',
 ];

@@ -14,8 +14,6 @@ class Product extends Model
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory, SoftDeletes;
 
-//    protected $guarded = [];
-
     protected $fillable = [
         'category_id',
         'brand_id',

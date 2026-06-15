@@ -37,14 +37,14 @@ class Variant extends Model
         );
     }
 
-    public function attributeValue(): HasOne
+    public function variantAttributeValue(): HasOne
     {
         return $this->hasOne(VariantAttributeValue::class);
     }
 
     public function getVariantValueAttribute(): ?string
     {
-        return $this->attributeValue?->productAttributeValue?->value;
+        return $this->variantAttributeValue?->productAttributeValue?->value;
     }
 
     public function images(): HasMany

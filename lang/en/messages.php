@@ -155,4 +155,6 @@ return [
     'cart_updated' => 'Cart updated.',
     'item_removed' => 'Item removed.',
     'cart_cleared' => 'Cart cleared.',
+    'variant_was_successfully_created' => 'Diversity was successfully created.',
+    'this_variety_has_already_been_registered_for_this_product' => 'This variety has already been registered for this product.',
 ];

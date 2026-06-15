@@ -60,15 +60,15 @@
                         <label class="block text-sm font-medium mb-2">
                             {{ $variantAttribute['name'] }}:
                             <span id="selected-variant-label" class="font-bold text-indigo-600">
-                                {{ $defaultVariant->attributeValue->productAttributeValue->value ?? '' }}
+                                {{ $defaultVariant->variantAttributeValue->productAttributeValue->value ?? '' }}
                             </span>
                         </label>
                         <div class="flex flex-wrap gap-2" id="variant-selector">
                             @foreach($variantAttribute['values'] as $value)
                                 @php
-                                    $variant = $product->variants->firstWhere('attributeValue.product_attribute_value_id', $value['id']);
+                                    $variant = $product->variants->firstWhere('variantAttributeValue.product_attribute_value_id', $value['id']);
                                     $isSelected = $defaultVariant &&
-                                        $defaultVariant->attributeValue->product_attribute_value_id == $value['id'];
+                                        $defaultVariant->variantAttributeValue->product_attribute_value_id == $value['id'];
                                     $isDisabled = !$variant || $variant->stock == 0;
                                 @endphp
                                 <button onclick="selectVariant({{ $value['id'] }})"

@@ -12,7 +12,6 @@ use App\Services\ProductVariantService;
 use App\Traits\HandlesFileUpload;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use function Laravel\Roster\json;
 
 class ProductVariantController extends Controller
 {
@@ -20,31 +19,32 @@ class ProductVariantController extends Controller
 
     private ProductVariantService $variantService;
 
+    //ToDo:Use repository Pattern
     public function __construct(ProductVariantService $variantService)
     {
         $this->variantService = $variantService;
     }
 
+    //ToDO:Remove it,if You does not use it
+    //ToDo:English comment
     public function index(Product $product): View
     {
         $variants = $product->variants()
-            ->with('attributeValues')
+            ->with('variantAttributeValue')
             ->latest()
             ->paginate(20);
 
         return view('admin.variants.index', compact('product', 'variants'));
     }
 
-    //step1
     public function create(Product $product): View
     {
-        // بارگذاری ویژگی‌های محصول با رابطه‌های مورد نیاز
         $product->load([
             'productAttributes' => function ($query) {
-                $query->where('is_variant', true); // فقط ویژگی‌های تنوع‌ساز
+                $query->where('is_variant', true); // فقط ویژگی‌های تنوع‌ساز//یک دونه بیشتر نیست
             },
-            'productAttributes.attribute',        // نام ویژگی (مثلاً "رنگ")
-            'productAttributes.values',   // مقادیر ویژگی (مثلاً "قرمز", "آبی")
+            'productAttributes.attribute',
+            'productAttributes.values',
         ]);
 
         // گرفتن اولین ویژگی تنوع‌ساز
@@ -57,14 +57,13 @@ class ProductVariantController extends Controller
 
     }
 
-    //step2
     public function store(StoreProductVariantRequest $request, Product $product): RedirectResponse
     {
         $this->variantService->create($product, $request->validated());
 
         return redirect()
             ->route('admin.products.edit', $product)
-            ->with('success', 'تنوع با موفقیت ایجاد شد.');
+            ->with('success', __('messages.variant_was_successfully_created'));
     }
 
     //step3
@@ -89,7 +88,7 @@ class ProductVariantController extends Controller
         $variantValues = $variantAttribute ?->values ?? collect([]);
 
     // ✅ مقدار انتخاب‌شده فعلی (فقط یه آیدی)
-    $selectedValueId = $variant->attributeValue ?->product_attribute_value_id;
+    $selectedValueId = $variant->variantAttributeValue ?->product_attribute_value_id;
 
     return view('admin.variants.edit', compact(
         'product',

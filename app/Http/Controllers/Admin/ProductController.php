@@ -13,7 +13,6 @@ use App\Models\ProductAttribute;
 use App\Models\ProductImage;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -93,6 +92,8 @@ class ProductController extends Controller
                     }),
                 ];
             });
+
+        //Todo:البته ویزگی هایی نیاد که تنوعپذیر نیستن و توصیفی هستن.تنوع پذیرها میتونن باز بیان
 
         // ویژگی‌هایی که هنوز به محصول اضافه نشدن (برای dropdown فرم)
         $usedAttributeIds = $productAttributes->pluck('attribute_id');

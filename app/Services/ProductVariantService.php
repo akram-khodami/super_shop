@@ -7,32 +7,15 @@ use App\Models\ProductVariantImage;
 use App\Models\Variant;
 use App\Models\VariantAttributeValue;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class ProductVariantService
 {
     public function create(Product $product, array $data): Variant
     {
 
-        if (!empty($data['attribute_value'])) {
-
-            if (
-            $this->variantExists(
-                $product,
-                $data['attribute_value']
-            )
-            ) {
-                throw ValidationException::withMessages([
-                    'attribute_value' => 'این تنوع قبلاً ثبت شده است.'
-                ]);
-            }
-
-        } else {
-
-            //ToDO:قبلا رکورد تنوعی درج نشده باشد
-        }
-
         return DB::transaction(function () use ($product, $data) {
+
+            $productAttributeValueId = $data['attribute_value'] ?? null;
 
             $images = $data['images'] ?? [];
 
@@ -46,11 +29,11 @@ class ProductVariantService
                 'is_active' => $data['is_active'] ?? true,
             ]);
 
-            if (!empty($data['attribute_value'])) {
+            if (!empty($productAttributeValueId)) {
 
                 VariantAttributeValue::firstOrCreate([
                     'variant_id' => $variant->id,
-                    'product_attribute_value_id' => $data['attribute_value'],
+                    'product_attribute_value_id' => $productAttributeValueId,
                 ]);
             }
 
@@ -88,10 +71,12 @@ class ProductVariantService
                 'is_active' => $data['is_active'] ?? $variant->is_active,
             ]);
 
-            if (!empty($data['attribute_value'])) {
+            $productAttributeValueId = $data['attribute_value'] ?? null;
+
+            if (!empty($productAttributeValueId)) {
                 VariantAttributeValue::firstOrCreate([
                     'variant_id' => $variant->id,
-                    'product_attribute_value_id' => $data['attribute_value'],
+                    'product_attribute_value_id' => $productAttributeValueId,
                 ]);
             }
 
@@ -113,31 +98,5 @@ class ProductVariantService
 
             return $variant;
         });
-    }
-
-    private function variantExists(
-        Product $product,
-        int $attributeValueId,
-        ?int $ignoreVariantId = null
-    ): bool
-    {
-
-        return $product->variants()
-            ->with('attributeValue:id')
-            ->get()
-            ->filter(function ($variant) use (
-                $attributeValueId,
-                $ignoreVariantId
-            ) {
-
-                if (
-                    $ignoreVariantId &&
-                    $variant->id === $ignoreVariantId
-                ) {
-                    return false;
-                }
-
-            })
-            ->isNotEmpty();
     }
 }
