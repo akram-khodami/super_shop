@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\ProductAttribute;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -23,8 +24,23 @@ class UpdateProductVariantRequest extends FormRequest
             'sale_price' => ['nullable', 'numeric', 'min:0', 'lte:price'],
             'stock' => ['required', 'integer', 'min:0'],
             'is_active' => ['boolean'],
-            'attribute_value' => ['required', 'exists:product_attribute_values,id'],
+            'attribute_value' => [
+                'nullable',
+                'exists:product_attribute_values,id',
+                function ($attribute, $value, $fail) {
+                    $productId = $this->route('product') ?->id ?? $this->input('product_id');
 
+                if (!$productId) return;
+
+                $hasVariantAttribute = ProductAttribute::where('product_id', $productId)
+                    ->where('is_variant', true)
+                    ->exists();
+
+                if ($hasVariantAttribute && empty($value)) {
+                    $fail('انتخاب مقدار ویژگی تنوع الزامی است');
+                }
+            },
+            ],
             'images' => ['nullable', 'array'],
             'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];

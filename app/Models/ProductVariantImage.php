@@ -12,7 +12,7 @@ class ProductVariantImage extends Model
 
     protected $guarded = [];
 
-    public function product(): BelongsTo
+    public function variant(): BelongsTo
     {
         return $this->belongsTo(Variant::class);
     }

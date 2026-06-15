@@ -12,12 +12,15 @@ class Variant extends Model
     /** @use HasFactory<\Database\Factories\VariantFactory> */
     use HasFactory;
 
-
-//    protected $guarded = [];
-
     protected $fillable = [
-        'product_id', 'sku', 'barcode', 'price', 'sale_price',
-        'stock', 'is_default', 'is_active'
+        'product_id',
+        'sku',
+        'barcode',
+        'price',
+        'sale_price',
+        'stock',
+        'is_default',
+        'is_active'
     ];
 
     public function product()
@@ -34,15 +37,12 @@ class Variant extends Model
         );
     }
 
-    //  هر تنوع فقط یه رنگ داره
-    public function attributeValue():HasOne
+    public function attributeValue(): HasOne
     {
-        return $this->hasOne(VariantValue::class);
+        return $this->hasOne(VariantAttributeValue::class);
     }
 
-// برای دسترسی راحت‌تر به مقدار ویژگی
-    // ✅ اسم متفاوت با رابطه
-    public function getVariantValueAttribute()
+    public function getVariantValueAttribute(): ?string
     {
         return $this->attributeValue?->productAttributeValue?->value;
     }
@@ -74,6 +74,11 @@ class Variant extends Model
     public function getFormattedSalePriceAttribute(): string
     {
         return $this->sale_price ? number_format($this->sale_price) . ' تومان' : '---';
+    }
+
+    public function getFinalPriceAttribute()
+    {
+        return $this->sale_price ?? $this->price;
     }
 
 }

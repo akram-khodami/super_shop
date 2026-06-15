@@ -10,7 +10,7 @@
         <thead class="bg-slate-50/80">
         <tr>
             <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                {{ __('messages.variant') }}
+                {{ __('messages.variant_attribute') }}
             </th>
 
             <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
@@ -48,7 +48,7 @@
             <tr class="border-t border-slate-100 hover:bg-indigo-50/30 transition-colors duration-150 group">
                 <td class="px-6 py-4">
                     <div class="font-medium text-slate-800">
-                        {{ $variant->attributeValue->productAttributeValue->value }}
+                        {{ $variant->variant_value ?? '—' }}
                     </div>
                 </td>
 
@@ -72,12 +72,14 @@
 
                 <td class="px-6 py-4">
                     @if($variant->is_active)
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">
+                        <span
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">
                                 <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5"></span>
                                 {{ __('messages.active') }}
                             </span>
                     @else
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-red-50 text-red-700 text-xs font-semibold">
+                        <span
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-red-50 text-red-700 text-xs font-semibold">
                                 <span class="w-1.5 h-1.5 bg-red-500 rounded-full mr-1.5"></span>
                                 {{ __('messages.inactive') }}
                             </span>

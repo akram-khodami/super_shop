@@ -129,6 +129,7 @@ return [
     'sale_price' => 'sale_price',
     'SKU' => 'SKU',
     'variant' => 'Variant',
+    'variant_attribute' => 'Variant Attribute',
     'manage_inventory' => 'Manage Inventory',
     'current_stock' => 'Current Stock',
     'increase_stock' => 'Increase Stock',

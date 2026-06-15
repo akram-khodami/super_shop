@@ -10,7 +10,6 @@ use App\Models\Variant;
 use App\Models\ProductVariantImage;
 use App\Services\ProductVariantService;
 use App\Traits\HandlesFileUpload;
-use http\Env\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use function Laravel\Roster\json;
@@ -89,11 +88,17 @@ class ProductVariantController extends Controller
         // مقادیر این ویژگی
         $variantValues = $variantAttribute ?->values ?? collect([]);
 
-        $selectedValues = $variant->attributeValue->pluck('id')->toArray();
+    // ✅ مقدار انتخاب‌شده فعلی (فقط یه آیدی)
+    $selectedValueId = $variant->attributeValue ?->product_attribute_value_id;
 
-
-        return view('admin.variants.edit', compact('product', 'variantAttribute', 'variantValues', 'variant','selectedValues'));
-    }
+    return view('admin.variants.edit', compact(
+        'product',
+        'variant',
+        'variantAttribute',
+        'variantValues',
+        'selectedValueId'
+    ));
+}
 
     public function update(UpdateProductVariantRequest $request, Product $product, Variant $variant): RedirectResponse
     {

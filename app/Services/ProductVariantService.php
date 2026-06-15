@@ -3,10 +3,9 @@
 namespace App\Services;
 
 use App\Models\Product;
-use App\Models\ProductVariant;
 use App\Models\ProductVariantImage;
 use App\Models\Variant;
-use App\Models\VariantValue;
+use App\Models\VariantAttributeValue;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,15 +14,22 @@ class ProductVariantService
     public function create(Product $product, array $data): Variant
     {
 
-        if (
-        $this->variantExists(
-            $product,
-            $data['attribute_value']
-        )
-        ) {
-            throw ValidationException::withMessages([
-                'attribute_value' => 'این تنوع قبلاً ثبت شده است.'
-            ]);
+        if (!empty($data['attribute_value'])) {
+
+            if (
+            $this->variantExists(
+                $product,
+                $data['attribute_value']
+            )
+            ) {
+                throw ValidationException::withMessages([
+                    'attribute_value' => 'این تنوع قبلاً ثبت شده است.'
+                ]);
+            }
+
+        } else {
+
+            //ToDO:قبلا رکورد تنوعی درج نشده باشد
         }
 
         return DB::transaction(function () use ($product, $data) {
@@ -42,7 +48,7 @@ class ProductVariantService
 
             if (!empty($data['attribute_value'])) {
 
-                VariantValue::firstOrCreate([
+                VariantAttributeValue::firstOrCreate([
                     'variant_id' => $variant->id,
                     'product_attribute_value_id' => $data['attribute_value'],
                 ]);
@@ -83,7 +89,7 @@ class ProductVariantService
             ]);
 
             if (!empty($data['attribute_value'])) {
-                VariantValue::firstOrCreate([
+                VariantAttributeValue::firstOrCreate([
                     'variant_id' => $variant->id,
                     'product_attribute_value_id' => $data['attribute_value'],
                 ]);

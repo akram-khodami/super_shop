@@ -1,41 +1,33 @@
-<div class="grid md:grid-cols-2 gap-6">
+@if($variantAttribute?->attribute?->name)
+    {{--    just for the product has variant attribute--}}
+    <div class="grid md:grid-cols-2 gap-6">
 
-    <div>
+        <div>
 
-        <label
-            class="block text-sm font-medium text-slate-700 mb-2"
-        >
-            {{ $variantAttribute->attribute->name }}
-        </label>
+            <label
+                class="block text-sm font-medium text-slate-700 mb-2"
+            >
+                {{ $variantAttribute->attribute->name }}
+            </label>
 
-        <select
-            name="attribute_value"
-            class="w-full rounded-xl border-slate-200 bg-slate-50"
-        >
+            <select
+                name="attribute_value"
+                class="w-full rounded-xl border-slate-200 bg-slate-50"
+            >
 
-            @foreach($variantValues as $value)
+                @foreach($variantValues as $value)
+                    <option value="{{ $value->id }}"
+                        {{ (isset($selectedValueId)&&($selectedValueId == $value->id)) ? 'selected' : '' }}>
+                        {{ $value->value }}
+                    </option>
+                @endforeach
 
-                <option
-                    value="{{ $value->id }}"
-                    @selected(
-                    isset($selectedValues)
-                    &&
-                    in_array(
-                    $value->id,
-                    $selectedValues
-                    )
-                    )
-                    >
-                    {{ $value->value }}
-                </option>
+            </select>
 
-            @endforeach
-
-        </select>
+        </div>
 
     </div>
-
-</div>
+@endif
 
 <hr class="my-8">
 

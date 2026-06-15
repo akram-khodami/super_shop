@@ -129,6 +129,7 @@ return [
     'sale_price' => 'قیمت فروش',
     'SKU' => 'SKU',
     'variant' => 'تنوع',
+    'variant_attribute' => 'ویژگی تنوع',
     'manage_inventory' => 'مدیرت موجودی',
     'current_stock' => 'موجودی فعلی',
     'increase_stock' => 'افزایش موجودی',

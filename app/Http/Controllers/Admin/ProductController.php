@@ -65,7 +65,7 @@ class ProductController extends Controller
 
         $product->load([
             'images',
-            'variants.attributeValue.productAttributeValue',
+            'variants',
         ]);
 
         $data = $this->getCategoriesAndBrands();

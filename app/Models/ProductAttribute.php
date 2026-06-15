@@ -18,6 +18,7 @@ class ProductAttribute extends Model
         return $this->hasMany(ProductAttributeValue::class);
     }
 
+    //Todo:ببین اسم خوبه؟
     //===Only values of an attribute which use for variant(is_variant is true)
     public function variantValues()
     {
@@ -27,9 +28,13 @@ class ProductAttribute extends Model
             });
     }
 
-    //checked
     public function attribute()
     {
         return $this->belongsTo(Attribute::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 }

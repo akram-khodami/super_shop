@@ -17,19 +17,13 @@ class Product extends Model
 //    protected $guarded = [];
 
     protected $fillable = [
-        'id',
         'category_id',
         'brand_id',
-
         'name',
         'slug',
         'description',
-
         'featured',
         'is_active',
-
-        'created_at',
-        'updated_at',
     ];
 
     public function category(): BelongsTo
@@ -50,6 +44,7 @@ class Product extends Model
     public function thumbnail()
     {
         return $this->hasOne(ProductImage::class)
+            ->orderByDesc('is_primary')
             ->orderBy('sort_order');
     }
 
@@ -75,7 +70,6 @@ class Product extends Model
         )->withPivot('is_variant');
     }
 
-    //checked
     public function productAttributes()
     {
         return $this->hasMany(ProductAttribute::class);
