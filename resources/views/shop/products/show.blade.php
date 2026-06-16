@@ -21,11 +21,12 @@
                 {{-- تصویر اصلی (با آیدی برای تغییر با JS) --}}
                 <div class="aspect-square overflow-hidden rounded-2xl bg-gray-100" id="main-image-container">
                     <img
-                        src="{{ $defaultVariant?->images->first()?->url ?? $product->images->first()?->url ?? $product->thumbnail_url }}"
+                        src="{{ $product->default_variant?->images->first()?->url ?? $product->images->first()?->url ?? $product->thumbnail_url }}"
                         alt="{{ $product->name }}"
                         id="main-image"
                         class="w-full h-full object-cover">
                 </div>
+
 
                 @if($product->gallery->count() > 1)
                     <div class="grid grid-cols-5 gap-3">
@@ -51,7 +52,7 @@
 
                 {{-- قیمت (با آیدی برای تغییر با JS) --}}
                 <div class="mb-6 p-4 bg-gray-50 rounded-xl" id="price-box">
-                    @include('shop.products.partials.price', ['variant' => $defaultVariant])
+                    @include('shop.products.partials.price', ['variant' => $product->default_variant])
                 </div>
 
                 {{-- ویژگی تنوع‌ساز --}}
@@ -60,33 +61,35 @@
                         <label class="block text-sm font-medium mb-2">
                             {{ $variantAttribute['name'] }}:
                             <span id="selected-variant-label" class="font-bold text-indigo-600">
-                                {{ $defaultVariant->variantAttributeValue->productAttributeValue->value ?? '' }}
+                                {{ $product->default_variant->variantAttributeValue->productAttributeValue->value ?? '' }}
                             </span>
                         </label>
                         <div class="flex flex-wrap gap-2" id="variant-selector">
-                            @foreach($variantAttribute['values'] as $value)
-                                @php
-                                    $variant = $product->variants->firstWhere('variantAttributeValue.product_attribute_value_id', $value['id']);
-                                    $isSelected = $defaultVariant &&
-                                        $defaultVariant->variantAttributeValue->product_attribute_value_id == $value['id'];
-                                    $isDisabled = !$variant || $variant->stock == 0;
-                                @endphp
-                                <button onclick="selectVariant({{ $value['id'] }})"
-                                        data-variant-id="{{ $variant?->id }}"
-                                        data-value-id="{{ $value['id'] }}"
-                                        data-price="{{ $variant?->price }}"
-                                        data-sale-price="{{ $variant?->sale_price }}"
-                                        data-stock="{{ $variant?->stock }}"
-                                        data-image="{{ $variant?->images->first()?->url }}"
-                                        class="variant-btn px-4 py-2 rounded-lg border transition
-                                               {{ $isSelected ? 'border-indigo-500 bg-indigo-50 text-indigo-700 ring-2 ring-indigo-200' : 'border-gray-200 hover:border-indigo-500 hover:bg-indigo-50' }}
-                                        {{ $isDisabled ? 'opacity-50 cursor-not-allowed line-through' : '' }}"
-                                    {{ $isDisabled ? 'disabled' : '' }}>
-                                    {{ $value['value'] }}
-                                    @if($isDisabled)
+                            @foreach($variantOptions as $option)
+
+                                <button
+                                    onclick="selectVariant({{ $option['id'] }})"
+                                    data-variant-id="{{ $option['variant_id'] }}"
+                                    data-value-id="{{ $option['id'] }}"
+                                    class="variant-btn px-4 py-2 rounded-lg border transition
+        {{ $option['selected']
+            ? 'border-indigo-500 bg-indigo-50 text-indigo-700 ring-2 ring-indigo-200'
+            : 'border-gray-200 hover:border-indigo-500 hover:bg-indigo-50'
+        }}
+                                    {{ $option['disabled']
+                                        ? 'opacity-50 cursor-not-allowed line-through'
+                                        : ''
+                                    }}"
+                                    {{ $option['disabled'] ? 'disabled' : '' }}
+                                >
+                                    {{ $option['label'] }}
+
+                                    @if($option['disabled'])
                                         <span class="text-xs block">ناموجود</span>
                                     @endif
+
                                 </button>
+
                             @endforeach
                         </div>
                     </div>
@@ -95,8 +98,8 @@
                 {{-- موجودی --}}
                 <div class="mb-4">
                     <span id="stock-status" class="text-sm font-medium
-                        {{ $defaultVariant && $defaultVariant->stock > 0 ? 'text-green-600' : 'text-red-500' }}">
-                        @if($defaultVariant && $defaultVariant->stock > 0)
+                        {{ $product->default_variant && $product->default_variant->stock > 0 ? 'text-green-600' : 'text-red-500' }}">
+                        @if($product->default_variant && $product->default_variant->stock > 0)
                             ✓ موجود در انبار
                         @else
                             ✗ ناموجود
@@ -136,13 +139,13 @@
                 {{-- دکمه افزودن به سبد --}}
                 <div class="flex gap-3">
                     <button id="add-to-cart-btn"
-                            data-current-variant-id="{{ $defaultVariant?->id }}"
+                            data-current-variant-id="{{ $product->default_variant?->id }}"
                             class="flex-1 py-3 rounded-xl font-medium transition-colors
-                                   {{ $defaultVariant && $defaultVariant->stock > 0
+                                   {{ $product->default_variant && $product->default_variant->stock > 0
                                        ? 'bg-indigo-600 text-white hover:bg-indigo-700'
                                        : 'bg-gray-200 text-gray-400 cursor-not-allowed' }}"
-                        {{ !$defaultVariant || $defaultVariant->stock == 0 ? 'disabled' : '' }}>
-                        {{ $defaultVariant && $defaultVariant->stock > 0 ? __('messages.add_to_cart') : __('messages.unavailable') }}
+                        {{ !$product->default_variant || $product->default_variant->stock == 0 ? 'disabled' : '' }}>
+                        {{ $product->default_variant && $product->default_variant->stock > 0 ? __('messages.add_to_cart') : __('messages.unavailable') }}
                     </button>
 
                     <button class="p-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
@@ -270,14 +273,14 @@
                     const originalText = this.textContent;
                     this.textContent = '⏳ در حال افزودن...';
 
-                fetch(`/cart/items/${variantId}`, {
+                    fetch(`/cart/items/${variantId}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                             'Accept': 'application/json'
                         },
-                        body: JSON.stringify({ quantity: 1 })
+                        body: JSON.stringify({quantity: 1})
                     })
                         .then(async response => {
                             const data = await response.json();

@@ -16,18 +16,7 @@ class ProductController extends Controller
             ->with(['thumbnail', 'brand', 'variants'])
             ->where('is_active', true)
             ->latest()
-            ->paginate(12)
-            ->through(function ($product) {
-                $firstVariant = $product->variants->where('stock', '>', 0)->first();
-
-                $product->display_price = $firstVariant ?->price;
-                $product->display_sale_price = $firstVariant ?->sale_price;
-                $product->in_stock = $product->variants->sum('stock') > 0;
-                $product->thumbnail_url = $product->thumbnail_url;
-                $product->default_variant = $firstVariant;
-
-                return $product;
-            });
+            ->paginate(12);
 
         return view('shop.products.index', compact('products'));
     }
@@ -44,16 +33,14 @@ class ProductController extends Controller
             'category',
             'variants.variantAttributeValue.productAttributeValue',
             'variants.images',
+            'productAttributes.attribute',
+            'productAttributes.values',
         ]);
 
-        //Gallery
-        $product->gallery = $product->images->take(5);
-
         //Descriptive features
-        $productAttributes = ProductAttribute::with(['attribute:id,name', 'values'])
+        $productAttributes = $product->productAttributes
             ->where('product_id', $product->id)
             ->where('is_variant', false)
-            ->get()
             ->map(function ($productAttribute) {
                 return [
                     'name' => $productAttribute->attribute->name,
@@ -62,7 +49,7 @@ class ProductController extends Controller
             });
 
         //Diversifying feature
-        $variantAttribute = ProductAttribute::with(['attribute:id,name', 'values'])
+        $variantAttribute = $product->productAttributes
             ->where('product_id', $product->id)
             ->where('is_variant', true)
             ->first();
@@ -77,25 +64,44 @@ class ProductController extends Controller
             ];
         }
 
-        // تنوع پیش‌فرض
-        $defaultVariant = $product->variants
-                ->firstWhere('is_default', true)
-            ?? $product->variants->first();
-
         // آرایه‌ای از همه تنوع‌ها با اطلاعات لازم برای frontend
         $variantsData = $product->variants->map(function ($variant) {
             return [
                 'id' => $variant->id,
-                'value_id' => $variant->attributeValue->product_attribute_value_id ?? null,
+                'value_id' => $variant->variantAttributeValue->product_attribute_value_id ?? null,
                 'price' => $variant->price,
                 'sale_price' => $variant->sale_price,
                 'stock' => $variant->stock,
                 'in_stock' => $variant->stock > 0,
                 'image' => $variant->images->first() ?->url ?? null,
-            'formatted_price'=> $variant->price ? number_format($variant->price) . ' تومان' : null,
-            'formatted_sale' => $variant->sale_price ? number_format($variant->sale_price) . ' تومان' : null,
+                'formatted_price' => $variant->formatted_price,
+                'formatted_sale' => $variant->formatted_sale_price,
         ];
     });
+
+
+        $variantOptions = collect();
+
+        if ($variantAttribute) {
+
+            $variantOptions = collect($variantAttribute['values'])
+                ->map(function ($value) use ($product) {
+
+                    $variant = $product->variants
+                        ->firstWhere(
+                            'variantAttributeValue.product_attribute_value_id',
+                            $value['id']
+                        );
+
+                    return [
+                        'id' => $value['id'],
+                        'label' => $value['value'],
+                        'variant_id' => $variant ?->id,
+                'selected' => $product->default_variant ?->variantAttributeValue ?->product_attribute_value_id == $value['id'],
+                'disabled' => !$variant || $variant->stock <= 0,
+            ];
+        });
+        }
 
         // محصولات مرتبط
         $relatedProducts = collect();
@@ -114,7 +120,7 @@ class ProductController extends Controller
             'relatedProducts',
             'productAttributes',
             'variantAttribute',
-            'defaultVariant',
+            'variantOptions',
             'variantsData'
         ));
     }

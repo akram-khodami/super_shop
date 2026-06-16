@@ -73,6 +73,11 @@ class Product extends Model
         return $this->hasMany(ProductAttribute::class);
     }
 
+    public function getInStockAttribute()
+    {
+        return $this->variants->sum('stock') > 0;
+    }
+
     public function scopeOutOfStock(Builder $query): Builder
     {
         return $query->whereDoesntHave('variants', function ($q) {
@@ -86,6 +91,34 @@ class Product extends Model
             ->having('variants_sum_stock', '<=', $threshold)
             ->having('variants_sum_stock', '>', 0);
     }
+
+    public function getGalleryAttribute()
+    {
+        return $this->images->take(5);
+    }
+
+    public function getDefaultVariantAttribute()
+    {
+        return $this->variants->firstWhere('is_default', true)
+            ?? $this->variants->first();
+    }
+
+    public function getFirstAvailableVariantAttribute()
+    {
+        return $this->variants
+            ->where('stock', '>', 0)
+            ->first();
+    }
+
+    public function getDisplayPriceAttribute()
+    {
+        return $this->first_available_variant ?->price;
+    }
+
+    public function getDisplaySalePriceAttribute()
+    {
+        return $this->first_available_variant ?->sale_price;
+}
 
     public function scopeFilter(Builder $query, array $filters): Builder
     {
