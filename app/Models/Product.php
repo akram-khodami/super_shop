@@ -24,6 +24,15 @@ class Product extends Model
         'is_active',
     ];
 
+    protected $appends = [
+        'thumbnail_url',
+        'in_stock',
+        'display_price',
+        'display_sale_price',
+    ];
+
+    // ... relationships ...
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
@@ -53,7 +62,7 @@ class Product extends Model
             : asset('images/no-image.jpg');
     }
 
-    public function variants()
+    public function variants(): HasMany
     {
         return $this->hasMany(Variant::class);
     }
@@ -62,18 +71,18 @@ class Product extends Model
     {
         return $this->belongsToMany(
             Attribute::class,
-            'product_attributes',  // اسم جدول pivot
-            'product_id',                  // foreign key مربوط به این مدل
-            'attribute_id'         // foreign key مربوط به مدل مقابل
+            'product_attributes',
+            'product_id',
+            'attribute_id'
         )->withPivot('is_variant');
     }
 
-    public function productAttributes()
+    public function productAttributes(): HasMany
     {
         return $this->hasMany(ProductAttribute::class);
     }
 
-    public function getInStockAttribute()
+    public function getInStockAttribute(): bool
     {
         return $this->variants->sum('stock') > 0;
     }
@@ -118,57 +127,42 @@ class Product extends Model
     public function getDisplaySalePriceAttribute()
     {
         return $this->first_available_variant ?->sale_price;
-}
+    }
 
     public function scopeFilter(Builder $query, array $filters): Builder
     {
         return $query
             ->when(
                 $filters['search'] ?? null,
-                fn ($q, $search) => $q->where(
-                    'name',
-                    'like',
-                    "%{$search}%"
-                )
+                fn ($q, $search) => $q->where('name', 'like', "%{$search}%")
             )
             ->when(
                 $filters['category_id'] ?? null,
-                fn ($q, $categoryId) => $q->where(
-                    'category_id',
-                    $categoryId
-                )
+                fn ($q, $categoryId) => $q->where('category_id', $categoryId)
             )
             ->when(
                 $filters['brand_id'] ?? null,
-                fn ($q, $brandId) => $q->where(
-                    'brand_id',
-                    $brandId
-                )
+                fn ($q, $brandId) => $q->where('brand_id', $brandId)
             )
             ->when(
                 request('status') !== null,
-                fn ($q) => $q->where(
-                    'is_active',
-                    request('status')
-                )
+                fn ($q) => $q->where('is_active', request('status'))
             )
-            ->when(request('stock') === 'out',
+            ->when(
+                request('stock') === 'out',
                 fn ($q) => $q->whereDoesntHave('variants', fn ($q2) => $q2->where('stock', '>', 0))
             )
-            ->when(request('stock') === 'in',
+            ->when(
+                request('stock') === 'in',
                 fn ($q) => $q->whereHas('variants', fn ($q2) => $q2->where('stock', '>', 0))
             )
             ->when(
                 $filters['trash'] ?? null,
                 function ($q, $trash) {
-
                     if ($trash === 'only') {
-
                         $q->onlyTrashed();
                     }
-
                     if ($trash === 'with') {
-
                         $q->withTrashed();
                     }
                 }
@@ -176,17 +170,11 @@ class Product extends Model
             ->when(
                 $filters['sort'] ?? null,
                 function ($q, $sort) {
-
                     match($sort){
-
-
-                    'name'
-                => $q->orderBy('name'),
-
-            default
-                => $q->latest(),
-        };
-    }
+                    'name' => $q->orderBy('name'),
+                        default => $q->latest(),
+                    };
+                }
             );
     }
 }

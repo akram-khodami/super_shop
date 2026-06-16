@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductAttribute;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    //Todo: Use service class
+    // TODO: Use service class for business logic
 
     public function index()
     {
@@ -37,7 +38,7 @@ class ProductController extends Controller
             'productAttributes.values',
         ]);
 
-        //Descriptive features
+        // Descriptive features (non-variant)
         $productAttributes = $product->productAttributes
             ->where('product_id', $product->id)
             ->where('is_variant', false)
@@ -48,7 +49,7 @@ class ProductController extends Controller
                 ];
             });
 
-        //Diversifying feature
+        // Diversifying feature (variant attribute)
         $variantAttribute = $product->productAttributes
             ->where('product_id', $product->id)
             ->where('is_variant', true)
@@ -64,7 +65,7 @@ class ProductController extends Controller
             ];
         }
 
-        // آرایه‌ای از همه تنوع‌ها با اطلاعات لازم برای frontend
+        // Prepare variants data for JavaScript
         $variantsData = $product->variants->map(function ($variant) {
             return [
                 'id' => $variant->id,
@@ -73,20 +74,19 @@ class ProductController extends Controller
                 'sale_price' => $variant->sale_price,
                 'stock' => $variant->stock,
                 'in_stock' => $variant->stock > 0,
-                'image' => $variant->images->first() ?->url ?? null,
+                'status' => $variant->in_stock_title,
+                'image' => $variant->thumbnailUrl ?? null,
                 'formatted_price' => $variant->formatted_price,
-                'formatted_sale' => $variant->formatted_sale_price,
-        ];
-    });
+                'formatted_sale_price' => $variant->formatted_sale_price,
+            ];
+        });
 
-
+        // Build variant options for the view
         $variantOptions = collect();
 
         if ($variantAttribute) {
-
             $variantOptions = collect($variantAttribute['values'])
                 ->map(function ($value) use ($product) {
-
                     $variant = $product->variants
                         ->firstWhere(
                             'variantAttributeValue.product_attribute_value_id',
@@ -96,14 +96,14 @@ class ProductController extends Controller
                     return [
                         'id' => $value['id'],
                         'label' => $value['value'],
-                        'variant_id' => $variant ?->id,
-                'selected' => $product->default_variant ?->variantAttributeValue ?->product_attribute_value_id == $value['id'],
-                'disabled' => !$variant || $variant->stock <= 0,
-            ];
-        });
+                        'variant_id' => $variant?->id,
+                        'selected' => $product->default_variant?->variantAttributeValue?->product_attribute_value_id == $value['id'],
+                        'disabled' => !$variant || $variant->stock <= 0,
+                    ];
+                });
         }
 
-        // محصولات مرتبط
+        // Get related products
         $relatedProducts = collect();
         if ($product->category_id) {
             $relatedProducts = Product::query()

@@ -23,18 +23,45 @@ class Variant extends Model
         'is_active'
     ];
 
+    protected $appends = [
+        'thumbnail_url',
+        'formatted_price',
+        'formatted_sale_price',
+        'final_price',
+        'in_stock_title',
+    ];
+
+    // ... relationships ...
+
     public function product()
     {
-        return $this->belongsTo(
-            Product::class
-        );
+        return $this->belongsTo(Product::class);
     }
 
     public function stockMovements()
     {
-        return $this->hasMany(
-            StockMovement::class
-        );
+        return $this->hasMany(StockMovement::class);
+    }
+
+    /**
+     * Get stock status text (without hardcoded language)
+     * Use translation in view instead
+     */
+    public function getInStockTitleAttribute(): string
+    {
+        return $this->stock > 0 ? '✓' . __('messages.in_stock') : '✗' . __('messages.out_of_stock');
+    }
+
+    /**
+     * Get stock status with icon (without hardcoded language)
+     */
+    public function getStockStatusAttribute(): array
+    {
+        return [
+            'status' => $this->stock > 0 ? 'in_stock' : 'out_of_stock',
+            'in_stock' => $this->stock > 0,
+            'stock' => $this->stock,
+        ];
     }
 
     public function variantAttributeValue(): HasOne
@@ -44,7 +71,7 @@ class Variant extends Model
 
     public function getVariantValueAttribute(): ?string
     {
-        return $this->variantAttributeValue?->productAttributeValue?->value;
+        return $this->variantAttributeValue ?->productAttributeValue ?->value;
     }
 
     public function images(): HasMany
@@ -66,14 +93,18 @@ class Variant extends Model
             : asset('images/no-image.jpg');
     }
 
+    /**
+     * Format price without hardcoded currency
+     * Currency should be added in view
+     */
     public function getFormattedPriceAttribute(): string
     {
-        return $this->price ? number_format($this->price) . ' تومان' : '---';
+        return $this->price ? number_format($this->price) : '---';
     }
 
     public function getFormattedSalePriceAttribute(): string
     {
-        return $this->sale_price ? number_format($this->sale_price) . ' تومان' : '---';
+        return $this->sale_price ? number_format($this->sale_price) : '---';
     }
 
     public function getFinalPriceAttribute()
@@ -81,4 +112,49 @@ class Variant extends Model
         return $this->sale_price ?? $this->price;
     }
 
+    /**
+     * Get price data for JavaScript
+     */
+    public function getPriceDataAttribute(): array
+    {
+        return [
+            'price' => $this->price,
+            'sale_price' => $this->sale_price,
+            'formatted_price' => $this->formatted_price,
+            'formatted_sale_price' => $this->formatted_sale_price,
+            'final_price' => $this->final_price,
+            'has_discount' => $this->sale_price && $this->sale_price < $this->price,
+            'discount_percent' => $this->sale_price && $this->price > 0
+                ? round((($this->price - $this->sale_price) / $this->price) * 100)
+                : 0,
+        ];
+    }
+
+    /**
+     * Check if variant is available
+     */
+    public function isAvailable(): bool
+    {
+        return $this->stock > 0 && $this->is_active;
+    }
+
+    /**
+     * Check if variant has discount
+     */
+    public function hasDiscount(): bool
+    {
+        return $this->sale_price && $this->sale_price < $this->price;
+    }
+
+    /**
+     * Get discount percentage
+     */
+    public function getDiscountPercentAttribute(): int
+    {
+        if (!$this->hasDiscount() || $this->price <= 0) {
+            return 0;
+        }
+
+        return round((($this->price - $this->sale_price) / $this->price) * 100);
+    }
 }
