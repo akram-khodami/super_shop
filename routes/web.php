@@ -13,7 +13,8 @@ use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Shop\CategoryController;
 use App\Http\Controllers\Shop\ProductController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Shop\ProfileController;
+use App\Http\Controllers\Shop\UserAddressController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -46,6 +47,22 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::middleware('auth')
+    ->prefix('profile')
+    ->name('profile.')
+    ->group(function () {
+
+        Route::resource(
+            'addresses',
+            UserAddressController::class
+        );
+
+        Route::patch(
+            'addresses/{address}/default',
+            [UserAddressController::class, 'setDefault']
+        )->name('addresses.default');
+    });
 
 require __DIR__ . '/auth.php';
 
@@ -80,7 +97,8 @@ Route::middleware(['auth'])
                 [InventoryController::class, 'show']
             )->name('variants.inventory');;
 
-            Route::post('inventory/increase',
+            Route::post(
+                'inventory/increase',
                 [InventoryController::class, 'increase']
             )->name('variants.inventory.increase');
 
@@ -88,7 +106,6 @@ Route::middleware(['auth'])
                 'inventory/decrease',
                 [InventoryController::class, 'decrease']
             )->name('variants.inventory.decrease');
-
         });
 
         Route::prefix('products/{product}')
@@ -99,7 +116,6 @@ Route::middleware(['auth'])
                     'variants',
                     ProductVariantController::class
                 )->except('index', 'show');
-
             });
 
         Route::delete(

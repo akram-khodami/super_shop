@@ -200,7 +200,11 @@ return [
         'email' => 'ایمیل',
         'password' => 'رمز عبور',
         'attribute_value' => 'ویژگی تنوع',
-        // ... سایر فیلدها
+        'slug' => 'نامک',
+        'logo' => 'لوگو',
+        'image' => 'تصویر',
+        'description' => 'توضیحات',
+        'is_active' => 'وضعیت',
     ],
 
 ];

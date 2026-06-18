@@ -195,6 +195,16 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'name',
+        'email' => 'email',
+        'password' => 'password',
+        'attribute_value' => 'attribute value',
+        'slug' => 'slug',
+        'logo' => 'logo',
+        'image' => 'image',
+        'description' => 'description',
+        'is_active' => 'status',
+    ],
 
 ];
