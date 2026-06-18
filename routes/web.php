@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductAttributeValueController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductVariantController;
+use App\Http\Controllers\Shop\AssistantController;
 use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Shop\CategoryController;
@@ -21,6 +22,14 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::resource('products', ProductController::class);
 Route::resource('categories', CategoryController::class);
+Route::get(
+    '/assistant/search',
+    [AssistantController::class, 'index']
+);
+Route::post(
+    '/assistant/search',
+    [AssistantController::class, 'search']
+);
 
 Route::prefix('cart')
     ->name('cart.')

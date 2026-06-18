@@ -5,70 +5,64 @@
 
             <!-- Logo -->
             <a href="/" class="font-bold text-2xl text-indigo-600">
-                {{__('messages.shop')}}
+                {{ __('messages.shop') }}
             </a>
 
             <!-- Search Desktop -->
             <div class="hidden md:flex flex-1 mx-8">
-                <input
-                    type="text"
-                    placeholder="{{__('messages.search_products')}}"
-                    class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                >
+                <div class="hidden md:flex flex-1 mx-8">
+                    <input type="text"
+                        class="general-search w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                        placeholder="{{ __('messages.search_products') }}">
+                </div>
             </div>
 
             <!-- Desktop Menu -->
             <div class="hidden md:flex items-center gap-6">
 
                 <a href="/" class="hover:text-indigo-600">
-                    {{__('messages.home')}}
+                    {{ __('messages.home') }}
                 </a>
 
-                <a href="{{route('products.index')}}" class="hover:text-indigo-600">
-                    {{__('messages.products')}}
+                <a href="{{ route('products.index') }}" class="hover:text-indigo-600">
+                    {{ __('messages.products') }}
                 </a>
 
-                <a href="{{route('cart.index')}}" class="relative">
+                <a href="{{ route('cart.index') }}" class="relative">
                     🛒
-                    @php($cartCount=$cartCount??0)
-                    @if($cartCount > 0)
-
+                    @php($cartCount = $cartCount ?? 0)
+                    @if ($cartCount > 0)
                         <span
-                            class="absolute -top-2 -right-2  flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white"
-                        >
+                            class="absolute -top-2 -right-2  flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
                             {{ $cartCount }}
                         </span>
-
                     @endif
                 </a>
 
 
                 @guest
                     <a href="{{ route('login') }}">
-                        {{__('messages.login')}}
+                        {{ __('messages.login') }}
                     </a>
 
-                    <a
-                        href="{{ route('register') }}"
-                        class="bg-indigo-600 text-white px-4 py-2 rounded-lg"
-                    >
-                        {{__('messages.register')}}
+                    <a href="{{ route('register') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg">
+                        {{ __('messages.register') }}
                     </a>
                 @endguest
 
                 @auth
+                    <a href="{{ route('profile.edit') }}">
+                        {{ __('messages.profile') }}
+                    </a>
                     <a href="{{ route('admin.dashboard') }}">
-                        {{__('messages.dashboard')}}
+                        {{ __('messages.dashboard') }}
                     </a>
                 @endauth
 
             </div>
 
             <!-- Mobile Button -->
-            <button
-                id="mobile-menu-btn"
-                class="md:hidden text-2xl"
-            >
+            <button id="mobile-menu-btn" class="md:hidden text-2xl">
                 ☰
             </button>
 
@@ -76,28 +70,22 @@
 
         <!-- Mobile Search -->
         <div class="md:hidden pb-4">
-            <input
-                type="text"
-                placeholder="{{__('messages.search_products')}}"
-                class="w-full rounded-lg border-gray-300"
-            >
+            <input type="text" class="general-search w-full rounded-lg border-gray-300"
+                placeholder="{{ __('messages.search_products') }}">
         </div>
 
         <!-- Mobile Menu -->
-        <div
-            id="mobile-menu"
-            class="hidden md:hidden pb-4 space-y-3"
-        >
-            <a href="/" class="block">{{__('messages.home')}}</a>
-            <a href="#" class="block">{{__('messages.products')}}</a>
+        <div id="mobile-menu" class="hidden md:hidden pb-4 space-y-3">
+            <a href="/" class="block">{{ __('messages.home') }}</a>
+            <a href="#" class="block">{{ __('messages.products') }}</a>
 
             @guest
                 <a href="{{ route('login') }}" class="block">
-                    {{__('messages.login')}}
+                    {{ __('messages.login') }}
                 </a>
 
                 <a href="{{ route('register') }}" class="block">
-                    {{__('messages.register')}}
+                    {{ __('messages.register') }}
                 </a>
             @endguest
         </div>
