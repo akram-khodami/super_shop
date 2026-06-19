@@ -13,6 +13,7 @@ use App\Http\Controllers\Shop\AssistantController;
 use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Shop\CategoryController;
+use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ProfileController;
 use App\Http\Controllers\Shop\UserAddressController;
@@ -75,6 +76,24 @@ Route::middleware('auth')
 
 require __DIR__ . '/auth.php';
 
+Route::middleware('auth')
+    ->group(function () {
+
+        Route::get(
+            '/checkout',
+            [CheckoutController::class, 'index']
+        )->name('checkout.index');
+
+        Route::post(
+            '/checkout',
+            [CheckoutController::class, 'store']
+        )->name('checkout.store');
+
+        Route::get(
+            '/checkout/payment',
+            [CheckoutController::class, 'index']
+        )->name('checkout.payment');
+    });
 
 Route::middleware(['auth'])
     ->prefix('admin')

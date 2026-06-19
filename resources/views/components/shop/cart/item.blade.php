@@ -20,7 +20,7 @@
 
                 <button class="cart-remove-btn text-red-500 hover:text-red-700 text-sm transition-colors"
                         data-variant-id="{{ $variant->id }}">
-                    حذف
+                    {{ __('messages.remove') }}
                 </button>
             </div>
 
@@ -32,7 +32,7 @@
                     @else
                         {{ number_format($variant->price) }}
                     @endif
-                    تومان
+                    {{ __('messages.currency') }}
                 </div>
 
                 <div class="flex items-center overflow-hidden rounded-lg border">

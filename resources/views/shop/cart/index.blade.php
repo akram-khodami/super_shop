@@ -41,7 +41,7 @@
                 <div>
 
                     <x-shop.cart.summary
-                        :subtotal="$cart['subtotal']"
+                        :subtotal="$subtotal"
                     />
 
                 </div>

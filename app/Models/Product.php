@@ -129,6 +129,11 @@ class Product extends Model
         return $this->first_available_variant ?->sale_price;
     }
 
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
     public function scopeFilter(Builder $query, array $filters): Builder
     {
         return $query

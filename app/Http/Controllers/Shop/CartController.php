@@ -25,8 +25,8 @@ class CartController extends Controller
             'shop.cart.index',
             [
                 'cart' => $cart,
-                'total' => $this->cartService->total(),
-                'count' => $this->cartService->itemsCount(),
+                'subtotal' => $this->cartService->total(),
+                'count' => $this->cartService->itemsCount(),//unused
             ]
         );
     }
@@ -75,9 +75,7 @@ class CartController extends Controller
 
     public function destroy(Variant $variant)
     {
-        $this->cartService->remove(
-            $variant
-        );
+        $this->cartService->remove($variant);
 
         return response()->json(
             [

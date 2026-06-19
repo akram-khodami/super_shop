@@ -31,4 +31,9 @@ class UserAddress extends Model
     {
         return $query->where('is_default', true);
     }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }

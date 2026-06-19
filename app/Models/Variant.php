@@ -157,4 +157,9 @@ class Variant extends Model
 
         return round((($this->price - $this->sale_price) / $this->price) * 100);
     }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class, 'variant_id');
+    }
 }
