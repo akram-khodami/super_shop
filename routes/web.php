@@ -15,6 +15,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Shop\CategoryController;
 use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\CheckoutPaymentController;
+use App\Http\Controllers\Shop\OrderSuccessController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ProfileController;
 use App\Http\Controllers\Shop\UserAddressController;
@@ -86,20 +87,7 @@ Route::middleware('auth')->group(function () {
         });
 
 
-    Route::get(
-        '/payments/wallet/{payment}',
-        fn ($payment) => 'Wallet Payment'
-    )->name('payments.wallet');
-
-    Route::get(
-        '/payments/online/{payment}',
-        fn ($payment) => 'Online Payment'
-    )->name('payments.online');
-
-    Route::get(
-        '/payments/installment/{payment}',
-        fn ($payment) => 'Installment Payment'
-    )->name('payments.installment');
+    Route::get('/orders/{order}/success', [OrderSuccessController::class, 'show'])->name('orders.success');
 });
 
 

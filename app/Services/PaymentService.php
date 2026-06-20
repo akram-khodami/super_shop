@@ -81,6 +81,10 @@ class PaymentService
             'paid_at' => now(),
         ]);
 
+        $this->clearCart(
+            $payment->order
+        );
+
         return $payment->fresh();
 
         });
@@ -94,5 +98,17 @@ class PaymentService
     public function payInstallment(Payment $payment): Payment
     {
 
+    }
+
+    protected function clearCart(Order $order): void
+    {
+        $cart = $order->user
+            ->cart;
+
+        if (!$cart) {
+            return;
+        }
+
+        $cart->items()->delete();
     }
 }
