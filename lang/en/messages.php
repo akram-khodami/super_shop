@@ -232,6 +232,26 @@ return [
     'total' => 'Total',
     'place_order' => 'Place Order',
     'cart' => 'Cart',
+    'select_payment_method' => 'Select Payment Method',
+    'select_payment_method_description' => 'Please select your order payment method.',
+    'proceed_to_payment' => 'Proceed to Payment',
+    'order_number' => 'Order Number',
+    'payment' => 'Payment',
+    'payment_methods_title' => 'Payment Methods',
+    'payment_methods' => [
+        'wallet' => [
+            'label' => 'Wallet Payment',
+            'description' => 'Order amount will be deducted from your wallet balance.',
+        ],
+        'online' => [
+            'label' => 'Online Payment',
+            'description' => 'Redirect to bank payment gateway',
+        ],
+        'installment' => [
+            'label' => 'Installment Payment',
+            'description' => 'Pay your order in installments',
+        ]
+    ],
     //====action messages
     'attributes_created_successfully' => 'Attributes created successfully.',
     'attributes_updated_successfully' => 'Attribute updated successfully.',

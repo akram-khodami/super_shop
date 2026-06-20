@@ -19,7 +19,8 @@ class CheckoutService
 
             $cart = Cart::query()
                 ->with([
-                    'items.variant'
+                    'items.variant.product',
+                    'items.variant.variantAttributeValue.productAttributeValue',
                 ])
                 ->where(
                     'user_id',
@@ -68,8 +69,7 @@ class CheckoutService
 
             foreach ($cart->items as $item) {
 
-                $price = $item->variant->price;
-                $sale_price = $item->variant->sale_price;
+                $unitPrice = $item->variant->sale_price ?? $item->variant->price;
 
                 $data = [
 
@@ -79,13 +79,13 @@ class CheckoutService
 
                     'product_title' => $item->variant->product->name,
 
-                    'variant_title' => $item->variant?->variantAttributeValue->productAttributeValue->value,
+                    'variant_title' => $item->variant ?->variantAttributeValue->productAttributeValue->value,
 
-                    'unit_price' => $price,
+                    'unit_price' => $unitPrice,
 
                     'quantity' => $item->quantity,
 
-                    'total_amount' => $price * $item->quantity,
+                    'total_amount' => $unitPrice * $item->quantity,
                 ];
 
                 $order->items()->create($data);
@@ -97,10 +97,13 @@ class CheckoutService
 
     }
 
+
     public function subtotal(Cart $cart): float
     {
-        return $cart->items->sum(
-            fn ($item) => $item->variant->price * $item->quantity
-        );
+        return $cart->items->sum(function ($item) {
+            $unitPrice = $item->variant->sale_price ?? $item->variant->price;
+            return $unitPrice * $item->quantity;
+        });
     }
+
 }

@@ -17,12 +17,11 @@
             </div>
 
             <div>
-                <h4 class="font-semibold mb-4">Shop</h4>
+                <h4 class="font-semibold mb-4">{{__('messages.shop')}}</h4>
 
                 <ul class="space-y-2 text-gray-400">
-                    <li>Products</li>
-                    <li>Categories</li>
-                    <li>Offers</li>
+                    <li>{{__('messages.products')}}</li>
+                    <li>{{__('messages.categories')}}</li>
                 </ul>
             </div>
 

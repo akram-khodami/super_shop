@@ -25,7 +25,8 @@ class CheckoutController extends Controller
         $cart = Cart::query()
             ->with(
                 [
-                    'items.variant'
+                    'items.variant.product',
+                    'items.variant.variantAttributeValue.productAttributeValue',
                 ])
             ->where('user_id', $user->id)
             ->first();
@@ -63,10 +64,6 @@ class CheckoutController extends Controller
             $request->address_id
         );
 
-        return redirect()
-            ->route(
-                'checkout.payment',
-                $order
-            );
+        return redirect()->route('checkout.payment', [$order]);
     }
 }

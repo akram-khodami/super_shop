@@ -232,6 +232,26 @@ return [
     'total' => 'مبلغ نهایی',
     'place_order' => 'ثبت سفارش',
     'cart' => 'سبد خرید',
+    'select_payment_method' => 'انتخاب روش پرداخت',
+    'select_payment_method_description' => 'لطفاً روش پرداخت سفارش خود را انتخاب کنید.',
+    'proceed_to_payment' => 'ادامه پرداخت',
+    'order_number' => 'شماره سفارش',
+    'payment' => 'پرداخت',
+    'payment_methods_title' => 'روش‌های پرداخت',
+    'payment_methods' => [
+        'wallet' => [
+            'label' => 'پرداخت از کیف پول',
+            'description' => 'مبلغ سفارش از موجودی کیف پول شما کسر خواهد شد.',
+        ],
+        'online' => [
+            'label' => 'پرداخت آنلاین',
+            'description' => 'انتقال به درگاه پرداخت بانکی',
+        ],
+        'installment' => [
+            'label' => 'خرید اقساطی',
+            'description' => 'پرداخت سفارش به صورت اقساط',
+        ],
+    ],
     //====action messages
     'attributes_created_successfully' => 'ویژگی با موفقیت ایجاد شد.',
     'attributes_updated_successfully' => 'ویژگی با موفقیت به‌روزرسانی شد.',

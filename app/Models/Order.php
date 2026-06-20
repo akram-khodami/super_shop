@@ -80,5 +80,9 @@ class Order extends Model
         return $this->payment_status === self::PAYMENT_PAID;
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 
 }
