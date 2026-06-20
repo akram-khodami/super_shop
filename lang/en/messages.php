@@ -231,6 +231,7 @@ return [
     'select_address' => 'Select Address',
     'total' => 'Total',
     'place_order' => 'Place Order',
+    'cart' => 'Cart',
     //====action messages
     'attributes_created_successfully' => 'Attributes created successfully.',
     'attributes_updated_successfully' => 'Attribute updated successfully.',

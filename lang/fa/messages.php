@@ -231,6 +231,7 @@ return [
     'select_address' => 'انتخاب آدرس',
     'total' => 'مبلغ نهایی',
     'place_order' => 'ثبت سفارش',
+    'cart' => 'سبد خرید',
     //====action messages
     'attributes_created_successfully' => 'ویژگی با موفقیت ایجاد شد.',
     'attributes_updated_successfully' => 'ویژگی با موفقیت به‌روزرسانی شد.',
