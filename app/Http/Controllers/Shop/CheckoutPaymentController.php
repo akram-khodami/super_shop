@@ -7,6 +7,7 @@ use App\Http\Requests\Shop\StorePaymentRequest;
 use App\Models\Order;
 use App\Services\PaymentService;
 use App\Enums\PaymentMethod;
+use Illuminate\Support\Facades\Gate;
 
 class CheckoutPaymentController extends Controller
 {
@@ -19,27 +20,19 @@ class CheckoutPaymentController extends Controller
 
     public function show(Order $order)
     {
-        abort_if($order->user_id !== auth()->id(), 403);
+        Gate::authorize('view', $order);
 
         $paymentMethods = PaymentMethod::options();
 
-        return view('shop.checkout.payment',
-            compact('order', 'paymentMethods')
-        );
+        return view('shop.checkout.payment', compact('order', 'paymentMethods'));
     }
 
     public function store(StorePaymentRequest $request, Order $order)
     {
-        abort_if(
-            $order->user_id !== auth()->id(),
-            403
-        );
+        Gate::authorize('pay', $order);
 
         $payment = $this->paymentService->pay($order, $request->payment_method);
 
-        return redirect()->route(
-            'orders.success',
-            $payment->order
-        );
+        return redirect()->route('orders.success', $payment->order);
     }
 }

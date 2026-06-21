@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\ProductAttribute;
 use App\Rules\UniqueVariant;
 
 class StoreProductVariantRequest extends BaseProductVariantRequest
@@ -20,7 +21,7 @@ class StoreProductVariantRequest extends BaseProductVariantRequest
 
         // اضافه کردن اعتبارسنجی شرطی برای محصولاتی که ویژگی تنوع دارند
         if ($product) {
-            $hasVariantAttribute = \App\Models\ProductAttribute::where('product_id', $product->id)
+            $hasVariantAttribute = ProductAttribute::where('product_id', $product->id)
                 ->where('is_variant', true)
                 ->exists();
 

@@ -54,12 +54,21 @@ class InventoryService
             $note
         ) {
 
+            $variant = Variant::query()
+                ->lockForUpdate()
+                ->findOrFail($variant->id);
+
+
             $before = $variant->stock;
 
-            $after = max(
-                0,
-                $before - $quantity
-            );
+            if ($before < $quantity) {
+                throw new \RuntimeException(
+                    'Insufficient stock.'//todo:translate
+                );
+            }
+
+            $after = $before - $quantity;
+
 
             $variant->update([
                 'stock' => $after

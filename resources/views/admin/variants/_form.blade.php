@@ -1,6 +1,7 @@
-@if($variantAttribute?->attribute?->name)
-    {{--    just for the product has variant attribute--}}
-    <div class="grid md:grid-cols-2 gap-6">
+<div class="grid md:grid-cols-2 gap-6">
+
+    @if($variantAttribute?->attribute?->name)
+        {{--    just for the product has variant attribute--}}
 
         <div>
 
@@ -26,15 +27,8 @@
 
         </div>
 
-    </div>
-@endif
-
-<hr class="my-8">
-
-<div class="grid md:grid-cols-2 gap-6">
-
+    @endif
     <div>
-
         <label class="block mb-2">
             {{__('messages.SKU')}}
         </label>
@@ -45,8 +39,13 @@
             value="{{ old('sku',$variant->sku ?? '') }}"
             class="w-full rounded-xl border-slate-200 bg-slate-50"
         >
-
     </div>
+</div>
+
+<hr class="my-8">
+
+<div class="grid md:grid-cols-2 gap-6">
+
 
     <div>
 
@@ -75,21 +74,6 @@
             step="0.01"
             name="sale_price"
             value="{{ old('sale_price',$variant->sale_price ?? '') }}"
-            class="w-full rounded-xl border-slate-200 bg-slate-50"
-        >
-
-    </div>
-
-    <div>
-
-        <label class="block mb-2">
-            {{__('messages.stock')}}
-        </label>
-
-        <input
-            type="number"
-            name="stock"
-            value="{{ old('stock',$variant->stock ?? 0) }}"
             class="w-full rounded-xl border-slate-200 bg-slate-50"
         >
 

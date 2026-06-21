@@ -19,7 +19,6 @@ abstract class BaseProductVariantRequest extends FormRequest
         return [
             'price' => ['required', 'numeric', 'min:0'],
             'sale_price' => ['nullable', 'numeric', 'min:0', 'lte:price'],
-            'stock' => ['required', 'integer', 'min:0'],
             'is_active' => ['boolean'],
             'images' => ['nullable', 'array'],
             'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
@@ -40,7 +39,6 @@ abstract class BaseProductVariantRequest extends FormRequest
     {
         return [
             'price.required' => 'قیمت الزامی است',
-            'stock.required' => 'موجودی الزامی است',
             'attribute_value.required' => 'حداقل یک ویژگی باید انتخاب شود',
             'attribute_value.exists' => 'مقدار ویژگی انتخاب شده معتبر نیست',
         ];

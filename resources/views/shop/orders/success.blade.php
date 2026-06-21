@@ -5,7 +5,7 @@
         <div class="bg-white border rounded-3xl p-10 text-center">
 
             <div
-                class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto"
+                class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto text-3xl text-green-600"
             >
                 ✓
             </div>
@@ -13,13 +13,13 @@
             <h1
                 class="mt-6 text-3xl font-bold text-green-600"
             >
-                سفارش با موفقیت ثبت شد
+                {{ __('messages.order_successful') }}
             </h1>
 
             <p
                 class="mt-3 text-gray-500"
             >
-                پرداخت شما با موفقیت انجام شد.
+                {{ __('messages.payment_successful') }}
             </p>
 
             <div
@@ -27,7 +27,7 @@
             >
 
                 <div class="flex justify-between">
-                    <span>شماره سفارش</span>
+                    <span>{{ __('messages.order_number') }}</span>
 
                     <strong>
                         {{ $order->order_number }}
@@ -35,19 +35,19 @@
                 </div>
 
                 <div class="flex justify-between">
-                    <span>مبلغ پرداختی</span>
+                    <span>{{ __('messages.payment_amount') }}</span>
 
                     <strong>
                         {{ number_format($order->total_amount) }}
-                        تومان
+                        {{ __('messages.currency') }}
                     </strong>
                 </div>
 
                 <div class="flex justify-between">
-                    <span>وضعیت</span>
+                    <span>{{ __('messages.payment_status') }}</span>
 
                     <strong class="text-green-600">
-                        پرداخت شده
+                        {{ __('messages.status_paid') }}
                     </strong>
                 </div>
 
@@ -59,16 +59,16 @@
 
                 <a
                     href="{{ route('home') }}"
-                    class="px-5 py-3 rounded-xl bg-gray-100"
+                    class="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 transition"
                 >
-                    بازگشت به فروشگاه
+                    {{ __('messages.back_to_shop') }}
                 </a>
 
                 <a
-                    href="#"
-                    class="px-5 py-3 rounded-xl bg-indigo-600 text-white"
+                    href="{{ route('orders.index') }}"
+                    class="px-5 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition"
                 >
-                    مشاهده سفارش
+                    {{ __('messages.view_order') }}
                 </a>
 
             </div>

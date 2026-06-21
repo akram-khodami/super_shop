@@ -30,7 +30,7 @@ return new class extends Migration
                 ->default('pending');
 
             $table->string('payment_status')
-                ->default('unpaid');
+                ->default('unpaid')->comment('Order Payment Status');
 
             $table->decimal('subtotal', 12, 2)
                 ->default(0);

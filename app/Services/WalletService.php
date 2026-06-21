@@ -76,7 +76,6 @@ class WalletService
             $description
         ) {
 
-            $wallet = $this->getWallet($user);
 
             $wallet = Wallet::query()
                 ->where('user_id', $user->id)

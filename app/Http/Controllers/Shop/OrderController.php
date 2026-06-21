@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Http\Controllers\Shop;
+
+use App\Http\Controllers\Controller;
+use App\Models\Order;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+
+class OrderController extends Controller
+{
+    public function index()
+    {
+        $orders = auth()
+            ->user()
+            ->orders()
+            ->latest()
+            ->paginate(10);
+
+//        return response()->json($orders);
+
+        return view('shop.orders.index', compact('orders'));
+    }
+
+    public function show(Order $order)
+    {
+        Gate::authorize('view', $order);
+
+        $order->load([
+            'items',
+            'payments',
+        ]);
+
+//        return response()->json($order);
+
+        return view('shop.orders.show', compact('order'));
+    }
+}

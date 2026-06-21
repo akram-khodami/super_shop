@@ -4,18 +4,19 @@ namespace App\Enums;
 
 enum PaymentMethod: string
 {
-case WALLET = 'wallet';
-case ONLINE = 'online';
-case INSTALLMENT = 'installment';
+    case WALLET = 'wallet';
+    case ONLINE = 'online';
+    case INSTALLMENT = 'installment';
 
     public function label(): string
 {
-    return match($this) {
-    self::WALLET => __('messages.payment_methods.wallet.label'),
-            self::ONLINE => __('messages.payment_methods.online.label'),
-            self::INSTALLMENT => __('messages.payment_methods.installment.label'),
-        };
-    }
+    return __("messages.payment_methods.{$this->value}.label");
+}
+
+    public function description(): string
+{
+    return __("messages.payment_methods.{$this->value}.description");
+}
 
     public static function options(): array
 {

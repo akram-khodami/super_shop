@@ -25,7 +25,7 @@ class ProductVariantService
                 'sku' => $data['sku'] ?? null,
                 'price' => $data['price'],
                 'sale_price' => $data['sale_price'] ?? null,
-                'stock' => $data['stock'],
+                'stock' => 0,
                 'is_active' => $data['is_active'] ?? true,
             ]);
 
@@ -67,7 +67,7 @@ class ProductVariantService
                 'sku' => $data['sku'] ?? null,
                 'price' => $data['price'],
                 'sale_price' => $data['sale_price'] ?? null,
-                'stock' => $data['stock'],
+                'stock' => 0,
                 'is_active' => $data['is_active'] ?? $variant->is_active,
             ]);
 

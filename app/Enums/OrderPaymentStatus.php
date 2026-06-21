@@ -2,16 +2,16 @@
 
 namespace App\Enums;
 
-enum WalletTransactionType: string
+enum OrderPaymentStatus:string
 {
-    case DEPOSIT = 'deposit';
-    case WITHDRAW = 'withdraw';
+    case UNPAID='unpaid';
+    case PAID='paid';
+    case REFUNDED='refunded';
 
     public function label(): string
 {
-    return __("messages.wallet_transaction_type.".$this->value);
+    return __("messages.order_payment_statuses.".$this->value);
 }
-
     public static function options(): array
 {
     return collect(self::cases())

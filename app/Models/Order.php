@@ -3,20 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\OrderStatus;
+use App\Enums\OrderPaymentStatus;
 
+#[UsePolicy(OrderPolicy::class)]
 class Order extends Model
 {
-    public const STATUS_PENDING = 'pending';
-    public const STATUS_PAID = 'paid';
-    public const STATUS_PROCESSING = 'processing';
-    public const STATUS_SHIPPED = 'shipped';
-    public const STATUS_DELIVERED = 'delivered';
-    public const STATUS_CANCELED = 'canceled';
-
-    public const PAYMENT_UNPAID = 'unpaid';
-    public const PAYMENT_PAID = 'paid';
-    public const PAYMENT_REFUNDED = 'refunded';
-
     protected $fillable = [
         'user_id',
         'user_address_id',
@@ -83,6 +75,16 @@ class Order extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return OrderStatus::tryFrom($this->status)?->label() ?? $this->status;
+    }
+
+    public function getPaymentStatusLabelAttribute(): string
+    {
+        return OrderPaymentStatus::tryFrom($this->payment_status)?->label() ?? $this->payment_status;
     }
 
 }

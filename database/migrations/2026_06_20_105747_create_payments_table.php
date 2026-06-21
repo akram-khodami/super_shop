@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('method');
 
             $table->string('status')
-                ->default('pending');
+                ->default('pending')->comment('Payment Attempt status');
 
             $table->decimal('amount', 12, 2);
 

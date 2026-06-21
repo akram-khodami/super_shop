@@ -15,6 +15,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Shop\CategoryController;
 use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\CheckoutPaymentController;
+use App\Http\Controllers\Shop\OrderController;
 use App\Http\Controllers\Shop\OrderSuccessController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ProfileController;
@@ -88,6 +89,9 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/orders/{order}/success', [OrderSuccessController::class, 'show'])->name('orders.success');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+
 });
 
 

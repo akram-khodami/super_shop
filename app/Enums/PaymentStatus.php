@@ -1,16 +1,27 @@
 <?php
 
 namespace App\Enums;
+use App\Traits\HasLabelTranslation;
 
 enum PaymentStatus: string
 {
-case PENDING = 'pending';
+    use HasLabelTranslation;
 
-case SUCCESS = 'success';
+    case PENDING = 'pending';
+    case SUCCESS = 'success';
+    case FAILED = 'failed';
+    case CANCELED = 'canceled';
+    case REFUNDED = 'refunded';
 
-case FAILED = 'failed';
+    public function label(): string
+{
+    return __("messages.payment_statuses.".$this->value);
+}
 
-case CANCELED = 'canceled';
-
-case REFUNDED = 'refunded';
+    public static function options(): array
+{
+    return collect(self::cases())
+        ->mapWithKeys(fn ($case) => [$case->value => $case->label()])
+        ->toArray();
+}
 }

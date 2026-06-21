@@ -79,7 +79,7 @@ class CheckoutService
 
                     'product_title' => $item->variant->product->name,
 
-                    'variant_title' => $item->variant ?->variantAttributeValue->productAttributeValue->value,
+                    'variant_title' => $item->variant?->variantAttributeValue?->productAttributeValue->value,
 
                     'unit_price' => $unitPrice,
 
