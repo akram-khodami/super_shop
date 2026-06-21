@@ -217,8 +217,6 @@
 
                     <th class="p-3">{{__('messages.brand')}}</th>
 
-                    <th class="p-3">{{__('messages.stock')}}</th>
-
                     <th class="p-3">{{__('messages.image')}}</th>
 
                     <th class="p-3">{{__('messages.actions')}}</th>
@@ -246,36 +244,6 @@
 
                         <td class="p-3">
                             {{ $product->brand?->name }}
-                        </td>
-
-                        <td class="p-3">
-
-                            @if($product->stock == 0)
-
-                                <span
-                                    class="bg-red-100 text-red-700 px-2 py-1 rounded"
-                                >
-                                    {{__('messages.out_of_stock')}}
-                                </span>
-
-                            @elseif($product->stock <= 5)
-
-                                <span
-                                    class="bg-orange-100 text-orange-700 px-2 py-1 rounded"
-                                >
-                                    {{ $product->stock }}
-                                </span>
-
-                            @else
-
-                                <span
-                                    class="bg-green-100 text-green-700 px-2 py-1 rounded"
-                                >
-                                    {{ $product->stock }}
-                                </span>
-
-                            @endif
-
                         </td>
 
                         <td class="p-3">

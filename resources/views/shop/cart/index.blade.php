@@ -5,11 +5,11 @@
         <div class="mb-8">
 
             <h1 class="text-3xl font-bold">
-                سبد خرید
+                {{ __('messages.shopping_cart') }}
             </h1>
 
             <p class="mt-2 text-gray-500">
-                محصولات انتخاب شده شما
+                {{ __('messages.your_selected_products') }}
             </p>
 
         </div>
@@ -54,7 +54,7 @@
 
     @push('scripts')
         <script>
-            // ========== افزایش و کاهش تعداد ==========
+            // ========== Increase and decrease quantity ==========
             document.querySelectorAll('.cart-qty-btn').forEach(btn => {
                 btn.addEventListener('click', function () {
                     const action = this.dataset.action;
@@ -81,11 +81,11 @@
                     })
                         .then(async response => {
                             const data = await response.json();
-                            if (!response.ok) throw new Error(data.message || 'خطای سرور');
+                            if (!response.ok) throw new Error(data.message || 'Server error');
                             return data;
                         })
                         .then(data => {
-                            showToast(data.message || '✅ بروزرسانی شد', 'success');
+                            showToast(data.message || '✅ Updated successfully', 'success');
 
                             let currentQty = parseInt(quantitySpan.textContent.trim());
                             if (action === 'increase') {
@@ -101,7 +101,7 @@
                             }
                         })
                         .catch(error => {
-                            showToast(error.message || '❌ خطا در بروزرسانی', 'error');
+                            showToast(error.message || '❌ Error updating', 'error');
                         })
                         .finally(() => {
                             siblingBtns.forEach(b => {
@@ -112,13 +112,13 @@
                 });
             });
 
-            // ========== حذف آیتم ==========
+            // ========== Remove item ==========
             document.querySelectorAll('.cart-remove-btn').forEach(btn => {
                 btn.addEventListener('click', function () {
                     const variantId = this.dataset.variantId;
                     const row = this.closest('.cart-item-row');
 
-                    if (!confirm('آیا از حذف این محصول اطمینان دارید؟')) return;
+                    if (!confirm('{{ __('messages.confirm_remove_item') }}')) return;
 
                     const siblingBtns = row.querySelectorAll('.cart-qty-btn, .cart-remove-btn');
                     siblingBtns.forEach(b => {
@@ -138,17 +138,17 @@
                     })
                         .then(async response => {
                             const data = await response.json();
-                            if (!response.ok) throw new Error(data.message || 'خطای سرور');
+                            if (!response.ok) throw new Error(data.message || 'Server error');
                             return data;
                         })
                         .then(data => {
-                            showToast(data.message || '🗑️ محصول حذف شد', 'success');
+                            showToast(data.message || '🗑️ Item removed', 'success');
                             row.remove();
                             checkEmptyCart();
                         })
                         .catch(error => {
-                            showToast(error.message || '❌ خطا در حذف محصول', 'error');
-                            this.textContent = 'حذف';
+                            showToast(error.message || '❌ Error removing item', 'error');
+                            this.textContent = '{{ __('messages.remove') }}';
                         })
                         .finally(() => {
                             siblingBtns.forEach(b => {
@@ -159,14 +159,13 @@
                 });
             });
 
-            // بررسی خالی شدن سبد
+            // Check if cart is empty
             function checkEmptyCart() {
                 const remainingItems = document.querySelectorAll('.cart-item-row');
                 if (remainingItems.length === 0) {
-                    location.reload(); // رفرش کن تا empty state نشون داده بشه
+                    location.reload(); // Reload to show empty state
                 }
             }
         </script>
     @endpush
 </x-app-layout>
-

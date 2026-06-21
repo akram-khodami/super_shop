@@ -8,24 +8,8 @@
                 {{ __('messages.shop') }}
             </a>
 
-            <!-- Search Desktop -->
-            <div class="hidden md:flex flex-1 mx-8 relative">
-                <input type="text"
-                       class="general-search w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 pl-10"
-                       placeholder="{{ __('messages.search_products') }}"
-                       autocomplete="off">
-
-                <!-- Search icon -->
-                <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                </div>
-            </div>
-
             <!-- Desktop Menu -->
-            <div class="hidden md:flex items-center gap-6 shrink-0">
+            <div class="hidden md:flex items-center gap-6 shrink-0 p-12">
 
                 <a href="/" class="hover:text-indigo-600 transition-colors">
                     {{ __('messages.home') }}
@@ -72,6 +56,21 @@
             <button id="mobile-menu-btn" class="md:hidden text-2xl p-2 hover:bg-gray-100 rounded-lg transition-colors">
                 ☰
             </button>
+            <!-- Search Desktop -->
+            <div class="hidden md:flex flex-1 mx-8 relative">
+                <input type="text"
+                       class="general-search w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 pl-10"
+                       placeholder="{{ __('messages.search_products') }}"
+                       autocomplete="off">
+
+                <!-- Search icon -->
+                <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+            </div>
 
         </div>
 
@@ -102,7 +101,7 @@
             <a href="{{ route('products.index') }}"
                class="block hover:text-indigo-600 transition-colors">{{ __('messages.products') }}</a>
             <a href="{{ route('cart.index') }}"
-               class="block hover:text-indigo-600 transition-colors">🛒 {{ __('messages.cart') }}</a>
+               class="block hover:text-indigo-600 transition-colors">{{ __('messages.cart') }} &nbsp;🛒 </a>
 
             @guest
                 <a href="{{ route('login') }}" class="block hover:text-indigo-600 transition-colors">

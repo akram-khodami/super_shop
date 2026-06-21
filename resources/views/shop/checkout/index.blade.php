@@ -2,11 +2,11 @@
 
     <div class="max-w-7xl mx-auto px-4 py-8">
 
-        <x-shop.checkout-stepper :step="2"/>
-
         <h1 class="text-2xl font-bold mb-8">
             {{ __('messages.checkout') }}
         </h1>
+
+        <x-shop.checkout-stepper :step="2"/>
 
         <form
             method="POST"
