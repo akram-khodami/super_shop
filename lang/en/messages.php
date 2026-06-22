@@ -316,6 +316,10 @@ return [
     'customer_information' => 'Customer Information',
     'order_totals' => 'Order Totals',
     'status_history' => 'Status History',
+    'insufficient_stock' => 'Insufficient Stock',
+    'insufficient_wallet_balance' => 'Insufficient wallet balance.',
+    'invalid_order_status_transition' => 'Invalid order status transition.',
+    'order_already_paid' => 'Order already paid.',
     //====action messages
     'updated_successfully' => 'Updated successfully',
     'attributes_created_successfully' => 'Attributes created successfully.',

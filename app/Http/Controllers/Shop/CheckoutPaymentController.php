@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Shop;
 
+use App\Exceptions\OrderAlreadyPaidException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\StorePaymentRequest;
 use App\Models\Order;
@@ -21,6 +22,10 @@ class CheckoutPaymentController extends Controller
     public function show(Order $order)
     {
         Gate::authorize('view', $order);
+
+        if ($order->isPaid()) {
+            throw new OrderAlreadyPaidException();
+        }
 
         $paymentMethods = PaymentMethod::options();
 

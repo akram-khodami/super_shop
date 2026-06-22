@@ -41,7 +41,8 @@ class UserAddressController extends Controller
      */
     public function store(
         StoreUserAddressRequest $request
-    ) {
+    )
+    {
         auth()
             ->user()
             ->addresses()
@@ -79,7 +80,8 @@ class UserAddressController extends Controller
     public function update(
         UpdateUserAddressRequest $request,
         UserAddress $address
-    ) {
+    )
+    {
         abort_if(
             $address->user_id !== auth()->id(),
             403
@@ -99,9 +101,8 @@ class UserAddressController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(
-        UserAddress $address
-    ) {
+    public function destroy(UserAddress $address)
+    {
         abort_if(
             $address->user_id !== auth()->id(),
             403
@@ -119,7 +120,8 @@ class UserAddressController extends Controller
     public function setDefault(
         UserAddress $address,
         AddressService $service
-    ) {
+    )
+    {
         abort_if(
             $address->user_id !== auth()->id(),
             403

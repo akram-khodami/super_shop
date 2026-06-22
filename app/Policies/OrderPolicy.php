@@ -40,14 +40,12 @@ class OrderPolicy
     public function update(User $user, Order $order): bool
     {
         return ($user->id === $order->user_id) &&
-            ($order->payment_status === OrderPaymentStatus::UNPAID->value) &&
             ($order->status === OrderStatus::PENDING->value);
     }
 
     public function pay(User $user, Order $order): bool
     {
         return ($user->id === $order->user_id) &&
-            ($order->payment_status === OrderPaymentStatus::UNPAID->value) &&
             ($order->status === OrderStatus::PENDING->value);
     }
 

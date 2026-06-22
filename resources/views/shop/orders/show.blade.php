@@ -4,6 +4,43 @@
 
         <x-shop.orders.order-stepper :order="$order"/>
 
+        <div class="mt-8">
+
+            <h3 class="font-bold mb-4">
+                {{__('messages.status_history')}}
+            </h3>
+
+            @foreach($order->statusLogs as $log)
+
+                <div class="border-r-2 pr-4 mb-4">
+
+                    <div class="font-medium">
+
+                        {{ $log->new_status_label }}
+
+                    </div>
+
+                    <div class="text-sm text-gray-500">
+
+                        {{$log->created_at }}
+
+                    </div>
+
+                    @if($log->description)
+
+                        <div class="text-sm mt-1">
+
+                            {{ $log->description }}
+
+                        </div>
+
+                    @endif
+
+                </div>
+
+            @endforeach
+
+        </div>
         <div class="flex items-center justify-between mb-8 bg-white border rounded-2xl p-6 shadow-sm">
 
             <div>

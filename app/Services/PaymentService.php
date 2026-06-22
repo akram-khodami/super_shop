@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Exceptions\OrderAlreadyPaidException;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Enums\PaymentMethod;
@@ -25,6 +26,10 @@ class PaymentService
 
     public function pay(Order $order, string $method)
     {
+        if ($order->isPaid()) {
+            throw new OrderAlreadyPaidException();
+        }
+
         $payment = $this->createPayment($order, $method);
 
         switch ($method) {

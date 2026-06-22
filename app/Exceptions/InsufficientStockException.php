@@ -2,12 +2,13 @@
 
 namespace App\Exceptions;
 
-class InsufficientWalletBalanceException extends BusinessException
+
+class InsufficientStockException extends BusinessException
 {
     public function __construct()
     {
         parent::__construct(
-            __('messages.insufficient_wallet_balance')
+            __('messages.insufficient_stock')
         );
     }
 }

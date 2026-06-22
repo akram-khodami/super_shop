@@ -21,21 +21,23 @@
 
         @include('admin.partials.header')
 
-        <main class="p-6">
+        <main class="p-4 lg:p-8">
 
-            @if(session('success'))
-                <div
-                    class="mb-6 bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg"
-                >
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div
-                    class="mb-6 bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg"
-                >
-                    {{ session('error') }}
+            <!-- Alerts -->
+            @if(session('success') || session('error') || session('warning') || session('info'))
+                <div class="space-y-4">
+                    @if(session('success'))
+                        <x-alert type="success" :message="session('success')" dismissible/>
+                    @endif
+                    @if(session('error'))
+                        <x-alert type="error" :message="session('error')" dismissible/>
+                    @endif
+                    @if(session('warning'))
+                        <x-alert type="warning" :message="session('warning')" dismissible/>
+                    @endif
+                    @if(session('info'))
+                        <x-alert type="info" :message="session('info')" dismissible/>
+                    @endif
                 </div>
             @endif
 

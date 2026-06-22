@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\InvalidOrderStatusTransitionException;
 use App\Models\Order;
 use App\Enums\OrderStatus;
 use App\Models\OrderStatusLog;
@@ -54,6 +55,12 @@ class OrderStatusService
     {
 
         $oldStatus = $order->status;
+        $currentStatus = OrderStatus::from($order->status);
+
+        if (!$currentStatus->canTransitionTo($status)) {
+
+            throw new InvalidOrderStatusTransitionException();
+        }
 
         $data = [
             'status' => $status->value,

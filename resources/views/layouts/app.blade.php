@@ -14,11 +14,21 @@
 
 @include('partials.navbar')
 
-@if (session('success'))
-    <div class="max-w-7xl mx-auto px-4 mt-4">
-        <div class="bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg">
-            {{ session('success') }}
-        </div>
+<!-- Alerts -->
+@if(session('success') || session('error') || session('warning') || session('info'))
+    <div class="space-y-4">
+        @if(session('success'))
+            <x-alert type="success" :message="session('success')" dismissible/>
+        @endif
+        @if(session('error'))
+            <x-alert type="error" :message="session('error')" dismissible/>
+        @endif
+        @if(session('warning'))
+            <x-alert type="warning" :message="session('warning')" dismissible/>
+        @endif
+        @if(session('info'))
+            <x-alert type="info" :message="session('info')" dismissible/>
+        @endif
     </div>
 @endif
 

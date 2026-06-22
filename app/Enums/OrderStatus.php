@@ -44,4 +44,38 @@ enum OrderStatus:string
             'bg-red-100 text-red-700',
     };
 }
+
+    public function canTransitionTo(
+    self $newStatus
+): bool {
+
+    return in_array(
+        $newStatus,
+        match($this) {
+
+        self::PENDING => [
+        self::PROCESSING,
+        self::CANCELED,
+    ],
+
+                self::PROCESSING => [
+        self::SHIPPED,
+        self::CANCELED,
+    ],
+
+                self::SHIPPED => [
+        self::DELIVERED,
+    ],
+
+                self::DELIVERED => [
+        self::COMPLETED,
+    ],
+
+                self::COMPLETED => [],
+
+                self::CANCELED => [],
+            },
+            true
+        );
+    }
 }

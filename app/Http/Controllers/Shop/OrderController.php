@@ -17,8 +17,6 @@ class OrderController extends Controller
             ->latest()
             ->paginate(10);
 
-//        return response()->json($orders);
-
         return view('shop.orders.index', compact('orders'));
     }
 
@@ -29,9 +27,8 @@ class OrderController extends Controller
         $order->load([
             'items',
             'payments',
+            'statusLogs',
         ]);
-
-//        return response()->json($order);
 
         return view('shop.orders.show', compact('order'));
     }

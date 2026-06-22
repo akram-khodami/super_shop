@@ -82,7 +82,10 @@ class WalletService
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            abort_if($wallet->balance < $amount, 403);
+            if ($wallet->balance < $amount) {
+
+                throw new InsufficientWalletBalanceException();
+            }
 
             $balanceBefore = $wallet->balance;
 

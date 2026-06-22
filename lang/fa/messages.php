@@ -316,6 +316,10 @@ return [
     'customer_information' => 'اطلاعات مشتری',
     'order_totals' => 'مبالغ سفارش',
     'status_history' => 'تاریخچه وضعیت',
+    'insufficient_stock' => 'موجودی ناکافی است.',
+    'insufficient_wallet_balance' => 'موجودی کیف پول شما ناکافی است.',
+    'invalid_order_status_transition' => 'تغییر وضعیت سفارش نامعتبر است.',
+    'order_already_paid' => 'سفارش قبلا پرداخت شده است.',
     //====action messages
     'updated_successfully' => 'با موفقیت بروز شد.',
     'attributes_created_successfully' => 'ویژگی با موفقیت ایجاد شد.',

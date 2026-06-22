@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers\Shop;
 
+use App\Exceptions\OrderAlreadyPaidException;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use Illuminate\Support\Facades\Gate;
 
 class OrderSuccessController extends Controller
 {
     public function show(Order $order)
     {
-        abort_if(
-            $order->user_id !== auth()->id(),
-            403
-        );
+        Gate::authorize('view', $order);
 
-        abort_if(
-            $order->payment_status !== 'paid',
-            404
-        );
+        if (!$order->isPaid()) {
+//            throw new OrderAlreadyPaidException();
+        }
 
         return view(
             'shop.orders.success',

@@ -61,7 +61,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/payment/{order}', [CheckoutPaymentController::class, 'store'])->name('payment.store');
         });
     Route::prefix('orders')
-        ->name('orders')
+        ->name('orders.')
         ->group(function () {
             Route::get('/{order}/success', [OrderSuccessController::class, 'show'])->name('success');
             Route::get('/', [OrderController::class, 'index'])->name('index');
