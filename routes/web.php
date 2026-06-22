@@ -9,9 +9,10 @@ use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductAttributeValueController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductVariantController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Shop\AssistantController;
 use App\Http\Controllers\Shop\CartController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Shop\CategoryController;
 use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\CheckoutPaymentController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\Shop\OrderSuccessController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ProfileController;
 use App\Http\Controllers\Shop\UserAddressController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -40,6 +42,7 @@ Route::prefix('cart')
 require __DIR__ . '/auth.php';
 
 Route::middleware('auth')->group(function () {
+    //===Shop===========================================================================================================
     Route::prefix('profile')
         ->name('profile.')
         ->group(function () {
@@ -57,6 +60,14 @@ Route::middleware('auth')->group(function () {
             Route::get('/payment/{order}', [CheckoutPaymentController::class, 'show'])->name('payment');
             Route::post('/payment/{order}', [CheckoutPaymentController::class, 'store'])->name('payment.store');
         });
+    Route::prefix('orders')
+        ->name('orders')
+        ->group(function () {
+            Route::get('/{order}/success', [OrderSuccessController::class, 'show'])->name('success');
+            Route::get('/', [OrderController::class, 'index'])->name('index');
+            Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+        });
+    //===Admin==========================================================================================================
     Route::prefix('admin')
         ->name('admin.')
         ->group(function () {
@@ -85,13 +96,14 @@ Route::middleware('auth')->group(function () {
                 });
             Route::delete('variant-images/{image}', [ProductVariantController::class, 'destroyImage'])->name('variants.images.destroy');
             Route::delete('product-images/{image}', [AdminProductController::class, 'destroyImage'])->name('products.images.destroy');
+            Route::prefix('orders')
+                ->name('orders.')
+                ->group(function () {
+                    Route::patch('{order}/status', [AdminOrderController::class, 'changeStatus'])->name('change-status');
+                    Route::get('/', [AdminOrderController::class, 'index'])->name('index');
+                    Route::get('{order}', [AdminOrderController::class, 'show'])->name('show');
+                });
         });
-
-
-    Route::get('/orders/{order}/success', [OrderSuccessController::class, 'show'])->name('orders.success');
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-
 });
 
 

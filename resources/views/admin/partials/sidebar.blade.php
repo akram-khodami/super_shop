@@ -34,6 +34,15 @@
 
             <li>
                 <a
+                    href="{{ route('admin.orders.index') }}"
+                    class="block px-4 py-2 rounded hover:bg-slate-800"
+                >
+                    {{__('messages.orders')}}
+                </a>
+            </li>
+
+            <li>
+                <a
                     href="{{ route('admin.products.index') }}"
                     class="block px-4 py-2 rounded hover:bg-slate-800"
                 >

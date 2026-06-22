@@ -79,12 +79,17 @@ class Order extends Model
 
     public function getStatusLabelAttribute(): string
     {
-        return OrderStatus::tryFrom($this->status)?->label() ?? $this->status;
+        return OrderStatus::tryFrom($this->status) ?->label() ?? $this->status;
     }
 
     public function getPaymentStatusLabelAttribute(): string
     {
-        return OrderPaymentStatus::tryFrom($this->payment_status)?->label() ?? $this->payment_status;
+        return OrderPaymentStatus::tryFrom($this->payment_status) ?->label() ?? $this->payment_status;
+    }
+
+    public function statusLogs()
+    {
+        return $this->hasMany(OrderStatusLog::class)->latest();
     }
 
 }
