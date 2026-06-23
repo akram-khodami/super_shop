@@ -69,7 +69,7 @@ class Order extends Model
 
     public function isPaid(): bool
     {
-        return $this->payment_status === self::PAYMENT_PAID;
+        return $this->payment_status === OrderPaymentStatus::PAID->value;
     }
 
     public function payments()

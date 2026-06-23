@@ -19,7 +19,6 @@ use App\Http\Controllers\Shop\CheckoutPaymentController;
 use App\Http\Controllers\Shop\OrderController;
 use App\Http\Controllers\Shop\OrderSuccessController;
 use App\Http\Controllers\Shop\PaymentCallbackController;
-use App\Http\Controllers\Shop\PaymentSucessController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ProfileController;
 use App\Http\Controllers\Shop\UserAddressController;
@@ -79,9 +78,12 @@ Route::middleware('auth')->group(function () {
             Route::post('/topup', [WalletTopupController::class, 'store'])->name('topup.store');
             Route::get('/topup/show', [WalletTopupController::class, 'show'])->name('topup.show');
         });
-    Route::get('/payment/callback/{payment}', PaymentCallbackController::class)->name('payment.callback');
-    Route::get('/payment/success', PaymentSucessController::class)->name('payment.success');
-//    Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+    Route::prefix('payment')
+        ->name('payment.')
+        ->group(function () {
+            Route::get('/callback/{payment}', PaymentCallbackController::class)->name('callback');
+            Route::view('/success', 'shop.payment.success')->name('success');
+        });
     //===Admin==========================================================================================================
     Route::prefix('admin')
         ->name('admin.')

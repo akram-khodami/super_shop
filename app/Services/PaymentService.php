@@ -39,29 +39,43 @@ class PaymentService
             throw new OrderAlreadyPaidException();
         }
 
-        $payment = $this->createOrderPayment($order, $method);
-
         switch ($method) {
 
             case PaymentMethod::WALLET->value:
-                return $this->payWithWallet($payment);
+
+                $gateway = NULL;
+
+                $payment = $this->createOrderPayment($order, $method, $gateway);
+
+                $payment = $this->payWithWallet($payment);
+
+                return redirect()->route('orders.success', $payment->order);
 
             case PaymentMethod::ONLINE->value:
+
+                $gateway = PaymentGateway::ZARINPAL->value;
+
+                $payment = $this->createOrderPayment($order, $method, $gateway);
+
                 return $this->payWithGateway($payment);
 
             case PaymentMethod::INSTALLMENT->value:
+
+                $gateway = NULL;//Digi pay,snapp pay
+
+                $payment = $this->createOrderPayment($order, $method, $gateway);
+
                 return $this->payInstallment($payment);
         }
 
     }
 
-    public function createOrderPayment(Order $order, string $method): Payment
+    public function createOrderPayment(Order $order, string $method, $gateway = null): Payment
     {
         $type = PaymentType::ORDER->value;
         $userId = $order->user_id;
         $orderId = $order->id;
         $amount = $order->total_amount;
-        $gateway = NULL;
 
         return Payment::create([
             'type' => $type,
@@ -145,7 +159,7 @@ class PaymentService
 
     }
 
-    protected function clearCart(Order $order): void
+    public function clearCart(Order $order): void
     {
         $cart = $order->user->cart;
 
@@ -158,7 +172,7 @@ class PaymentService
         $cart->delete();
     }
 
-    private function decreaseOrderStock(Order $order): void
+    public function decreaseOrderStock(Order $order): void
     {
 
         $order->loadMissing('items.variant');

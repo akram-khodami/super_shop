@@ -33,7 +33,7 @@ class ZarinpalGateway implements PaymentGatewayInterface
             [
                 'merchant_id' => $this->merchantId,
 
-                'amount' => (int)$payment->amount,
+                'amount' => (int)$payment->amount * 10,//exchange to Rial
 
                 'description' =>
                     "Payment #{$payment->id}",
@@ -84,7 +84,7 @@ class ZarinpalGateway implements PaymentGatewayInterface
             [
                 'merchant_id' => $this->merchantId,
 
-                'amount' => (int)$payment->amount,
+                'amount' => (int)$payment->amount * 10,
 
                 'authority' =>
                     $callbackData['Authority'],
@@ -92,6 +92,7 @@ class ZarinpalGateway implements PaymentGatewayInterface
         );
 
         $result = $response->json();
+
 
         $payment->update([
             'paid_at' => now(),

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Shop;
 
-use App\Enums\PaymentStatus;
 use App\Enums\OrderPaymentStatus;
 use App\Enums\OrderStatus;
+use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Services\Gateways\ZarinpalGateway;
+use App\Services\PaymentService;
 use App\Services\WalletService;
 
 class PaymentCallbackController extends Controller
@@ -15,16 +16,17 @@ class PaymentCallbackController extends Controller
     public function __invoke(
         Payment $payment,
         ZarinpalGateway $gateway,
-        WalletService $walletService
+        WalletService $walletService,
+        PaymentService $paymentService
     )
     {
 
         if ($payment->status === PaymentStatus::SUCCESS->value) {
         return redirect()
             ->route('payment.success');
-        }
+    }
 
-        $verified = $gateway->verify(            $payment,
+        $verified = $gateway->verify($payment,
             request()->all()
         );
 
@@ -56,6 +58,10 @@ class PaymentCallbackController extends Controller
                 'status' => OrderStatus::PROCESSING->value,
                 'paid_at' => now(),
             ]);
+
+            $paymentService->clearCart($payment->order);
+
+            $paymentService->decreaseOrderStock($payment->order);
         }
 
         if (

@@ -55,7 +55,7 @@ class ProductController extends Controller
 
         return redirect()
             ->route('admin.products.index')
-            ->with('success', __(',messages.product_created_successfully'));
+            ->with('success', __('messages.product_created_successfully'));
     }
 
     public function edit(Product $product): View

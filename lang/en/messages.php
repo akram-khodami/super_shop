@@ -328,7 +328,12 @@ return [
     'top_up_wallet' => 'Top Up Wallet',
     'amount_currency' => 'Amount (Tomans)',
     'payment_gateway' => 'Payment Gateway',
-    'payment_successful_description'=>'Payment successful description.',
+    'payment_successful_description' => 'Payment successful description.',
+    'stock_increase_reason' => 'Damage / Loss ...',
+    'stock_decrease_reason' => 'Purchase / Return ...',
+    'in' => 'In',
+    'out' => 'Out',
+    'adjust' => 'ADJUST',
     //====action messages
     'updated_successfully' => 'Updated successfully',
     'attributes_created_successfully' => 'Attributes created successfully.',

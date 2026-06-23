@@ -73,7 +73,7 @@
                     <input
                         type="text"
                         name="note"
-                        placeholder="Purchase / Return ..."
+                        placeholder="{{__('messages.stock_decrease_reason')}}"
                         class="w-full rounded-lg border-gray-300"
                     >
 
@@ -128,7 +128,7 @@
                     <input
                         type="text"
                         name="note"
-                        placeholder="Damage / Loss ..."
+                        placeholder="{{__('messages.stock_increase_reason')}}"
                         class="w-full rounded-lg border-gray-300"
                     >
 
@@ -163,31 +163,31 @@
 
                 <tr>
 
-                    <th class="px-4 py-3 text-left">
+                    <th class="px-4 py-3">
                         {{__('messages.date')}}
                     </th>
 
-                    <th class="px-4 py-3 text-left">
+                    <th class="px-4 py-3">
                         {{__('messages.type')}}
                     </th>
 
-                    <th class="px-4 py-3 text-left">
+                    <th class="px-4 py-3">
                         {{__('messages.quantity')}}
                     </th>
 
-                    <th class="px-4 py-3 text-left">
+                    <th class="px-4 py-3">
                         {{__('messages.before')}}
                     </th>
 
-                    <th class="px-4 py-3 text-left">
+                    <th class="px-4 py-3">
                         {{__('messages.after')}}
                     </th>
 
-                    <th class="px-4 py-3 text-left">
+                    <th class="px-4 py-3">
                         {{__('messages.user')}}
                     </th>
 
-                    <th class="px-4 py-3 text-left">
+                    <th class="px-4 py-3">
                         {{__('messages.note')}}
                     </th>
 
@@ -212,7 +212,7 @@
                                 <span
                                     class="bg-green-100 text-green-700 px-2 py-1 rounded"
                                 >
-                            IN
+                            {{__('messages.in')}}
                         </span>
 
                             @elseif($movement->type === 'out')
@@ -220,7 +220,7 @@
                                 <span
                                     class="bg-red-100 text-red-700 px-2 py-1 rounded"
                                 >
-                            OUT
+                            {{__('messages.out')}}
                         </span>
 
                             @else
@@ -228,7 +228,7 @@
                                 <span
                                     class="bg-blue-100 text-blue-700 px-2 py-1 rounded"
                                 >
-                            ADJUST
+                                    {{__('messages.adjust')}}
                         </span>
 
                             @endif

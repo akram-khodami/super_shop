@@ -38,6 +38,7 @@ class CheckoutPaymentController extends Controller
 
         $payment = $this->paymentService->pay($order, $request->payment_method);
 
-        return redirect()->route('orders.success', $payment->order);
+        return $payment;
+
     }
 }

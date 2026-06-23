@@ -328,7 +328,12 @@ return [
     'top_up_wallet' => 'شارژ کیف پول',
     'amount_currency' => 'مبلغ (تومان)',
     'payment_gateway' => 'درگاه پرداخت',
-    'payment_successful_description'=>'پرداخت با موفقیت انجام شد.',
+    'payment_successful_description' => 'پرداخت با موفقیت انجام شد.',
+    'stock_increase_reason' => 'خسارت / زیان ...',
+    'stock_decrease_reason' => 'خرید / بازگشت ...',
+    'in' => 'ورود',
+    'out' => 'خروج',
+    'adjust' => 'تنظیم',
     //====action messages
     'updated_successfully' => 'با موفقیت بروز شد.',
     'attributes_created_successfully' => 'ویژگی با موفقیت ایجاد شد.',

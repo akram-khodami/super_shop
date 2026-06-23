@@ -64,6 +64,21 @@ return new class extends Migration
             $table->timestamp('paid_at')
                 ->nullable();
 
+            $table->timestamp('processing_at')
+                ->nullable();
+
+            $table->timestamp('shipped_at')
+                ->nullable();
+
+            $table->timestamp('delivered_at')
+                ->nullable();
+
+            $table->timestamp('completed_at')
+                ->nullable();
+
+            $table->string('tracking_code')
+                ->nullable();
+
             $table->timestamps();
         });
     }

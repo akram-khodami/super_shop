@@ -45,6 +45,11 @@ return new class extends Migration
 
             $table->timestamps();
 
+            $table->string('type')->default('order');
+            $table->string('authority')
+                ->nullable()
+                ->unique();
+
             $table->index([
                 'order_id',
                 'status'
