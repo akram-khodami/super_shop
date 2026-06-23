@@ -25,6 +25,7 @@ class Payment extends Model
         'gateway_response',
 
         'paid_at',
+        'type',
     ];
 
     protected function casts(): array
@@ -36,6 +37,7 @@ class Payment extends Model
             'paid_at' => 'datetime',
 
             'gateway_response' => 'array',
+
         ];
 
     }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\WalletTransactionType;
 
 class WalletTransaction extends Model
 {
@@ -46,5 +47,10 @@ class WalletTransaction extends Model
         return $this->belongsTo(
             Payment::class
         );
+    }
+
+    public function getTypeLabelAttribute(): string
+    {
+        return WalletTransactionType::tryFrom($this->type) ?->label() ?? $this->type;
     }
 }

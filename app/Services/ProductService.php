@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 
 class ProductService
 {
+
     public function create(array $data): Product
     {
         return DB::transaction(function () use ($data) {

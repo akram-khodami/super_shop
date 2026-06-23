@@ -24,4 +24,10 @@ class wallet extends Model
     {
         return $this->hasMany(WalletTransaction::class);
     }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return PaymentType::tryFrom($this->type) ?->label() ?? $this->type;
+    }
+
 }

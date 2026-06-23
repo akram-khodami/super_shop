@@ -15,7 +15,7 @@ return new class extends Migration
 
             $table->id();
 
-            $table->foreignId('order_id')
+            $table->foreignId('order_id')->nullable()
                 ->constrained()
                 ->cascadeOnDelete();
 
@@ -30,8 +30,7 @@ return new class extends Migration
 
             $table->decimal('amount', 12, 2);
 
-            $table->string('gateway')
-                ->nullable();
+            $table->string('gateway')->nullable();
 
             $table->string('transaction_id')
                 ->nullable();
@@ -39,8 +38,7 @@ return new class extends Migration
             $table->string('reference_id')
                 ->nullable();
 
-            $table->text('gateway_response')
-                ->nullable();
+            $table->text('gateway_response')->nullable();
 
             $table->timestamp('paid_at')
                 ->nullable();

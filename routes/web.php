@@ -18,10 +18,14 @@ use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\CheckoutPaymentController;
 use App\Http\Controllers\Shop\OrderController;
 use App\Http\Controllers\Shop\OrderSuccessController;
+use App\Http\Controllers\Shop\PaymentCallbackController;
+use App\Http\Controllers\Shop\PaymentSucessController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ProfileController;
 use App\Http\Controllers\Shop\UserAddressController;
 
+use App\Http\Controllers\Shop\WalletController;
+use App\Http\Controllers\Shop\WalletTopupController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -67,6 +71,17 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [OrderController::class, 'index'])->name('index');
             Route::get('/{order}', [OrderController::class, 'show'])->name('show');
         });
+    Route::prefix('wallet')
+        ->name('wallet.')
+        ->group(function () {
+            Route::get('/', [WalletController::class, 'index'])->name('index');
+            Route::get('/topup', [WalletTopupController::class, 'create'])->name('topup.create');
+            Route::post('/topup', [WalletTopupController::class, 'store'])->name('topup.store');
+            Route::get('/topup/show', [WalletTopupController::class, 'show'])->name('topup.show');
+        });
+    Route::get('/payment/callback/{payment}', PaymentCallbackController::class)->name('payment.callback');
+    Route::get('/payment/success', PaymentSucessController::class)->name('payment.success');
+//    Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
     //===Admin==========================================================================================================
     Route::prefix('admin')
         ->name('admin.')

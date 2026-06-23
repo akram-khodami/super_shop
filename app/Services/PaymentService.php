@@ -7,21 +7,30 @@ namespace App\Services;
 use App\Exceptions\OrderAlreadyPaidException;
 use App\Models\Order;
 use App\Models\Payment;
+use App\Enums\PaymentType;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Enums\OrderPaymentStatus;
 use App\Enums\OrderStatus;
+use App\Enums\PaymentGateway;
+use App\Services\Gateways\PaymentGatewayManager;
 use Illuminate\Support\Facades\DB;
 
 class PaymentService
 {
     protected WalletService $walletService;
     protected InventoryService $inventoryService;
+    protected PaymentGatewayManager $gatewayManager;
 
-    public function __construct(WalletService $walletService, InventoryService $inventoryService)
+    public function __construct(
+        WalletService $walletService,
+        PaymentGatewayManager $gatewayManager,
+        InventoryService $inventoryService)
     {
         $this->walletService = $walletService;
         $this->inventoryService = $inventoryService;
+        $this->gatewayManager = $gatewayManager;
+
     }
 
     public function pay(Order $order, string $method)
@@ -30,7 +39,7 @@ class PaymentService
             throw new OrderAlreadyPaidException();
         }
 
-        $payment = $this->createPayment($order, $method);
+        $payment = $this->createOrderPayment($order, $method);
 
         switch ($method) {
 
@@ -46,21 +55,49 @@ class PaymentService
 
     }
 
-    public function createPayment(Order $order, string $method): Payment
+    public function createOrderPayment(Order $order, string $method): Payment
     {
+        $type = PaymentType::ORDER->value;
+        $userId = $order->user_id;
+        $orderId = $order->id;
+        $amount = $order->total_amount;
+        $gateway = NULL;
 
         return Payment::create([
-
-            'order_id' => $order->id,
-
-            'user_id' => $order->user_id,
-
+            'type' => $type,
             'method' => $method,
-
+            'user_id' => $userId,
+            'order_id' => $orderId,
+            'amount' => $amount,
+            'gateway' => $gateway,
             'status' => PaymentStatus::PENDING->value,
-
-            'amount' => $order->total_amount,
         ]);
+    }
+
+    public function createWalletTopupPayment($request)
+    {
+        $type = PaymentType::WALLET_TOPUP->value;
+        $method = PaymentMethod::ONLINE->value;
+        $userId = auth()->id();
+        $orderId = NULL;
+        $amount = $request->amount;
+        $gateway = $request->gateway;
+
+        return Payment::create([
+            'type' => $type,
+            'method' => $method,
+            'user_id' => $userId,
+            'order_id' => $orderId,
+            'amount' => $amount,
+            'gateway' => $gateway,
+            'status' => PaymentStatus::PENDING->value,
+        ]);
+    }
+
+
+    public function payTopup()
+    {
+
     }
 
     public function payWithWallet(Payment $payment): Payment
@@ -81,7 +118,7 @@ class PaymentService
 
             $payment->order->update([
                 'payment_status' => OrderPaymentStatus::PAID->value,
-                'status' => OrderStatus::COMPLETED->value,
+                'status' => OrderStatus::PROCESSING->value,
                 'paid_at' => now(),
             ]);
 
@@ -94,9 +131,13 @@ class PaymentService
         });
     }
 
-    public function payWithGateway(Payment $payment): Payment
+    public function payWithGateway(Payment $payment)
     {
+        $gateway = $this->gatewayManager->driver($payment->gateway);
 
+        $redirectUrl = $gateway->purchase($payment);
+
+        return redirect()->away($redirectUrl);
     }
 
     public function payInstallment(Payment $payment): Payment
