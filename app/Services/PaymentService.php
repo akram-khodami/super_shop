@@ -13,6 +13,7 @@ use App\Enums\PaymentStatus;
 use App\Enums\OrderPaymentStatus;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
+use App\Exceptions\BusinessException;
 use App\Services\Gateways\PaymentGatewayManager;
 use Illuminate\Support\Facades\DB;
 
@@ -39,7 +40,7 @@ class PaymentService
             throw new OrderAlreadyPaidException();
         }
 
-        switch ($method) {
+        switch (PaymentMethod::from($method)) {
 
             case PaymentMethod::WALLET:
 
@@ -66,6 +67,12 @@ class PaymentService
                 $payment = $this->createOrderPayment($order, $method, $gateway);
 
                 return $this->payInstallment($payment);
+
+                default:
+
+            throw new BusinessException();//Todo:custmize
+
+
         }
 
     }

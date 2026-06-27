@@ -57,9 +57,10 @@ class OrderStatusService
         $oldStatus = $order->status;
         $currentStatus = $status;
 
-        if (!$currentStatus->canTransitionTo($status)) {
+        if (!$oldStatus->canTransitionTo($currentStatus)) {
 
             throw new InvalidOrderStatusTransitionException();
+
         }
 
         $data = [

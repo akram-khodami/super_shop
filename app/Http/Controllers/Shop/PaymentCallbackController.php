@@ -50,7 +50,7 @@ class PaymentCallbackController extends Controller
             'paid_at' => now(),
         ]);
 
-        if ($payment->type === PaymentType::order) {
+        if ($payment->type === PaymentType::ORDER) {
 
             $payment->order->update([
                 'payment_status' => OrderPaymentStatus::PAID,
@@ -64,7 +64,7 @@ class PaymentCallbackController extends Controller
 
             return redirect()->route('orders.success', $payment->order);
 
-        } else if ($payment->type === PaymentType::wallet_topup) {
+        } else if ($payment->type === PaymentType::WALLET_TOPUP) {
 
             $walletService->deposit(
                 $payment->user,

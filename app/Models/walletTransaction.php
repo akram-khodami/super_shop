@@ -53,6 +53,6 @@ class WalletTransaction extends Model
 
     public function getTypeLabelAttribute(): string
     {
-        return WalletTransactionType::tryFrom($this->type) ?->label() ?? $this->type;
+        return $this->type?->label() ?? $this->type;
     }
 }

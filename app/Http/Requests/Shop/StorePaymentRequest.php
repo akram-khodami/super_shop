@@ -28,7 +28,6 @@ class StorePaymentRequest extends FormRequest
             'payment_method' => [
                 'required',
                 new Enum(PaymentMethod::class),
-//                'in:wallet,online,installment'
             ]
         ];
     }

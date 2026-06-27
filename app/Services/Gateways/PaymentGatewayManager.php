@@ -4,28 +4,29 @@ namespace App\Services\Gateways;
 
 use App\Contracts\PaymentGatewayInterface;
 use InvalidArgumentException;
+use App\Enums\PaymentGateway;
 
 class PaymentGatewayManager
 {
-    public function driver(string $gateway): PaymentGatewayInterface
+    public function driver(PaymentGateway $gateway): PaymentGatewayInterface
     {
-        return match($gateway){
+        return match ($gateway) {
 
-        'zarinpal' => app(
-        ZarinpalGateway::class
-    ),
+            PaymentGateway::ZARINPAL => app(
+                ZarinpalGateway::class
+            ),
 
-            'idpay' => app(
-        IdPayGateway::class
-    ),
+            PaymentGateway::IDPAY => app(
+                IdPayGateway::class
+            ),
 
-            'nextpay' => app(
-        NextPayGateway::class
-    ),
+            PaymentGateway::NEXTPAY => app(
+                NextPayGateway::class
+            ),
 
             default => throw new InvalidArgumentException(
-        "Unsupported gateway: {$gateway}"
-    ),
+                "Unsupported gateway: {$gateway}"
+            ),
         };
     }
 }
