@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-
+@section('title', __('messages.attributes'))
 @section('content')
 
     <div class="max-w-7xl mx-auto px-4 bg-black/10 rounded-xl shadow p-4">

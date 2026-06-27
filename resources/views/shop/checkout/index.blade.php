@@ -1,17 +1,18 @@
 <x-app-layout>
 
+    <x-slot:title>
+        {{ __('messages.checkout') }}
+    </x-slot:title>
+
     <div class="max-w-7xl mx-auto px-4 py-8">
 
         <h1 class="text-2xl font-bold mb-8">
             {{ __('messages.checkout') }}
         </h1>
 
-        <x-shop.checkout-stepper :step="2"/>
+        <x-shop.checkout-stepper :step="2" />
 
-        <form
-            method="POST"
-            action="{{ route('checkout.store') }}"
-        >
+        <form method="POST" action="{{ route('checkout.store') }}">
             @csrf
 
             <div class="grid lg:grid-cols-3 gap-6">
@@ -27,19 +28,11 @@
 
                         <div class="space-y-4">
 
-                            @foreach($addresses as $address)
+                            @foreach ($addresses as $address)
+                                <label class="block border rounded-xl p-4 cursor-pointer hover:border-indigo-500">
 
-                                <label
-                                    class="block border rounded-xl p-4 cursor-pointer hover:border-indigo-500"
-                                >
-
-                                    <input
-                                        type="radio"
-                                        name="address_id"
-                                        value="{{ $address->id }}"
-                                        class="ml-2"
-                                        @checked($address->is_default)
-                                    >
+                                    <input type="radio" name="address_id" value="{{ $address->id }}" class="ml-2"
+                                        @checked($address->is_default)>
 
                                     <span class="font-medium">
                                         {{ $address->title }}
@@ -68,7 +61,6 @@
                                     </div>
 
                                 </label>
-
                             @endforeach
 
                         </div>
@@ -132,9 +124,7 @@
 
                         </div>
 
-                        <x-primary-button
-                            class="w-full justify-center mt-6"
-                        >
+                        <x-primary-button class="w-full justify-center mt-6">
                             {{ __('messages.place_order') }}
                         </x-primary-button>
 

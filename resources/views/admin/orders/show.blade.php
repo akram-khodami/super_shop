@@ -1,12 +1,8 @@
 @extends('admin.layouts.app')
-
+@section('title', __('messages.order') . ' ' . $order->order_number)
 @section('content')
-
-    <form
-        action="{{ route('admin.orders.change-status',$order) }}"
-        method="POST"
-        class="bg-white p-4 rounded-lg shadow mb-6"
-    >
+    <form action="{{ route('admin.orders.change-status', $order) }}" method="POST"
+        class="bg-white p-4 rounded-lg shadow mb-6">
         @csrf
         @method('PATCH')
 
@@ -18,20 +14,12 @@
                     {{ __('messages.order_status') }}
                 </label>
 
-                <select
-                    name="status"
-                    class="w-full rounded-lg border-gray-300"
-                >
+                <select name="status" class="w-full rounded-lg border-gray-300">
 
-                    @foreach($statuses as $value => $label)
-
-                        <option
-                            value="{{ $value }}"
-                            @selected($order->status === $value)
-                            >
+                    @foreach ($statuses as $value => $label)
+                        <option value="{{ $value }}" @selected($order->status === $value)>
                             {{ $label }}
                         </option>
-
                     @endforeach
 
                 </select>
@@ -44,12 +32,8 @@
                     {{ __('messages.tracking_code') }}
                 </label>
 
-                <input
-                    type="text"
-                    name="tracking_code"
-                    value="{{ $order->tracking_code }}"
-                    class="w-full rounded-lg border-gray-300"
-                >
+                <input type="text" name="tracking_code" value="{{ $order->tracking_code }}"
+                    class="w-full rounded-lg border-gray-300">
 
             </div>
 
@@ -73,10 +57,7 @@
                 {{ __('messages.order') }} {{ $order->order_number }}
             </h1>
 
-            <a
-                href="{{ route('admin.orders.index') }}"
-                class="text-blue-600"
-            >
+            <a href="{{ route('admin.orders.index') }}" class="text-blue-600">
                 {{ __('messages.back') }}
             </a>
 
@@ -126,63 +107,61 @@
 
                 <thead>
 
-                <tr>
+                    <tr>
 
-                    <th class="text-right p-2">
-                        {{ __('messages.product') }}
-                    </th>
+                        <th class="text-right p-2">
+                            {{ __('messages.product') }}
+                        </th>
 
-                    <th class="text-right p-2">
-                        {{ __('messages.quantity') }}
-                    </th>
+                        <th class="text-right p-2">
+                            {{ __('messages.quantity') }}
+                        </th>
 
-                    <th class="text-right p-2">
-                        {{ __('messages.price') }}
-                    </th>
+                        <th class="text-right p-2">
+                            {{ __('messages.price') }}
+                        </th>
 
-                    <th class="text-right p-2">
-                        {{ __('messages.total') }}
-                    </th>
+                        <th class="text-right p-2">
+                            {{ __('messages.total') }}
+                        </th>
 
-                </tr>
+                    </tr>
 
                 </thead>
 
                 <tbody>
 
-                @foreach($order->items as $item)
+                    @foreach ($order->items as $item)
+                        <tr>
 
-                    <tr>
+                            <td class="p-2">
 
-                        <td class="p-2">
+                                {{ $item->product_title }}
 
-                            {{ $item->product_title }}
+                                @if ($item->variant_title)
+                                    <div class="text-xs text-gray-500">
+                                        {{ $item->variant_title }}
+                                    </div>
+                                @endif
 
-                            @if($item->variant_title)
-                                <div class="text-xs text-gray-500">
-                                    {{ $item->variant_title }}
-                                </div>
-                            @endif
+                            </td>
 
-                        </td>
+                            <td class="p-2">
+                                {{ $item->quantity }}
+                            </td>
 
-                        <td class="p-2">
-                            {{ $item->quantity }}
-                        </td>
+                            <td class="p-2">
+                                {{ number_format($item->unit_price) }}
+                                {{ __('messages.currency') }}
+                            </td>
 
-                        <td class="p-2">
-                            {{ number_format($item->unit_price) }}
-                            {{ __('messages.currency') }}
-                        </td>
+                            <td class="p-2">
+                                {{ number_format($item->total_amount) }}
+                                {{ __('messages.currency') }}
+                            </td>
 
-                        <td class="p-2">
-                            {{ number_format($item->total_amount) }}
-                            {{ __('messages.currency') }}
-                        </td>
-
-                    </tr>
-
-                @endforeach
+                        </tr>
+                    @endforeach
 
                 </tbody>
 
@@ -230,8 +209,7 @@
             {{ __('messages.status_history') }}
         </h2>
 
-        @foreach($order->statusLogs as $log)
-
+        @foreach ($order->statusLogs as $log)
             <div class="border-b py-3">
 
                 <div>
@@ -250,9 +228,7 @@
                 </div>
 
             </div>
-
         @endforeach
 
     </div>
-
 @endsection

@@ -1,5 +1,9 @@
 <x-app-layout>
 
+    <x-slot:title>
+        {{ __('messages.top_up_wallet') }}
+    </x-slot:title>
+
     <div class="max-w-xl mx-auto py-10">
 
         <div class="bg-white rounded-xl shadow p-6">
@@ -8,10 +12,7 @@
                 {{ __('messages.top_up_wallet') }}
             </h1>
 
-            <form
-                method="POST"
-                action="{{ route('wallet.topup.store') }}"
-            >
+            <form method="POST" action="{{ route('wallet.topup.store') }}">
 
                 @csrf
 
@@ -19,13 +20,8 @@
                     {{ __('messages.amount_currency') }}
                 </label>
 
-                <input
-                    type="number"
-                    name="amount"
-                    min="10000"
-                    step="1000"
-                    class="w-full rounded-lg border-gray-300 mt-2"
-                >
+                <input type="number" name="amount" min="10000" step="1000"
+                    class="w-full rounded-lg border-gray-300 mt-2">
 
                 <div class="mt-6">
 
@@ -35,25 +31,16 @@
 
                     </label>
 
-                    @foreach($gateways as $gateway)
+                    @foreach ($gateways as $gateway)
+                        <label class="flex items-center gap-3 border rounded-xl p-4 cursor-pointer">
 
-                        <label
-                            class="flex items-center gap-3 border rounded-xl p-4 cursor-pointer"
-                        >
-
-                            <input
-                                type="radio"
-                                name="gateway"
-                                value="{{ $gateway->value }}"
-                                checked
-                            >
+                            <input type="radio" name="gateway" value="{{ $gateway->value }}" checked>
 
                             <span>
                                 {{ $gateway->label() }}
                             </span>
 
                         </label>
-
                     @endforeach
 
                 </div>

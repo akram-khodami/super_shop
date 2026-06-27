@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-
+@section('title', __('messages.categories'))
 @section('content')
 
     <div class="bg-white rounded-xl shadow">

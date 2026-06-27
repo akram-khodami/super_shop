@@ -75,6 +75,7 @@ return [
     'brand' => 'برند',
     'create_brand' => 'ایجاد برند',
     'edit_brand' => 'ویرایش برند',
+    'edit_category' => 'ویرایش دسته بندی',
     'select' => '(انتخاب کنید)',
     'image' => 'تصویر',
     'no_image' => 'بدون تصویر',
@@ -340,6 +341,7 @@ return [
     'total_deposits' => 'مجموع شارژ',
     'record' => 'رکورد',
     'no_transactions' => 'هیچ تراکنشی یافت نشد',
+    'receipt' => 'رسید',
     //====action messages
     'updated_successfully' => 'با موفقیت بروز شد.',
     'attributes_created_successfully' => 'ویژگی با موفقیت ایجاد شد.',

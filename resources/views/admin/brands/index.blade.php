@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-
+@section('title', __('messages.brands'))
 @section('content')
 
     <div class="bg-white rounded-xl shadow">
@@ -7,14 +7,11 @@
         <div class="p-4 border-b flex justify-between">
 
             <h2 class="font-bold">
-                {{__('messages.brands')}}
+                {{ __('messages.brands') }}
             </h2>
 
-            <a
-                href="{{ route('admin.brands.create') }}"
-                class="bg-indigo-600 text-white px-4 py-2 rounded"
-            >
-                {{__('messages.create')}}
+            <a href="{{ route('admin.brands.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded">
+                {{ __('messages.create') }}
             </a>
 
         </div>
@@ -23,91 +20,73 @@
 
             <thead>
 
-            <tr>
+                <tr>
 
-                <th class="p-3">{{__('messages.logo')}}</th>
+                    <th class="p-3">{{ __('messages.logo') }}</th>
 
-                <th class="p-3">{{__('messages.name')}}</th>
+                    <th class="p-3">{{ __('messages.name') }}</th>
 
-                <th class="p-3">{{__('messages.status')}}</th>
+                    <th class="p-3">{{ __('messages.status') }}</th>
 
-                <th class="p-3">{{__('messages.actions')}}</th>
+                    <th class="p-3">{{ __('messages.actions') }}</th>
 
-            </tr>
+                </tr>
 
             </thead>
 
             <tbody>
 
-            @foreach($brands as $brand)
+                @foreach ($brands as $brand)
+                    <tr class="border-t">
 
-                <tr class="border-t">
+                        <td class="p-3">
 
-                    <td class="p-3">
+                            @if ($brand->logo)
+                                <img src="{{ asset('storage/' . $brand->logo) }}" class="w-12 h-12 rounded object-cover">
+                            @endif
 
-                        @if($brand->logo)
+                        </td>
 
-                            <img
-                                src="{{ asset('storage/'.$brand->logo) }}"
-                                class="w-12 h-12 rounded object-cover"
-                            >
+                        <td class="p-3">
+                            {{ $brand->name }}
+                        </td>
 
-                        @endif
+                        <td class="p-3">
 
-                    </td>
+                            @if ($brand->is_active)
+                                Active
+                            @else
+                                Inactive
+                            @endif
 
-                    <td class="p-3">
-                        {{ $brand->name }}
-                    </td>
+                        </td>
 
-                    <td class="p-3">
+                        <td class="p-3">
 
-                        @if($brand->is_active)
+                            <div class="flex gap-2">
 
-                            Active
+                                <a href="{{ route('admin.brands.edit', $brand) }}"
+                                    class="bg-yellow-500 text-white px-3 py-1 rounded"> &#9999
 
-                        @else
+                                </a>
 
-                            Inactive
+                                <form action="{{ route('admin.brands.destroy', $brand) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
 
-                        @endif
+                                    <button onclick="return confirm('Delete?')"
+                                        class="bg-red-600 text-white px-3 py-1 rounded">&#10060;
 
-                    </td>
+                                    </button>
 
-                    <td class="p-3">
+                                </form>
 
-                        <div class="flex gap-2">
+                            </div>
 
-                            <a
-                                href="{{ route('admin.brands.edit',$brand) }}"
-                                class="bg-yellow-500 text-white px-3 py-1 rounded"
-                            > &#9999
+                        </td>
 
-                            </a>
-
-                            <form
-                                action="{{ route('admin.brands.destroy',$brand) }}"
-                                method="POST"
-                            >
-                                @csrf
-                                @method('DELETE')
-
-                                <button
-                                    onclick="return confirm('Delete?')"
-                                    class="bg-red-600 text-white px-3 py-1 rounded"
-                                >&#10060;
-
-                                </button>
-
-                            </form>
-
-                        </div>
-
-                    </td>
-
-                </tr>
-
-            @endforeach
+                    </tr>
+                @endforeach
 
             </tbody>
 

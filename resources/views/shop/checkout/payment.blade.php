@@ -1,8 +1,12 @@
 <x-app-layout>
 
+    <x-slot:title>
+        {{ __('messages.payment') }}
+    </x-slot:title>
+
     <div class="max-w-7xl mx-auto px-4 py-8">
 
-        <x-shop.checkout-stepper :step="3"/>
+        <x-shop.checkout-stepper :step="3" />
 
         <div class="mb-8">
             <h1 class="text-2xl font-bold">
@@ -14,10 +18,7 @@
             </p>
         </div>
 
-        <form
-            method="POST"
-            action="{{ route('checkout.payment.store', $order) }}"
-        >
+        <form method="POST" action="{{ route('checkout.payment.store', $order) }}">
             @csrf
 
             <div class="grid lg:grid-cols-3 gap-6">
@@ -35,23 +36,17 @@
 
                         <div class="divide-y">
 
-                            @foreach($paymentMethods as $value => $label)
-                                <label
-                                    class="flex items-center gap-4 p-5 cursor-pointer hover:bg-gray-50 transition"
-                                >
-                                    <input
-                                        type="radio"
-                                        name="payment_method"
-                                        value="{{ $value }}"
-                                        class="text-indigo-600"
-                                    >
+                            @foreach ($paymentMethods as $value => $label)
+                                <label class="flex items-center gap-4 p-5 cursor-pointer hover:bg-gray-50 transition">
+                                    <input type="radio" name="payment_method" value="{{ $value }}"
+                                        class="text-indigo-600">
 
                                     <div class="flex-1">
                                         <div class="font-medium">
                                             {{ $label }}
                                         </div>
                                         <div class="text-sm text-gray-500 mt-1">
-                                            {{ __('messages.payment_methods.'.$value.'.description') }}
+                                            {{ __('messages.payment_methods.' . $value . '.description') }}
                                         </div>
                                     </div>
                                 </label>
@@ -134,10 +129,8 @@
 
                         </div>
 
-                        <button
-                            type="submit"
-                            class="w-full mt-6 rounded-xl bg-indigo-600 text-white py-3 hover:bg-indigo-700 transition"
-                        >
+                        <button type="submit"
+                            class="w-full mt-6 rounded-xl bg-indigo-600 text-white py-3 hover:bg-indigo-700 transition">
                             {{ __('messages.proceed_to_payment') }}
                         </button>
 

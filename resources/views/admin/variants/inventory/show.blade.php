@@ -1,4 +1,5 @@
 @extends('admin.layouts.app')
+@section('title', __('messages.manage_inventory'))
 @section('content')
 
     <div class="bg-white rounded-2xl shadow-sm border p-6 mb-6">
@@ -20,13 +21,11 @@
 
             <div>
 
-            <span
-                class="inline-flex items-center px-4 py-2 rounded-xl bg-indigo-100 text-indigo-700 font-semibold"
-            >
-                {{__('messages.current_stock')}}
-                :
-                {{ $variant->stock }}
-            </span>
+                <span class="inline-flex items-center px-4 py-2 rounded-xl bg-indigo-100 text-indigo-700 font-semibold">
+                    {{ __('messages.current_stock') }}
+                    :
+                    {{ $variant->stock }}
+                </span>
 
             </div>
 
@@ -38,51 +37,35 @@
         <div class="bg-white rounded-2xl shadow-sm border p-6">
 
             <h2 class="text-lg font-semibold text-green-600 mb-4">
-                {{__('messages.increase_stock')}}
+                {{ __('messages.increase_stock') }}
             </h2>
 
-            <form
-                method="POST"
-                action="{{ route('admin.variants.inventory.increase',$variant) }}"
-                class="space-y-4"
-            >
+            <form method="POST" action="{{ route('admin.variants.inventory.increase', $variant) }}" class="space-y-4">
                 @csrf
 
                 <div>
 
                     <label class="block mb-2 text-sm font-medium">
-                        {{__('messages.quantity')}}
+                        {{ __('messages.quantity') }}
                     </label>
 
-                    <input
-                        type="number"
-                        name="quantity"
-                        min="1"
-                        required
-                        class="w-full rounded-lg border-gray-300"
-                    >
+                    <input type="number" name="quantity" min="1" required class="w-full rounded-lg border-gray-300">
 
                 </div>
 
                 <div>
 
                     <label class="block mb-2 text-sm font-medium">
-                        {{__('messages.note')}}
+                        {{ __('messages.note') }}
                     </label>
 
-                    <input
-                        type="text"
-                        name="note"
-                        placeholder="{{__('messages.stock_decrease_reason')}}"
-                        class="w-full rounded-lg border-gray-300"
-                    >
+                    <input type="text" name="note" placeholder="{{ __('messages.stock_decrease_reason') }}"
+                        class="w-full rounded-lg border-gray-300">
 
                 </div>
 
-                <button
-                    class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg"
-                >
-                    {{__('messages.add_stock')}}
+                <button class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg">
+                    {{ __('messages.add_stock') }}
                 </button>
 
             </form>
@@ -93,51 +76,35 @@
         <div class="bg-white rounded-2xl shadow-sm border p-6">
 
             <h2 class="text-lg font-semibold text-red-600 mb-4">
-                {{__('messages.decrease_stock')}}
+                {{ __('messages.decrease_stock') }}
             </h2>
 
-            <form
-                method="POST"
-                action="{{ route('admin.variants.inventory.decrease',$variant) }}"
-                class="space-y-4"
-            >
+            <form method="POST" action="{{ route('admin.variants.inventory.decrease', $variant) }}" class="space-y-4">
                 @csrf
 
                 <div>
 
                     <label class="block mb-2 text-sm font-medium">
-                        {{__('messages.quantity')}}
+                        {{ __('messages.quantity') }}
                     </label>
 
-                    <input
-                        type="number"
-                        name="quantity"
-                        min="1"
-                        required
-                        class="w-full rounded-lg border-gray-300"
-                    >
+                    <input type="number" name="quantity" min="1" required class="w-full rounded-lg border-gray-300">
 
                 </div>
 
                 <div>
 
                     <label class="block mb-2 text-sm font-medium">
-                        {{__('messages.note')}}
+                        {{ __('messages.note') }}
                     </label>
 
-                    <input
-                        type="text"
-                        name="note"
-                        placeholder="{{__('messages.stock_increase_reason')}}"
-                        class="w-full rounded-lg border-gray-300"
-                    >
+                    <input type="text" name="note" placeholder="{{ __('messages.stock_increase_reason') }}"
+                        class="w-full rounded-lg border-gray-300">
 
                 </div>
 
-                <button
-                    class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg"
-                >
-                    {{__('messages.remove_stock')}}
+                <button class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg">
+                    {{ __('messages.remove_stock') }}
                 </button>
 
             </form>
@@ -151,7 +118,7 @@
         <div class="px-6 py-4 border-b">
 
             <h2 class="font-semibold">
-                {{__('messages.stock_history')}}
+                {{ __('messages.stock_history') }}
             </h2>
 
         </div>
@@ -161,103 +128,89 @@
 
                 <thead class="bg-gray-50">
 
-                <tr>
+                    <tr>
 
-                    <th class="px-4 py-3">
-                        {{__('messages.date')}}
-                    </th>
+                        <th class="px-4 py-3">
+                            {{ __('messages.date') }}
+                        </th>
 
-                    <th class="px-4 py-3">
-                        {{__('messages.type')}}
-                    </th>
+                        <th class="px-4 py-3">
+                            {{ __('messages.type') }}
+                        </th>
 
-                    <th class="px-4 py-3">
-                        {{__('messages.quantity')}}
-                    </th>
+                        <th class="px-4 py-3">
+                            {{ __('messages.quantity') }}
+                        </th>
 
-                    <th class="px-4 py-3">
-                        {{__('messages.before')}}
-                    </th>
+                        <th class="px-4 py-3">
+                            {{ __('messages.before') }}
+                        </th>
 
-                    <th class="px-4 py-3">
-                        {{__('messages.after')}}
-                    </th>
+                        <th class="px-4 py-3">
+                            {{ __('messages.after') }}
+                        </th>
 
-                    <th class="px-4 py-3">
-                        {{__('messages.user')}}
-                    </th>
+                        <th class="px-4 py-3">
+                            {{ __('messages.user') }}
+                        </th>
 
-                    <th class="px-4 py-3">
-                        {{__('messages.note')}}
-                    </th>
+                        <th class="px-4 py-3">
+                            {{ __('messages.note') }}
+                        </th>
 
-                </tr>
+                    </tr>
 
                 </thead>
 
                 <tbody>
 
-                @foreach($movements as $movement)
+                    @foreach ($movements as $movement)
+                        <tr class="border-t">
 
-                    <tr class="border-t">
+                            <td class="px-4 py-3">
+                                {{ $movement->created_at->format('Y-m-d H:i') }}
+                            </td>
 
-                        <td class="px-4 py-3">
-                            {{ $movement->created_at->format('Y-m-d H:i') }}
-                        </td>
+                            <td class="px-4 py-3">
 
-                        <td class="px-4 py-3">
+                                @if ($movement->type === 'in')
+                                    <span class="bg-green-100 text-green-700 px-2 py-1 rounded">
+                                        {{ __('messages.in') }}
+                                    </span>
+                                @elseif($movement->type === 'out')
+                                    <span class="bg-red-100 text-red-700 px-2 py-1 rounded">
+                                        {{ __('messages.out') }}
+                                    </span>
+                                @else
+                                    <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                                        {{ __('messages.adjust') }}
+                                    </span>
+                                @endif
 
-                            @if($movement->type === 'in')
+                            </td>
 
-                                <span
-                                    class="bg-green-100 text-green-700 px-2 py-1 rounded"
-                                >
-                            {{__('messages.in')}}
-                        </span>
+                            <td class="px-4 py-3">
+                                {{ $movement->quantity }}
+                            </td>
 
-                            @elseif($movement->type === 'out')
+                            <td class="px-4 py-3">
+                                {{ $movement->before_stock }}
+                            </td>
 
-                                <span
-                                    class="bg-red-100 text-red-700 px-2 py-1 rounded"
-                                >
-                            {{__('messages.out')}}
-                        </span>
+                            <td class="px-4 py-3 font-semibold">
+                                {{ $movement->after_stock }}
+                            </td>
 
-                            @else
+                            <td class="px-4 py-3">
+                                {{ $movement->user?->name ?? '-' }}
+                            </td>
 
-                                <span
-                                    class="bg-blue-100 text-blue-700 px-2 py-1 rounded"
-                                >
-                                    {{__('messages.adjust')}}
-                        </span>
+                            <td class="px-4 py-3">
+                                {{ $movement->note }}
+                            </td>
 
-                            @endif
-
-                        </td>
-
-                        <td class="px-4 py-3">
-                            {{ $movement->quantity }}
-                        </td>
-
-                        <td class="px-4 py-3">
-                            {{ $movement->before_stock }}
-                        </td>
-
-                        <td class="px-4 py-3 font-semibold">
-                            {{ $movement->after_stock }}
-                        </td>
-
-                        <td class="px-4 py-3">
-                            {{ $movement->user?->name ?? '-' }}
-                        </td>
-
-                        <td class="px-4 py-3">
-                            {{ $movement->note }}
-                        </td>
-
-                    </tr>
-
-                @endforeach
+                        </tr>
+                    @endforeach
 
                 </tbody>
 

@@ -1,27 +1,21 @@
 @extends('admin.layouts.app')
-
+@section('title', __('messages.create_brand'))
 @section('content')
 
     <div class="bg-white p-6 rounded-xl shadow">
 
         <h1 class="text-2xl font-bold mb-6">
-            {{__('messages.create_brand')}}
+            {{ __('messages.create_brand') }}
         </h1>
 
-        <form
-            action="{{ route('admin.brands.store') }}"
-            method="POST"
-            enctype="multipart/form-data"
-        >
+        <form action="{{ route('admin.brands.store') }}" method="POST" enctype="multipart/form-data">
 
             @csrf
 
             @include('admin.brands._form')
 
-            <button
-                class="mt-6 bg-indigo-600 text-white px-6 py-3 rounded"
-            >
-                {{__('messages.save')}}
+            <button class="mt-6 bg-indigo-600 text-white px-6 py-3 rounded">
+                {{ __('messages.save') }}
             </button>
 
         </form>

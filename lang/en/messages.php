@@ -75,6 +75,7 @@ return [
     'brand' => 'Brand',
     'create_brand' => 'Create Brand',
     'edit_brand' => 'Edit Brand',
+    'edit_category' => 'Edit Category',
     'select' => '(Select)',
     'image' => 'Image',
     'no_image' => 'No Image',
@@ -340,6 +341,7 @@ return [
     'total_deposits' => 'Total Deposits',
     'record' => 'Records',
     'no_transactions' => 'No transactions found',
+    'receipt' => 'receipt',
     //====action messages
     'updated_successfully' => 'Updated successfully',
     'attributes_created_successfully' => 'Attributes created successfully.',

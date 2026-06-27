@@ -1,5 +1,9 @@
 <x-app-layout>
 
+    <x-slot:title>
+        {{ __('messages.cart') }}
+    </x-slot:title>
+
     <div class="mx-auto max-w-7xl px-4 py-10">
 
         <div class="mb-8">
@@ -14,35 +18,23 @@
 
         </div>
 
-        @if(empty($cart['items']))
+        @if (empty($cart['items']))
 
-            <x-shop.cart.empty/>
-
+            <x-shop.cart.empty />
         @else
+            <div class="grid gap-8 lg:grid-cols-3">
 
-            <div
-                class="grid gap-8 lg:grid-cols-3"
-            >
+                <div class="space-y-4 lg:col-span-2">
 
-                <div
-                    class="space-y-4 lg:col-span-2"
-                >
-
-                    @foreach($cart['items'] as $item)
-
-                        <x-shop.cart.item
-                            :item="$item"
-                        />
-
+                    @foreach ($cart['items'] as $item)
+                        <x-shop.cart.item :item="$item" />
                     @endforeach
 
                 </div>
 
                 <div>
 
-                    <x-shop.cart.summary
-                        :subtotal="$subtotal"
-                    />
+                    <x-shop.cart.summary :subtotal="$subtotal" />
 
                 </div>
 
@@ -56,10 +48,11 @@
         <script>
             // ========== Increase and decrease quantity ==========
             document.querySelectorAll('.cart-qty-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
+                btn.addEventListener('click', function() {
                     const action = this.dataset.action;
                     const variantId = this.dataset.variantId;
-                    const quantitySpan = document.querySelector(`.cart-qty-text[data-variant-id="${variantId}"]`);
+                    const quantitySpan = document.querySelector(
+                        `.cart-qty-text[data-variant-id="${variantId}"]`);
                     const row = this.closest('.cart-item-row');
 
                     if (!variantId) return;
@@ -71,14 +64,17 @@
                     });
 
                     fetch(`/cart/items/${variantId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({ quantity: 1, action: action })
-                    })
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                quantity: 1,
+                                action: action
+                            })
+                        })
                         .then(async response => {
                             const data = await response.json();
                             if (!response.ok) throw new Error(data.message || 'Server error');
@@ -114,7 +110,7 @@
 
             // ========== Remove item ==========
             document.querySelectorAll('.cart-remove-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
+                btn.addEventListener('click', function() {
                     const variantId = this.dataset.variantId;
                     const row = this.closest('.cart-item-row');
 
@@ -129,13 +125,13 @@
                     this.textContent = '⏳';
 
                     fetch(`/cart/items/${variantId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Accept': 'application/json'
-                        }
-                    })
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                'Accept': 'application/json'
+                            }
+                        })
                         .then(async response => {
                             const data = await response.json();
                             if (!response.ok) throw new Error(data.message || 'Server error');
