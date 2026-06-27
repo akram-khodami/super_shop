@@ -39,6 +39,8 @@ class Order extends Model
         'discount_amount' => 'decimal:2',
         'total_amount' => 'decimal:2',
         'paid_at' => 'datetime',
+        'status' => OrderStatus::class,
+        'payment_status' => OrderPaymentStatus::class,
     ];
 
     /*
@@ -69,7 +71,7 @@ class Order extends Model
 
     public function isPaid(): bool
     {
-        return $this->payment_status === OrderPaymentStatus::PAID->value;
+        return $this->payment_status === OrderPaymentStatus::PAID;
     }
 
     public function payments()
@@ -79,12 +81,12 @@ class Order extends Model
 
     public function getStatusLabelAttribute(): string
     {
-        return OrderStatus::tryFrom($this->status) ?->label() ?? $this->status;
-    }
+        return $this->status?->label() ?? $this->status;
+}
 
     public function getPaymentStatusLabelAttribute(): string
     {
-        return OrderPaymentStatus::tryFrom($this->payment_status) ?->label() ?? $this->payment_status;
+        return $this->payment_status?->label() ?? $this->payment_status;
     }
 
     public function statusLogs()

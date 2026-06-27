@@ -41,7 +41,7 @@ class PaymentService
 
         switch ($method) {
 
-            case PaymentMethod::WALLET->value:
+            case PaymentMethod::WALLET:
 
                 $gateway = NULL;
 
@@ -51,15 +51,15 @@ class PaymentService
 
                 return redirect()->route('orders.success', $payment->order);
 
-            case PaymentMethod::ONLINE->value:
+            case PaymentMethod::ONLINE:
 
-                $gateway = PaymentGateway::ZARINPAL->value;
+                $gateway = PaymentGateway::ZARINPAL;
 
                 $payment = $this->createOrderPayment($order, $method, $gateway);
 
                 return $this->payWithGateway($payment);
 
-            case PaymentMethod::INSTALLMENT->value:
+            case PaymentMethod::INSTALLMENT:
 
                 $gateway = NULL;//Digi pay,snapp pay
 
@@ -72,7 +72,7 @@ class PaymentService
 
     public function createOrderPayment(Order $order, string $method, $gateway = null): Payment
     {
-        $type = PaymentType::ORDER->value;
+        $type = PaymentType::ORDER;
         $userId = $order->user_id;
         $orderId = $order->id;
         $amount = $order->total_amount;
@@ -84,14 +84,14 @@ class PaymentService
             'order_id' => $orderId,
             'amount' => $amount,
             'gateway' => $gateway,
-            'status' => PaymentStatus::PENDING->value,
+            'status' => PaymentStatus::PENDING,
         ]);
     }
 
     public function createWalletTopupPayment($request)
     {
-        $type = PaymentType::WALLET_TOPUP->value;
-        $method = PaymentMethod::ONLINE->value;
+        $type = PaymentType::WALLET_TOPUP;
+        $method = PaymentMethod::ONLINE;
         $userId = auth()->id();
         $orderId = NULL;
         $amount = $request->amount;
@@ -104,7 +104,7 @@ class PaymentService
             'order_id' => $orderId,
             'amount' => $amount,
             'gateway' => $gateway,
-            'status' => PaymentStatus::PENDING->value,
+            'status' => PaymentStatus::PENDING,
         ]);
     }
 
@@ -126,13 +126,13 @@ class PaymentService
             );
 
             $payment->update([
-                'status' => PaymentStatus::SUCCESS->value,
+                'status' => PaymentStatus::SUCCESS,
                     'paid_at' => now(),
             ]);
 
             $payment->order->update([
-                'payment_status' => OrderPaymentStatus::PAID->value,
-                'status' => OrderStatus::PROCESSING->value,
+                'payment_status' => OrderPaymentStatus::PAID,
+                'status' => OrderStatus::PROCESSING,
                 'paid_at' => now(),
             ]);
 

@@ -72,10 +72,7 @@ class ZarinpalGateway implements PaymentGatewayInterface
 
     public function verify(Payment $payment, array $callbackData = []): bool
     {
-        if (
-            ($callbackData['Status'] ?? null)
-            !== 'OK'
-        ) {
+        if (($callbackData['Status'] ?? null) !== 'OK') {
             return false;
         }
 
@@ -93,12 +90,11 @@ class ZarinpalGateway implements PaymentGatewayInterface
 
         $result = $response->json();
 
-
         $payment->update([
             'paid_at' => now(),
             'reference_id' => $result['data']['ref_id'],
             'gateway_response' => $result,
-            'status' => PaymentStatus::SUCCESS->value,
+            'status' => PaymentStatus::SUCCESS,
         ]);
 
         return ($result['data']['code'] ?? null) === 100;

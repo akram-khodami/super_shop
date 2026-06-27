@@ -23,7 +23,7 @@
                     class="w-full rounded-lg border-gray-300"
                 >
 
-                    @foreach(\App\Enums\OrderStatus::options() as $value => $label)
+                    @foreach($statuses as $value => $label)
 
                         <option
                             value="{{ $value }}"

@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\StoreUserAddressRequest;
 use App\Http\Requests\Shop\UpdateUserAddressRequest;
 use App\Models\UserAddress;
-use Illuminate\Http\Request;
 
 class UserAddressController extends Controller
 {

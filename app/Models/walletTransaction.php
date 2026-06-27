@@ -33,6 +33,8 @@ class WalletTransaction extends Model
         'balance_before' => 'decimal:2',
 
         'balance_after' => 'decimal:2',
+
+        'type' => WalletTransactionType::class
     ];
 
     public function wallet()

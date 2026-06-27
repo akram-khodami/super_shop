@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\ProductAttribute;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -96,8 +94,8 @@ class ProductController extends Controller
                     return [
                         'id' => $value['id'],
                         'label' => $value['value'],
-                        'variant_id' => $variant?->id,
-                        'selected' => $product->default_variant?->variantAttributeValue?->product_attribute_value_id == $value['id'],
+                        'variant_id' => $variant ?->id,
+                        'selected' => $product->default_variant ?->variantAttributeValue ?->product_attribute_value_id == $value['id'],
                         'disabled' => !$variant || $variant->stock <= 0,
                     ];
                 });

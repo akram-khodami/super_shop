@@ -55,7 +55,7 @@ class OrderStatusService
     {
 
         $oldStatus = $order->status;
-        $currentStatus = OrderStatus::from($order->status);
+        $currentStatus = $status;
 
         if (!$currentStatus->canTransitionTo($status)) {
 

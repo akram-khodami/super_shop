@@ -334,6 +334,12 @@ return [
     'in' => 'In',
     'out' => 'Out',
     'adjust' => 'ADJUST',
+    'wallet_balance' => 'Wallet Balance',
+    'total_transactions' => 'Total Transactions',
+    'last_transaction' => 'Last Transaction',
+    'total_deposits' => 'Total Deposits',
+    'record' => 'Records',
+    'no_transactions' => 'No transactions found',
     //====action messages
     'updated_successfully' => 'Updated successfully',
     'attributes_created_successfully' => 'Attributes created successfully.',

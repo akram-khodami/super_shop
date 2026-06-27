@@ -39,7 +39,9 @@ class OrderController extends Controller
             'statusLogs',
         ]);
 
-        return view('admin.orders.show', compact('order'));
+        $statuses = OrderStatus::options();
+
+        return view('admin.orders.show', compact('order', 'statuses'));
     }
 
     public function changeStatus(ChangeOrderStatusRequest $request, Order $order)

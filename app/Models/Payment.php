@@ -2,6 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentGateway;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
+use App\Enums\PaymentType;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
@@ -33,10 +38,12 @@ class Payment extends Model
         return [
 
             'amount' => 'decimal:2',
-
             'paid_at' => 'datetime',
-
             'gateway_response' => 'array',
+            'gateway' => PaymentGateway::class,
+            'method' => PaymentMethod::class,
+            'status' => PaymentStatus::class,
+            'type' => PaymentType::class,
 
         ];
 

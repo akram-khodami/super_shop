@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\StoreCheckoutRequest;
 use App\Models\Cart;
 use App\Services\CheckoutService;
-use Illuminate\Http\Request;
-use function Laravel\Mcp\responses;
 
 class CheckoutController extends Controller
 {

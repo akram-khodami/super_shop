@@ -334,6 +334,12 @@ return [
     'in' => 'ورود',
     'out' => 'خروج',
     'adjust' => 'تنظیم',
+    'wallet_balance' => 'موجودی کیف پول',
+    'total_transactions' => 'تعداد تراکنش‌ها',
+    'last_transaction' => 'آخرین تراکنش',
+    'total_deposits' => 'مجموع شارژ',
+    'record' => 'رکورد',
+    'no_transactions' => 'هیچ تراکنشی یافت نشد',
     //====action messages
     'updated_successfully' => 'با موفقیت بروز شد.',
     'attributes_created_successfully' => 'ویژگی با موفقیت ایجاد شد.',

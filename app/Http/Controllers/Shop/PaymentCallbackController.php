@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Shop;
 use App\Enums\OrderPaymentStatus;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
+use App\Enums\PaymentType;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Services\Gateways\ZarinpalGateway;
@@ -21,10 +22,10 @@ class PaymentCallbackController extends Controller
     )
     {
 
-        if ($payment->status === PaymentStatus::SUCCESS->value) {
-        return redirect()
-            ->route('payment.success');
-    }
+        if ($payment->status === PaymentStatus::SUCCESS) {
+            return redirect()
+                ->route('payment.success');
+        }
 
         $verified = $gateway->verify($payment,
             request()->all()
@@ -33,7 +34,7 @@ class PaymentCallbackController extends Controller
         if (!$verified) {
 
             $payment->update([
-                'status' => PaymentStatus::FAILED->value,
+                'status' => PaymentStatus::FAILED,
             ]);
 
             return redirect()
@@ -45,28 +46,25 @@ class PaymentCallbackController extends Controller
         }
 
         $payment->update([
-            'status' => PaymentStatus::SUCCESS->value,
+            'status' => PaymentStatus::SUCCESS,
             'paid_at' => now(),
         ]);
 
-        if (
-            $payment->type === 'order'
-        ) {
+        if ($payment->type === PaymentType::order) {
 
             $payment->order->update([
-                'payment_status' => OrderPaymentStatus::PAID->value,
-                'status' => OrderStatus::PROCESSING->value,
+                'payment_status' => OrderPaymentStatus::PAID,
+                'status' => OrderStatus::PROCESSING,
                 'paid_at' => now(),
             ]);
 
             $paymentService->clearCart($payment->order);
 
             $paymentService->decreaseOrderStock($payment->order);
-        }
 
-        if (
-            $payment->type === 'wallet_topup'
-        ) {
+            return redirect()->route('orders.success', $payment->order);
+
+        } else if ($payment->type === PaymentType::wallet_topup) {
 
             $walletService->deposit(
                 $payment->user,
@@ -74,9 +72,9 @@ class PaymentCallbackController extends Controller
                 $payment,
                 'Wallet topup'
             );
-        }
 
-        return redirect()
-            ->route('payment.success');
+            return redirect()->route('payment.success');
+
+        }
     }
 }

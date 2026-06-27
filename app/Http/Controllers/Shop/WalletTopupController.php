@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers\Shop;
 
-use App\Enums\PaymentMethod;
-use App\Enums\PaymentStatus;
-use App\Enums\PaymentType;
 use App\Enums\PaymentGateway;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\StoreWalletTopupRequest;
-use App\Models\Payment;
 use App\Services\PaymentService;
 
 class WalletTopupController extends Controller
