@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\HasLocalizedDates;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 abstract class BaseModel extends Model
 {
+
+    use HasLocalizedDates;
+    
     public static function generateUniqueSlug(string $name, string $column = 'slug', ?int $ignoreId = null): string
     {
         $slug = Str::slug($name, '-', null);
@@ -28,5 +32,10 @@ abstract class BaseModel extends Model
         }
 
         return "{$slug}-{$counter}";
+    }
+
+    public function localDate(string $column): ?string
+    {
+        return $this->localizeDate($this->{$column});
     }
 }
