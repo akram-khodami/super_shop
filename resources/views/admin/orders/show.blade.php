@@ -49,6 +49,11 @@
 
     </form>
 
+    <form action="{{ route('admin.payment.refund', 63) }}" method="POST" class="bg-white p-4 rounded-lg shadow mb-6">
+        @csrf
+        <input type="submit" value={{ __('messages.refund') }} class="">
+    </form>
+
     <div class="p-6">
 
         <div class="flex justify-between mb-6">
