@@ -2,14 +2,14 @@
 
 namespace App\Enums;
 
-enum PaymentType:string
+enum PaymentType: string
 {
-case ORDER = 'order';
+    case ORDER = 'order';
 
-case WALLET_TOPUP = 'wallet_topup';
+    case WALLET_TOPUP = 'wallet_topup';
 
     public function label(): string
-{
-    return __("messages.payment_types.".$this->value);
-}
+    {
+        return __("messages.payment_types." . $this->value);
+    }
 }

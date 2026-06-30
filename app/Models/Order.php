@@ -84,7 +84,7 @@ class Order extends Model
     public function getStatusLabelAttribute(): string
     {
         return $this->status?->label() ?? $this->status;
-}
+    }
 
     public function getPaymentStatusLabelAttribute(): string
     {
@@ -96,4 +96,8 @@ class Order extends Model
         return $this->hasMany(OrderStatusLog::class)->latest();
     }
 
+    public function installments()
+    {
+        return $this->hasMany(Installment::class);
+    }
 }

@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\PaymentRefunded;
-use App\Notifications\PaymentRefundedNotification;
+use App\Notifications\Payment\PaymentRefundedNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 

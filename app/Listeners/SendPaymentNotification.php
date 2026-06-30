@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\PaymentCompleted;
-use App\Notifications\PaymentSuccessfulNotification;
+use App\Notifications\Payment\PaymentSuccessfulNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Payment;
 
 use App\Models\Payment;
 use Illuminate\Bus\Queueable;
@@ -8,14 +8,14 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PaymentSuccessfulNotification extends Notification
+class PaymentRefundedNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Payment $payment)
+    public function __construct(protected Payment $payment)
     {
         //
     }
@@ -50,27 +50,18 @@ class PaymentSuccessfulNotification extends Notification
     {
         return [
 
-            'type' => 'payment_successful',
+            'title' => __('messages.payment_refunded'),
+
+            'message' => __(
+                'messages.payment_refunded_message',
+                [
+                    'amount' => $this->payment->amount,
+                ]
+            ),
 
             'payment_id' => $this->payment->id,
 
             'order_id' => $this->payment->order_id,
-
-            'amount' => $this->payment->amount,
-
-            'title' => __('messages.payment_successful'),
-
-            'message' => __('messages.payment_successful_message'),
-
-            'created_at' => now(),
-
-            'action' => [
-                'route' => 'orders.show',
-                'parameters' => [
-                    'order' => $this->payment->order_id,
-                ],
-            ],
-
         ];
     }
 }
