@@ -5,7 +5,7 @@ namespace App\Services\Gateways;
 use App\Contracts\PaymentGatewayInterface;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Http;
-use App\Enums\PaymentStatus;
+use App\Exceptions\PaymentGatewayException;
 
 class ZarinpalGateway implements PaymentGatewayInterface
 {
@@ -33,10 +33,10 @@ class ZarinpalGateway implements PaymentGatewayInterface
             [
                 'merchant_id' => $this->merchantId,
 
-                'amount' => (int)$payment->amount * 10,//exchange to Rial
+                'amount' => (int)$payment->amount * 10, //exchange to Rial
 
                 'description' =>
-                    "Payment #{$payment->id}",
+                "Payment #{$payment->id}",
 
                 'callback_url' => route(
                     'payment.callback',
@@ -48,11 +48,9 @@ class ZarinpalGateway implements PaymentGatewayInterface
         $result = $response->json();
 
         if (
-        !isset($result['data']['authority'])
+            !isset($result['data']['authority'])
         ) {
-            throw new \RuntimeException(
-                'Zarinpal request failed.'
-            );
+            throw new PaymentGatewayException();
         }
 
         $authority =
@@ -65,7 +63,7 @@ class ZarinpalGateway implements PaymentGatewayInterface
         ]);
 
         return $this->baseUrl ===
-        'https://sandbox.zarinpal.com/pg/v4/payment'
+            'https://sandbox.zarinpal.com/pg/v4/payment'
             ? "https://sandbox.zarinpal.com/pg/StartPay/{$authority}"
             : "https://payment.zarinpal.com/pg/StartPay/{$authority}";
     }
@@ -84,17 +82,17 @@ class ZarinpalGateway implements PaymentGatewayInterface
                 'amount' => (int)$payment->amount * 10,
 
                 'authority' =>
-                    $callbackData['Authority'],
+                $callbackData['Authority'],
             ]
         );
 
         $result = $response->json();
 
+        $referenceId = $result['data']['ref_id'] ?? null;
+
         $payment->update([
-            'paid_at' => now(),
-            'reference_id' => $result['data']['ref_id'],
+            'reference_id' => $referenceId,
             'gateway_response' => $result,
-            'status' => PaymentStatus::SUCCESS,
         ]);
 
         return ($result['data']['code'] ?? null) === 100;

@@ -10,28 +10,27 @@ use App\Models\Payment;
 use App\Enums\PaymentType;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
-use App\Enums\OrderPaymentStatus;
-use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
 use App\Exceptions\BusinessException;
+use App\Exceptions\InsufficientWalletBalanceException;
 use App\Services\Gateways\PaymentGatewayManager;
+use App\Services\Payment\PaymentCompletionService;
 use Illuminate\Support\Facades\DB;
 
 class PaymentService
 {
+    protected PaymentCompletionService $paymentCompletionService;
     protected WalletService $walletService;
-    protected InventoryService $inventoryService;
     protected PaymentGatewayManager $gatewayManager;
 
     public function __construct(
         WalletService $walletService,
         PaymentGatewayManager $gatewayManager,
-        InventoryService $inventoryService)
-    {
+        PaymentCompletionService $paymentCompletionService
+    ) {
         $this->walletService = $walletService;
-        $this->inventoryService = $inventoryService;
         $this->gatewayManager = $gatewayManager;
-
+        $this->paymentCompletionService = $paymentCompletionService;
     }
 
     public function pay(Order $order, string $method)
@@ -45,6 +44,15 @@ class PaymentService
             case PaymentMethod::WALLET:
 
                 $gateway = NULL;
+
+                $user = auth()->user();
+
+                $wallet = $this->walletService->getWallet($user);
+
+                if ($wallet->balance < $order->total_amount) {
+
+                    throw new InsufficientWalletBalanceException();
+                }
 
                 $payment = $this->createOrderPayment($order, $method, $gateway);
 
@@ -62,19 +70,18 @@ class PaymentService
 
             case PaymentMethod::INSTALLMENT:
 
-                $gateway = NULL;//Digi pay,snapp pay
+                $gateway = NULL; //Digi pay,snapp pay
 
                 $payment = $this->createOrderPayment($order, $method, $gateway);
 
                 return $this->payInstallment($payment);
 
-                default:
+            default:
 
-            throw new BusinessException();//Todo:custmize
+                throw new BusinessException(); //Todo:custmize
 
 
         }
-
     }
 
     public function createOrderPayment(Order $order, string $method, $gateway = null): Payment
@@ -84,15 +91,17 @@ class PaymentService
         $orderId = $order->id;
         $amount = $order->total_amount;
 
-        return Payment::create([
-            'type' => $type,
-            'method' => $method,
-            'user_id' => $userId,
-            'order_id' => $orderId,
-            'amount' => $amount,
-            'gateway' => $gateway,
-            'status' => PaymentStatus::PENDING,
-        ]);
+        return Payment::create(
+            [
+                'user_id' => $userId,
+                'order_id' => $orderId,
+                'status' => PaymentStatus::PENDING,
+                'type' => $type,
+                'method' => $method,
+                'amount' => $amount,
+                'gateway' => $gateway,
+            ]
+        );
     }
 
     public function createWalletTopupPayment($request)
@@ -116,40 +125,31 @@ class PaymentService
     }
 
 
-    public function payTopup()
-    {
-
-    }
-
     public function payWithWallet(Payment $payment): Payment
     {
-        return DB::transaction(function () use ($payment) {
+        try {
 
-            $this->walletService->withdraw(
-                $payment->user,
-                $payment->amount,
-                $payment,
-                'Order payment'
-            );
+            DB::transaction(function () use ($payment) {
+
+                $this->walletService->withdraw(
+                    $payment->user,
+                    $payment->amount,
+                    $payment,
+                    'Order payment'
+                );
+
+                $this->paymentCompletionService->handle($payment);
+            });
+        } catch (InsufficientWalletBalanceException $e) {
 
             $payment->update([
-                'status' => PaymentStatus::SUCCESS,
-                    'paid_at' => now(),
+                'status' => PaymentStatus::FAILED,
             ]);
 
-            $payment->order->update([
-                'payment_status' => OrderPaymentStatus::PAID,
-                'status' => OrderStatus::PROCESSING,
-                'paid_at' => now(),
-            ]);
+            throw $e;
+        }
 
-            $this->clearCart($payment->order);
-
-            $this->decreaseOrderStock($payment->order);
-
-            return $payment->fresh();
-
-        });
+        return $payment->fresh();
     }
 
     public function payWithGateway(Payment $payment)
@@ -163,34 +163,6 @@ class PaymentService
 
     public function payInstallment(Payment $payment): Payment
     {
-
-    }
-
-    public function clearCart(Order $order): void
-    {
-        $cart = $order->user->cart;
-
-        if (!$cart) {
-            return;
-        }
-
-        $cart->items()->delete();
-
-        $cart->delete();
-    }
-
-    public function decreaseOrderStock(Order $order): void
-    {
-
-        $order->loadMissing('items.variant');
-
-        foreach ($order->items as $item) {
-
-            $this->inventoryService->decrease(
-                $item->variant,
-                $item->quantity,
-                "Order #{$order->order_number}"
-            );
-        }
+        return $payment;
     }
 }

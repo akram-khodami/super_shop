@@ -19,8 +19,7 @@ class WalletService
         float $amount,
         ?Payment $payment = null,
         ?string $description = null
-    ): WalletTransaction
-    {
+    ): WalletTransaction {
 
         return DB::transaction(function () use (
             $user,
@@ -29,7 +28,7 @@ class WalletService
             $description
         ) {
 
-            $wallet = $this->getWallet($user);
+            $wallet = $this->getLockedWallet($user);
 
             $balanceBefore = $wallet->balance;
 
@@ -43,7 +42,7 @@ class WalletService
 
                 'wallet_id' => $wallet->id,
 
-                'payment_id' => $payment ?->id,
+                'payment_id' => $payment?->id,
 
                 'type' => 'deposit',
 
@@ -66,8 +65,7 @@ class WalletService
         float $amount,
         ?Payment $payment = null,
         ?string $description = null
-    ): WalletTransaction
-    {
+    ): WalletTransaction {
 
         return DB::transaction(function () use (
             $user,
@@ -77,10 +75,7 @@ class WalletService
         ) {
 
 
-            $wallet = Wallet::query()
-                ->where('user_id', $user->id)
-                ->lockForUpdate()
-                ->firstOrFail();
+            $wallet = $this->getLockedWallet($user);
 
             if ($wallet->balance < $amount) {
 
@@ -99,7 +94,7 @@ class WalletService
 
                 'wallet_id' => $wallet->id,
 
-                'payment_id' => $payment ?->id,
+                'payment_id' => $payment?->id,
 
                 'type' => 'withdraw',
 
@@ -127,5 +122,15 @@ class WalletService
                 'balance' => 0,
             ]
         );
+    }
+
+    private function getLockedWallet(User $user): Wallet
+    {
+        $this->getWallet($user);
+
+        return Wallet::query()
+            ->where('user_id', $user->id)
+            ->lockForUpdate()
+            ->firstOrFail();
     }
 }

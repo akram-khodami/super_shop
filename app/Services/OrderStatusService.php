@@ -10,6 +10,7 @@ use App\Models\OrderStatusLog;
 
 class OrderStatusService
 {
+    //todo:remove if it is unused
     public function markAsProcessing(Order $order): void
     {
         $order->update([
@@ -18,6 +19,7 @@ class OrderStatusService
         ]);
     }
 
+    //todo:remove if it is unused
     public function markAsShipped(Order $order, ?string $trackingCode = null): void
     {
 
@@ -28,6 +30,7 @@ class OrderStatusService
         ]);
     }
 
+    //todo:remove if it is unused
     public function markAsDelivered(Order $order): void
     {
         $order->update([
@@ -36,6 +39,7 @@ class OrderStatusService
         ]);
     }
 
+    //todo:remove if it is unused
     public function markAsCompleted(Order $order): void
     {
         $order->update([
@@ -44,6 +48,7 @@ class OrderStatusService
         ]);
     }
 
+    //todo:remove if it is unused
     public function cancel(Order $order): void
     {
         $order->update([
@@ -60,7 +65,6 @@ class OrderStatusService
         if (!$oldStatus->canTransitionTo($currentStatus)) {
 
             throw new InvalidOrderStatusTransitionException();
-
         }
 
         $data = [

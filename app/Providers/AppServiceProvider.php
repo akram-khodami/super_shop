@@ -6,6 +6,7 @@ use App\Services\CartService;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Event;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,15 +25,16 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useTailwind();
 
-//        View::composer(
-//            'layouts.app',
-//            function ($view) {
-//
-//                $view->with(
-//                    'cartCount',
-//                    app(CartService::class)->itemsCount()
-//                );
-//            }
-//        );
+
+        //        View::composer(
+        //            'layouts.app',
+        //            function ($view) {
+        //
+        //                $view->with(
+        //                    'cartCount',
+        //                    app(CartService::class)->itemsCount()
+        //                );
+        //            }
+        //        );
     }
 }

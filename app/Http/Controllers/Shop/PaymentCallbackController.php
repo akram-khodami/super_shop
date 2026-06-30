@@ -2,32 +2,33 @@
 
 namespace App\Http\Controllers\Shop;
 
-use App\Enums\OrderPaymentStatus;
-use App\Enums\OrderStatus;
+
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentType;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
-use App\Services\Gateways\ZarinpalGateway;
-use App\Services\PaymentService;
-use App\Services\WalletService;
+use App\Services\Gateways\PaymentGatewayManager;
+use App\Services\Payment\PaymentCompletionService;
 
 class PaymentCallbackController extends Controller
 {
     public function __invoke(
         Payment $payment,
-        ZarinpalGateway $gateway,
-        WalletService $walletService,
-        PaymentService $paymentService
-    )
-    {
+        PaymentGatewayManager $gatewayManager,
+        PaymentCompletionService $paymentCompletionService
+    ) {
 
         if ($payment->status === PaymentStatus::SUCCESS) {
             return redirect()
                 ->route('payment.success');
         }
 
-        $verified = $gateway->verify($payment,
+        $gateway = $gatewayManager->driver(
+            $payment->gateway
+        );
+
+        $verified = $gateway->verify(
+            $payment,
             request()->all()
         );
 
@@ -37,44 +38,37 @@ class PaymentCallbackController extends Controller
                 'status' => PaymentStatus::FAILED,
             ]);
 
-            return redirect()
-                ->route('orders.show', $payment->order_id)
-                ->with(
-                    'error',
-                    __('messages.payment_failed')
-                );
+            return  $this->failedRedirect($payment);
         }
 
-        $payment->update([
-            'status' => PaymentStatus::SUCCESS,
-            'paid_at' => now(),
-        ]);
+        $paymentCompletionService->handle($payment);
 
-        if ($payment->type === PaymentType::ORDER) {
+        return $this->successRedirect($payment);
+    }
 
-            $payment->order->update([
-                'payment_status' => OrderPaymentStatus::PAID,
-                'status' => OrderStatus::PROCESSING,
-                'paid_at' => now(),
-            ]);
+    private function successRedirect(Payment $payment)
+    {
+        return match ($payment->type) {
 
-            $paymentService->clearCart($payment->order);
+            PaymentType::ORDER => redirect()
+                ->route('orders.success', $payment->order),
 
-            $paymentService->decreaseOrderStock($payment->order);
+            PaymentType::WALLET_TOPUP => redirect()
+                ->route('payment.success'),
+        };
+    }
 
-            return redirect()->route('orders.success', $payment->order);
+    private function failedRedirect(Payment $payment)
+    {
+        return match ($payment->type) {
 
-        } else if ($payment->type === PaymentType::WALLET_TOPUP) {
+            PaymentType::ORDER => redirect()
+                ->route('orders.show', $payment->order)
+                ->with('error', __('messages.payment_failed')),
 
-            $walletService->deposit(
-                $payment->user,
-                $payment->amount,
-                $payment,
-                'Wallet topup'
-            );
-
-            return redirect()->route('payment.success');
-
-        }
+            PaymentType::WALLET_TOPUP => redirect()
+                ->route('wallet.index')
+                ->with('error', __('messages.payment_failed')),
+        };
     }
 }

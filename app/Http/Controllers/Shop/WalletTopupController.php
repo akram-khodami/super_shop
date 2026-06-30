@@ -29,9 +29,4 @@ class WalletTopupController extends Controller
 
         return $this->paymentService->payWithGateway($payment);
     }
-
-    public function show()
-    {
-
-    }
 }

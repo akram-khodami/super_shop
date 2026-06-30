@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ProductAttributeValueController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\PaymentRefundController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Shop\AssistantController;
 use App\Http\Controllers\Shop\CartController;
@@ -41,6 +42,7 @@ Route::prefix('cart')
         Route::delete('items/{variant}', [CartController::class, 'destroy'])->name('destroy');
         Route::delete('/', [CartController::class, 'clear'])->name('clear');
     });
+
 
 require __DIR__ . '/auth.php';
 
@@ -76,7 +78,6 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [WalletController::class, 'index'])->name('index');
             Route::get('/topup', [WalletTopupController::class, 'create'])->name('topup.create');
             Route::post('/topup', [WalletTopupController::class, 'store'])->name('topup.store');
-            Route::get('/topup/show', [WalletTopupController::class, 'show'])->name('topup.show');
         });
     Route::prefix('payment')
         ->name('payment.')
@@ -120,8 +121,6 @@ Route::middleware('auth')->group(function () {
                     Route::get('/', [AdminOrderController::class, 'index'])->name('index');
                     Route::get('{order}', [AdminOrderController::class, 'show'])->name('show');
                 });
+            Route::post('/payments/{payment}/refund', PaymentRefundController::class)->name('payment.refund');
         });
 });
-
-
-

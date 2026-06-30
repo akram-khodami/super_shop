@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Cart;
+use App\Models\User;
 use App\Models\Variant;
 
 class CartService
@@ -127,6 +128,18 @@ class CartService
             ->delete();
     }
 
+    public function clearForUser(User $user): void
+    {
+        $cart = $user->cart;
+
+        if (! $cart) {
+            return;
+        }
+
+        $cart->items()->delete();
+
+        $cart->delete();
+    }
     public function total(): float
     {
         return $this->getCart()
