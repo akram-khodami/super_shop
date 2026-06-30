@@ -10,6 +10,8 @@ enum PaymentGateway: string
 
     case NEXTPAY = 'nextpay';
 
+    case DIGIPAY = 'digipay';
+
     public function label(): string
     {
         return match ($this) {
@@ -19,6 +21,8 @@ enum PaymentGateway: string
             self::IDPAY => 'IDPay',
 
             self::NEXTPAY => 'NextPay',
+
+            self::DIGIPAY => 'DigiPay',
         };
     }
 }

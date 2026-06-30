@@ -43,5 +43,18 @@ return [
 
         'sandbox' => env('ZARINPAL_SANDBOX', true),
     ],
+    'digipay' => [
+
+        'username' => env('DIGIPAY_USERNAME'),
+
+        'password' => env('DIGIPAY_PASSWORD'),
+
+        'client_id' => env('DIGIPAY_CLIENT_ID'),
+
+        'client_secret' => env('DIGIPAY_CLIENT_SECRET'),
+
+        'sandbox' => env('DIGIPAY_SANDBOX', true),
+
+    ],
 
 ];
