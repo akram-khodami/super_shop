@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Policies\ProductImagePolicy;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+#[UsePolicy(ProductImagePolicy::class)]
 
 class ProductImage extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductImageFactory> */
     use HasFactory;
-
-//    protected $guarded = [];
 
     protected $fillable = [
         'id',

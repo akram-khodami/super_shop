@@ -349,6 +349,12 @@ return [
     'payment_refunded' => 'Payment Refunded',
     'payment_refund_exception' => 'Payment did not refund.',
     'payment_refunded_message' => 'Payment of :amount has been refunded successfully.',
+    'product_updated_successfully' => 'Product updated successfully.',
+    'product_moved_to_trash' => 'Product moved to trash.',
+    'product_restored_successfully' => 'Product restored successfully.',
+    'cannot_delete_product_with_variants' => 'Cannot delete product with variants. Please remove variants first.',
+    'image_deleted_successfully' => 'Image deleted successfully.',
+    'product_is_not_deleted' => 'Product is not deleted.',
     //====action messages
     'updated_successfully' => 'Updated successfully',
     'attributes_created_successfully' => 'Attributes created successfully.',

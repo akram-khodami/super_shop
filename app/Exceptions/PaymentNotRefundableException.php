@@ -3,7 +3,6 @@
 namespace App\Exceptions;
 
 use App\Enums\PaymentStatus;
-use Exception;
 
 class PaymentNotRefundableException extends BusinessException
 {

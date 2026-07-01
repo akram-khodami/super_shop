@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PaymentRefundController;
+use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Shop\AssistantController;
 use App\Http\Controllers\Shop\CartController;
@@ -109,11 +110,11 @@ Route::middleware('auth')->group(function () {
                         Route::post('/', [ProductAttributeController::class, 'store'])->name('store');
                         Route::delete('/{productAttribute}', [ProductAttributeController::class, 'destroy'])->name('destroy');
                     });
-                    Route::patch('restore', [ProductController::class, 'restore'])->name('restore');
+                    Route::patch('restore', [ProductController::class, 'restore'])->withTrashed()->name('restore');
                     Route::resource('variants', ProductVariantController::class)->except('index', 'show');
                 });
             Route::delete('variant-images/{image}', [ProductVariantController::class, 'destroyImage'])->name('variants.images.destroy');
-            Route::delete('product-images/{image}', [AdminProductController::class, 'destroyImage'])->name('products.images.destroy');
+            Route::delete('product-images/{image}', [ProductImageController::class, 'destroy'])->name('products.images.destroy');
             Route::prefix('orders')
                 ->name('orders.')
                 ->group(function () {

@@ -349,6 +349,12 @@ return [
     'payment_refunded' => 'مبلغ پرداختی مسترد شد',
     'payment_refund_exception' => 'مبلغ پرداختی مسترد نشد.',
     'payment_refunded_message' => 'مبلغ :amount با موفقیت بازگشت داده شد.',
+    'product_updated_successfully' => 'محصول با موفقیت به‌روزرسانی شد.',
+    'product_moved_to_trash' => 'محصول به سطل زباله منتقل شد.',
+    'product_restored_successfully' => 'محصول با موفقیت بازیابی شد.',
+    'cannot_delete_product_with_variants' => 'امکان حذف محصول دارای تنوع وجود ندارد. ابتدا تنوع ها را حذف کنید.',
+    'image_deleted_successfully' => 'تصویر با موفقیت حذف شد.',
+    'product_is_not_deleted' => 'محصول حذف نشده است.',
     //====action messages
     'updated_successfully' => 'با موفقیت بروز شد.',
     'attributes_created_successfully' => 'ویژگی با موفقیت ایجاد شد.',

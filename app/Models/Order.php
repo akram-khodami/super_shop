@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\OrderStatus;
 use App\Enums\OrderPaymentStatus;
+use App\Policies\OrderPolicy;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 
 #[UsePolicy(OrderPolicy::class)]
 class Order extends Model

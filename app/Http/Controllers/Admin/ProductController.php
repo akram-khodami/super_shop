@@ -5,53 +5,48 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreProductRequest;
 use App\Http\Requests\Admin\UpdateProductRequest;
-use App\Models\Attribute;
-use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductAttribute;
-use App\Models\ProductImage;
-use App\Services\ProductService;
+use App\Services\Product\ProductFormService;
+use App\Services\Product\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
-    private function getCategoriesAndBrands(): array
-    {
-        return [
-            'categories' => Category::orderBy('name')->get(['id', 'name']),
-            'brands' => Brand::orderBy('name')->get(['id', 'name']),
-        ];
-    }
+    public function __construct(
+        protected ProductService $productService,
+        protected ProductFormService $formService,
+    ) {}
 
     public function index(Request $request): View
     {
-        $products = Product::query()
-            ->with(['category', 'brand', 'thumbnail'])
-            ->filter($request->all())
-            ->latest()
-            ->paginate(15)
-            ->withQueryString();
+        Gate::authorize('viewAny', Product::class);
 
-        $data = $this->getCategoriesAndBrands();
+        $products = $this->productService->getPaginatedList($request->all());
 
-        return view('admin.products.index', array_merge(
-            compact('products'),
-            $data
-        ));
+        return view('admin.products.index', [
+            'products' => $products,
+            ...$this->formService->forCreate(),
+        ]);
     }
 
     public function create(): View
     {
-        return view('admin.products.create', $this->getCategoriesAndBrands());
+        Gate::authorize('create', Product::class);
+
+        return view(
+            'admin.products.create',
+            $this->formService->forCreate()
+        );
     }
 
-    public function store(StoreProductRequest $request, ProductService $service): RedirectResponse
+    public function store(StoreProductRequest $request): RedirectResponse
     {
-        $service->create($request->validated());
+        Gate::authorize('create', Product::class);
+
+        $this->productService->create($request->validated());
 
         return redirect()
             ->route('admin.products.index')
@@ -60,92 +55,45 @@ class ProductController extends Controller
 
     public function edit(Product $product): View
     {
-        //ToDO:stock count
+        Gate::authorize('update', $product);
 
-        $product->load([
-            'images',
-            'variants',
-        ]);
+        $data = $this->formService->forEdit($product);
 
-        $data = $this->getCategoriesAndBrands();
-
-        // همه ویژگی‌های سیستمی
-        $allAttributes = Attribute::query()
-            ->orderBy('name')
-            ->get(['id', 'name']);
-
-        // ویژگی‌های ثبت‌شده برای این محصول (گروه‌بندی شده)
-        $productAttributes = ProductAttribute::with(['attribute:id,name', 'values'])
-            ->where('product_id', $product->id)
-            ->get()
-            ->map(function ($productAttribute) {
-                return [
-                    'id' => $productAttribute->id,
-                    'attribute_id' => $productAttribute->attribute_id,
-                    'name' => $productAttribute->attribute->name,
-                    'is_variant' => $productAttribute->is_variant,
-                    'values' => $productAttribute->values->map(function ($value) {
-                        return [
-                            'id' => $value->id,
-                            'value' => $value->value,
-                        ];
-                    }),
-                ];
-            });
-
-        //Todo:البته ویزگی هایی نیاد که تنوعپذیر نیستن و توصیفی هستن.تنوع پذیرها میتونن باز بیان
-
-        // ویژگی‌هایی که هنوز به محصول اضافه نشدن (برای dropdown فرم)
-        $usedAttributeIds = $productAttributes->pluck('attribute_id');
-        $availableAttributes = $allAttributes->whereNotIn('id', $usedAttributeIds);
-
-        return view('admin.products.edit', array_merge(
-            compact('product', 'availableAttributes', 'productAttributes'),
-            $data
-        ));
+        return view('admin.products.edit', $data);
     }
 
     public function update(
         UpdateProductRequest $request,
-        Product $product,
-        ProductService $service
-    ): RedirectResponse
-    {
-        $service->update($product, $request->validated());
+        Product $product
+    ): RedirectResponse {
+
+        Gate::authorize('update', $product);
+
+        $this->productService->update($product, $request->validated());
 
         return redirect()
             ->route('admin.products.index')
-            ->with('success', 'محصول با موفقیت به‌روزرسانی شد.');
+            ->with('success', __('messages.product_updated_successfully'));
     }
 
     public function destroy(Product $product): RedirectResponse
     {
-        if ($product->variants()->exists()) {
-            return back()->with(
-                'error',
-                'امکان حذف محصول دارای تنوع وجود ندارد. ابتدا تنوع ها را حذف کنید.'
-            );
-        }
+        Gate::authorize('delete', $product);
 
-        $product->delete(); // soft delete
+        $this->productService->delete($product);
 
-        return back()->with('success', 'محصول به سطل زباله منتقل شد.');
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', __('messages.product_moved_to_trash'));
     }
 
-    public function destroyImage(ProductImage $image): RedirectResponse
+    //ToDO: use it in view
+    public function restore(Product $product): RedirectResponse
     {
-        Storage::disk('public')->delete($image->image);
-        $image->delete();
+        Gate::authorize('restore', $product);
 
-        return back()->with('success', 'تصویر با موفقیت حذف شد.');
+        $this->productService->restore($product);
+
+        return back()->with('success', __('messages.product_restored_successfully'));
     }
-
-    public function restore($id): RedirectResponse
-    {
-        $product = Product::onlyTrashed()->findOrFail($id);
-        $product->restore();
-
-        return back()->with('success', 'محصول با موفقیت بازیابی شد.');
-    }
-
 }
