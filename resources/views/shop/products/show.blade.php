@@ -1,3 +1,12 @@
+@props([
+    'productAttributes' => $viewModel->specificationAttributes(),
+    'variantAttribute' => $viewModel->variantAttributeData(),
+    'variantOptions' => $viewModel->variantOptions(),
+    'variantsData' => $viewModel->variantsData(),
+    'galleries' => $viewModel->gallery(),
+    'variant' => $product->defaultVariant(),
+])
+
 <x-app-layout>
 
     <x-slot:title>
@@ -26,15 +35,16 @@
                 {{-- Main Image (with ID for JS changes) --}}
                 <div class="aspect-square overflow-hidden rounded-2xl bg-gray-100" id="main-image-container">
                     <img src="{{ $product->default_variant?->images->first()?->url ?? ($product->images->first()?->url ?? $product->thumbnail_url) }}"
-                        alt="{{ $product->name }}" id="main-image" class="w-full h-full object-cover">
+                        id="main-image" class="w-full h-full object-cover">
                 </div>
 
-                @if ($product->gallery->count() > 1)
+                @if ($galleries->count() > 1)
                     <div class="grid grid-cols-5 gap-3">
-                        @foreach ($product->gallery as $image)
-                            <button onclick="changeMainImage('{{ $image->url }}')"
+                        @foreach ($galleries as $image)
+                            <button onclick="changeMainImage('{{ $image['thumbnail_url'] }}')"
                                 class="aspect-square rounded-lg overflow-hidden bg-gray-100 border-2 border-transparent hover:border-indigo-500 transition">
-                                <img src="{{ $image->url }}" alt="{{ $product->name }}"
+
+                                <img src="{{ $image['thumbnail_url'] }}" alt="{{ $product->name }}"
                                     class="w-full h-full object-cover">
                             </button>
                         @endforeach
@@ -52,7 +62,7 @@
 
                 {{-- Price (with ID for JS changes) --}}
                 <div class="mb-6 p-4 bg-gray-50 rounded-xl" id="price-box">
-                    @include('shop.products.partials.price', ['variant' => $product->default_variant])
+                    @include('shop.products.partials.price', ['variant' => $variant])
                 </div>
 
                 {{-- Variant Attribute --}}
@@ -61,7 +71,7 @@
                         <label class="block text-sm font-medium mb-2">
                             {{ $variantAttribute['name'] }}:
                             <span id="selected-variant-label" class="font-bold text-indigo-600">
-                                {{ $product->default_variant->variantAttributeValue->productAttributeValue->value ?? '' }}
+                                {{ $variant?->variant_label }}
                             </span>
                         </label>
                         <div class="flex flex-wrap gap-2" id="variant-selector">
@@ -89,8 +99,9 @@
                 <div class="mb-4">
                     <span id="stock-status"
                         class="text-sm font-medium
-                        {{ $product->default_variant && $product->default_variant->stock > 0 ? 'text-green-600' : 'text-red-500' }}">
-                        @if ($product->default_variant && $product->default_variant->stock > 0)
+                        {{ $variant?->isAvailable() ? 'text-green-600' : 'text-red-500' }}
+                        ">
+                        @if ($variant?->isAvailable())
                             ✓ {{ __('messages.in_stock') }}
                         @else
                             ✗ {{ __('messages.out_of_stock') }}
@@ -130,15 +141,13 @@
 
                 {{-- Add to Cart Button --}}
                 <div class="flex gap-3">
-                    <button id="add-to-cart-btn" data-current-variant-id="{{ $product->default_variant?->id }}"
+                    <button id="add-to-cart-btn" data-current-variant-id="{{ $variant?->id }}"
                         class="flex-1 py-3 rounded-xl font-medium transition-colors
-                                   {{ $product->default_variant && $product->default_variant->stock > 0
+                                   {{ $variant && $variant->stock > 0
                                        ? 'bg-indigo-600 text-white hover:bg-indigo-700'
                                        : 'bg-gray-200 text-gray-400 cursor-not-allowed' }}"
-                        {{ !$product->default_variant || $product->default_variant->stock == 0 ? 'disabled' : '' }}>
-                        {{ $product->default_variant && $product->default_variant->stock > 0
-                            ? __('messages.add_to_cart')
-                            : __('messages.unavailable') }}
+                        {{ !$variant || $variant->stock == 0 ? 'disabled' : '' }}>
+                        {{ $variant && $variant->stock > 0 ? __('messages.add_to_cart') : __('messages.unavailable') }}
                     </button>
 
                     <button class="p-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"

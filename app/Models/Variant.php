@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -25,53 +26,24 @@ class Variant extends Model
 
     protected $appends = [
         'thumbnail_url',
-        'formatted_price',
-        'formatted_sale_price',
         'final_price',
-        'in_stock_title',
     ];
 
     // ... relationships ...
 
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
-    public function stockMovements()
+    public function stockMovements(): HasMany
     {
         return $this->hasMany(StockMovement::class);
-    }
-
-    /**
-     * Get stock status text (without hardcoded language)
-     * Use translation in view instead
-     */
-    public function getInStockTitleAttribute(): string
-    {
-        return $this->stock > 0 ? '✓' . __('messages.in_stock') : '✗' . __('messages.out_of_stock');
-    }
-
-    /**
-     * Get stock status with icon (without hardcoded language)
-     */
-    public function getStockStatusAttribute(): array
-    {
-        return [
-            'status' => $this->stock > 0 ? 'in_stock' : 'out_of_stock',
-            'in_stock' => $this->stock > 0,
-            'stock' => $this->stock,
-        ];
     }
 
     public function variantAttributeValue(): HasOne
     {
         return $this->hasOne(VariantAttributeValue::class);
-    }
-
-    public function getVariantValueAttribute(): ?string
-    {
-        return $this->variantAttributeValue ?->productAttributeValue ?->value;
     }
 
     public function images(): HasMany
@@ -86,6 +58,25 @@ class Variant extends Model
             ->orderBy('sort_order');
     }
 
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class, 'variant_id');
+    }
+
+    // ... Domain business ...
+
+    public function isAvailable(): bool
+    {
+        return $this->stock > 0 && $this->is_active;
+    }
+
+    public function hasDiscount(): bool
+    {
+        return $this->sale_price && $this->sale_price < $this->price;
+    }
+
+    // ... Attribute ...
+
     public function getThumbnailUrlAttribute(): string
     {
         return $this->thumbnail
@@ -93,73 +84,29 @@ class Variant extends Model
             : asset('images/no-image.jpg');
     }
 
-    /**
-     * Format price without hardcoded currency
-     * Currency should be added in view
-     */
-    public function getFormattedPriceAttribute(): string
-    {
-        return $this->price ? number_format($this->price) : '---';
-    }
-
-    public function getFormattedSalePriceAttribute(): string
-    {
-        return $this->sale_price ? number_format($this->sale_price) : '---';
-    }
-
     public function getFinalPriceAttribute()
     {
         return $this->sale_price ?? $this->price;
     }
 
-    /**
-     * Get price data for JavaScript
-     */
-    public function getPriceDataAttribute(): array
+    public function getVariantValueAttribute(): ?string
     {
-        return [
-            'price' => $this->price,
-            'sale_price' => $this->sale_price,
-            'formatted_price' => $this->formatted_price,
-            'formatted_sale_price' => $this->formatted_sale_price,
-            'final_price' => $this->final_price,
-            'has_discount' => $this->sale_price && $this->sale_price < $this->price,
-            'discount_percent' => $this->sale_price && $this->price > 0
-                ? round((($this->price - $this->sale_price) / $this->price) * 100)
-                : 0,
-        ];
+        return $this->variantAttributeValue?->productAttributeValue?->value;
     }
 
-    /**
-     * Check if variant is available
-     */
-    public function isAvailable(): bool
+    public function getVariantLabelAttribute()
     {
-        return $this->stock > 0 && $this->is_active;
+        return $this->variantAttributeValue
+            ?->productAttributeValue
+            ?->value;
     }
 
-    /**
-     * Check if variant has discount
-     */
-    public function hasDiscount(): bool
+    public function discountPercent(): int
     {
-        return $this->sale_price && $this->sale_price < $this->price;
-    }
-
-    /**
-     * Get discount percentage
-     */
-    public function getDiscountPercentAttribute(): int
-    {
-        if (!$this->hasDiscount() || $this->price <= 0) {
+        if (! $this->hasDiscount() || $this->price <= 0) {
             return 0;
         }
 
         return round((($this->price - $this->sale_price) / $this->price) * 100);
-    }
-
-    public function orderItems()
-    {
-        return $this->hasMany(OrderItem::class, 'variant_id');
     }
 }

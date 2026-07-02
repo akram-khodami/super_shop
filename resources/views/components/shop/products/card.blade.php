@@ -4,15 +4,13 @@
 
     <a href="{{ route('products.show', $product->id) }}" class="block">
         <div class="aspect-square overflow-hidden bg-gray-100">
-            <img src="{{ $product->thumbnail_url }}"
-                 alt="{{ $product->name }}"
-                 class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                 loading="lazy">
+            <img src="{{ $product->thumbnail_url }}" alt="{{ $product->name }}"
+                class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy">
         </div>
     </a>
 
     <div class="p-4">
-        @if($product->brand)
+        @if ($product->brand)
             <div class="text-xs text-gray-500 mb-2">
                 {{ $product->brand->name }}
             </div>
@@ -23,29 +21,27 @@
         </h3>
 
         {{-- price componnent --}}
-        <x-shop.products.price
-            :price="$product->display_price"
-            :sale-price="$product->display_sale_price"
-        />
+        <x-shop.products.price :price="$product->selectedVariant()?->price" :sale-price="$product->selectedVariant()?->sale_price" />
 
         {{-- stock componnent --}}
         <div class="mb-4">
-            <x-shop.products.stock-badge :in-stock="$product->in_stock"/>
+            <x-shop.products.stock-badge :in-stock="$product->in_stock" />
         </div>
 
         <div class="flex gap-2">
             <a href="{{ route('products.show', $product->id) }}"
-               class="flex-1 text-center px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors">
-                {{__('messages.show')}}
+                class="flex-1 text-center px-4 py-2 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors">
+                {{ __('messages.show') }}
             </a>
 
-            @if($product->in_stock)
-                <form method="POST" action="{{ route('cart.store',$product->default_variant) }}">
+            @if ($product->in_stock)
+                @php($variant = $product->defaultVariant())
+                <form method="POST" action="{{ route('cart.store', $variant) }}">
                     @csrf
                     <input type="hidden" name="quantity" value="1">
-{{--                    <x-ui.button type="submit" variant="primary">--}}
-{{--                        {{__('messages.add')}}--}}
-{{--                    </x-ui.button>--}}
+                    {{--                    <x-ui.button type="submit" variant="primary"> --}}
+                    {{--                        {{__('messages.add')}} --}}
+                    {{--                    </x-ui.button> --}}
                 </form>
             @endif
         </div>

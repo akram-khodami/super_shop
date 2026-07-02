@@ -45,7 +45,7 @@ enum OrderStatus: string
         };
     }
 
-    public function canTransitionTo(self $newStatus): bool 
+    public function canTransitionTo(self $newStatus): bool
     {
 
         return in_array(

@@ -6,6 +6,7 @@ use App\Exceptions\CannotDeleteProductWithVariantsException;
 use App\Exceptions\ProductIsNotTrashedException;
 use App\Models\Product;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ProductService
@@ -83,5 +84,38 @@ class ProductService
             ->withQueryString();
 
         return $products;
+    }
+
+    public function getRelatedProducts(Product $product, int $limit = 4): Collection
+    {
+        return Product::query()
+            ->active()
+            ->whereCategoryId($product->category_id)
+            ->whereKeyNot($product->id)
+            ->with('thumbnail')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function loadProductDetails(Product $product): Product
+    {
+        return $product->load([
+            'images',
+            'brand',
+            'category',
+            'variants.variantAttributeValue.productAttributeValue',
+            'variants.images',
+            'productAttributes.attribute',
+            'productAttributes.values',
+        ]);
+    }
+
+    public function paginateActiveProducts(int $perPage = 12)
+    {
+        return Product::query()
+            ->active()
+            ->with(['thumbnail', 'brand', 'variants'])
+            ->latest()
+            ->paginate($perPage);
     }
 }

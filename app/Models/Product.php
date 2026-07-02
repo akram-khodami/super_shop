@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Policies\ProductPolicy;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,8 +30,6 @@ class Product extends BaseModel
     protected $appends = [
         'thumbnail_url',
         'in_stock',
-        'display_price',
-        'display_sale_price',
     ];
 
     // ... relationships ...
@@ -47,9 +44,19 @@ class Product extends BaseModel
         return $this->belongsTo(Brand::class);
     }
 
+    public function variants(): HasMany
+    {
+        return $this->hasMany(Variant::class);
+    }
+
     public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class);
+    }
+
+    public function productAttributes(): HasMany
+    {
+        return $this->hasMany(ProductAttribute::class);
     }
 
     public function thumbnail()
@@ -57,18 +64,6 @@ class Product extends BaseModel
         return $this->hasOne(ProductImage::class)
             ->orderByDesc('is_primary')
             ->orderBy('sort_order');
-    }
-
-    public function getThumbnailUrlAttribute(): string
-    {
-        return $this->thumbnail
-            ? asset('storage/' . $this->thumbnail->image)
-            : asset('images/no-image.jpg');
-    }
-
-    public function variants(): HasMany
-    {
-        return $this->hasMany(Variant::class);
     }
 
     public function attributes()
@@ -81,21 +76,16 @@ class Product extends BaseModel
         )->withPivot('is_variant');
     }
 
-    public function productAttributes(): HasMany
+    public function orderItems()
     {
-        return $this->hasMany(ProductAttribute::class);
+        return $this->hasMany(OrderItem::class);
     }
 
-    public function getInStockAttribute(): bool
-    {
-        return $this->variants->sum('stock') > 0;
-    }
+    // ... scope ...
 
-    public function scopeOutOfStock(Builder $query): Builder
+    public function scopeActive(Builder $query): Builder
     {
-        return $query->whereDoesntHave('variants', function ($q) {
-            $q->where('stock', '>', 0);
-        });
+        return $query->whereIsActive(true);
     }
 
     public function scopeLowStock(Builder $query, int $threshold = 5): Builder
@@ -105,15 +95,82 @@ class Product extends BaseModel
             ->having('variants_sum_stock', '>', 0);
     }
 
-    public function getGalleryAttribute()
+    public function scopeOutOfStock(Builder $query): Builder
     {
-        return $this->images->take(5);
+        return $query->whereDoesntHave('variants', function ($q) {
+            $q->where('stock', '>', 0);
+        });
     }
 
-    public function getDefaultVariantAttribute()
+    public function scopeFilter(Builder $query, array $filters): Builder
     {
-        return $this->variants->firstWhere('is_default', true)
-            ?? $this->variants->first();
+        $search = $filters['search'] ?? null;
+        $categoryId = $filters['category_id'] ?? null;
+        $brandId = $filters['brand_id'] ?? null;
+        $status = $filters['status'] ?? null;
+        $stock = $filters['stock'] ?? null;
+        $trash = $filters['trash'] ?? null;
+        $sort = $filters['sort'] ?? null;
+
+        return $query
+            ->when(
+                $search,
+                fn($q, $search) => $q->where('name', 'like', "%{$search}%")
+            )
+            ->when(
+                $categoryId,
+                fn($q, $categoryId) => $q->where('category_id', $categoryId)
+            )
+            ->when(
+                $brandId,
+                fn($q, $brandId) => $q->where('brand_id', $brandId)
+            )
+            ->when(
+                array_key_exists('status', $filters),
+                fn($q) => $q->whereIsActive($status)
+            )
+            ->when(
+                $stock === 'out',
+                fn($q) => $q->whereDoesntHave(
+                    'variants',
+                    fn($q2) => $q2->where('stock', '>', 0)
+                )
+            )
+            ->when(
+                $stock === 'in',
+                fn($q) => $q->whereHas(
+                    'variants',
+                    fn($q2) => $q2->where('stock', '>', 0)
+                )
+            )
+            ->when(
+                $trash,
+                function ($q, $trash) {
+                    match ($trash) {
+                        'only' => $q->onlyTrashed(),
+                        'with' => $q->withTrashed(),
+                        default => null,
+                    };
+                }
+            )
+            ->when(
+                $sort,
+                function ($q, $sort) {
+                    match ($sort) {
+                        'name' => $q->orderBy('name'),
+                        default => $q->latest(),
+                    };
+                }
+            );
+    }
+
+    // ... Attribute ...
+
+    public function getInStockAttribute(): bool
+    {
+        return $this->relationLoaded('variants')
+            ? $this->variants->sum('stock') > 0
+            : $this->variants()->sum('stock') > 0;
     }
 
     public function getFirstAvailableVariantAttribute()
@@ -123,67 +180,24 @@ class Product extends BaseModel
             ->first();
     }
 
-    public function getDisplayPriceAttribute()
+    public function getThumbnailUrlAttribute(): string
     {
-        return $this->first_available_variant ?->price;
+        return $this->thumbnail
+            ? asset('storage/' . $this->thumbnail->image)
+            : asset('images/no-image.jpg');
     }
 
-    public function getDisplaySalePriceAttribute()
+    public function selectedVariant(): ?Variant
     {
-        return $this->first_available_variant ?->sale_price;
+        return $this->variants
+            ->first(fn(Variant $variant) => $variant->isAvailable())
+            ?? $this->variants->firstWhere('is_default', true)
+            ?? $this->variants->first();
     }
 
-    public function orderItems()
+    public function defaultVariant(): ?Variant
     {
-        return $this->hasMany(OrderItem::class);
-    }
-
-    public function scopeFilter(Builder $query, array $filters): Builder
-    {
-        return $query
-            ->when(
-                $filters['search'] ?? null,
-                fn ($q, $search) => $q->where('name', 'like', "%{$search}%")
-            )
-            ->when(
-                $filters['category_id'] ?? null,
-                fn ($q, $categoryId) => $q->where('category_id', $categoryId)
-            )
-            ->when(
-                $filters['brand_id'] ?? null,
-                fn ($q, $brandId) => $q->where('brand_id', $brandId)
-            )
-            ->when(
-                request('status') !== null,
-                fn ($q) => $q->where('is_active', request('status'))
-            )
-            ->when(
-                request('stock') === 'out',
-                fn ($q) => $q->whereDoesntHave('variants', fn ($q2) => $q2->where('stock', '>', 0))
-            )
-            ->when(
-                request('stock') === 'in',
-                fn ($q) => $q->whereHas('variants', fn ($q2) => $q2->where('stock', '>', 0))
-            )
-            ->when(
-                $filters['trash'] ?? null,
-                function ($q, $trash) {
-                    if ($trash === 'only') {
-                        $q->onlyTrashed();
-                    }
-                    if ($trash === 'with') {
-                        $q->withTrashed();
-                    }
-                }
-            )
-            ->when(
-                $filters['sort'] ?? null,
-                function ($q, $sort) {
-                    match($sort){
-                    'name' => $q->orderBy('name'),
-                        default => $q->latest(),
-                    };
-                }
-            );
+        return $this->variants->firstWhere('is_default', true)
+            ?? $this->variants->first();
     }
 }
