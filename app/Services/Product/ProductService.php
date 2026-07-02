@@ -35,10 +35,6 @@ class ProductService
 
             $product->update($data);
 
-            $product->attributes()->sync(
-                $data['attributes'] ?? []
-            );
-
             $this->productImageService->uploadMany($product, $images);
 
             return $product->fresh();

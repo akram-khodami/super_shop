@@ -18,7 +18,7 @@
                     {{ __('messages.attribute') }}
                 </label>
                 <select name="attribute_id" class="w-full rounded-xl border-slate-200">
-                    <option value="">{{ __('messages.select_attribute') }}</option>
+                    <option value="">{{ __('messages.select') }}</option>
                     @foreach($availableAttributes as $attribute)
                         <option value="{{ $attribute->id }}">{{ $attribute->name }}</option>
                     @endforeach

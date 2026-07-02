@@ -52,11 +52,11 @@
             <div class="bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-100 rounded-3xl p-6">
 
                 <div class="text-slate-500 text-sm">
-                    {{ __('messages.total_stock') }}
+                    {{-- {{ __('messages.total_stock') }} --}}
                 </div>
 
                 <div class="text-3xl font-bold mt-2">
-                    {{ $product->stock ?? 0 }}
+                    {{-- {{ $product->stock ?? 0 }} --}}
                 </div>
 
             </div>
@@ -245,32 +245,14 @@
                             <div class="flex justify-between">
 
                                 <span class="text-slate-500">
-                                    {{ __('messages.stock') }}
+                                    {{-- {{ __('messages.stock') }} --}}
                                 </span>
 
                                 <span class="font-semibold">
-                                    {{ $product->stock }}
+                                    {{-- {{ $product->stock }} --}}
                                 </span>
 
                             </div>
-
-                        </div>
-
-                    </div>
-
-                    {{-- Quick Actions --}}
-                    <div class="bg-gradient-to-br from-indigo-600 to-violet-600 rounded-3xl p-6 text-white">
-
-                        <h3 class="font-semibold mb-3">
-                            {{ __('messages.quick_actions') }}
-                        </h3>
-
-                        <div class="space-y-3">
-
-                            <a href="{{ route('admin.products.variants.create', $product) }}"
-                                class="block bg-white/15 border border-white/20 rounded-xl px-4 py-3 hover:bg-white/25 transition">
-                                {{ __('messages.add_variant') }}
-                            </a>
 
                         </div>
 

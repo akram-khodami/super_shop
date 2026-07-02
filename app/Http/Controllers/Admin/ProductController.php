@@ -72,7 +72,7 @@ class ProductController extends Controller
         $this->productService->update($product, $request->validated());
 
         return redirect()
-            ->route('admin.products.index')
+            ->route('admin.products.edit', [$product])
             ->with('success', __('messages.product_updated_successfully'));
     }
 

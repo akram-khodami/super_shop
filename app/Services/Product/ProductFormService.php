@@ -71,18 +71,16 @@ class ProductFormService
 
     private function availableAttributes(Collection $productAttributes): Collection
     {
-
         // All system attributes
         $allAttributes = Attribute::query()
             ->orderBy('name')
             ->get(['id', 'name']);
 
-        // TODO: Only non-variant attributes should be shown. Variant attributes can be added again.
+        // Only non-variant attributes should be excluded.
+        $nonVariantAttributeIds = $productAttributes
+            ->where('is_variant', false)
+            ->pluck('attribute_id');
 
-        // Attributes that haven't been added to the product yet (for dropdown form)
-        $usedAttributeIds = $productAttributes->pluck('attribute_id');
-        $availableAttributes = $allAttributes->whereNotIn('id', $usedAttributeIds);
-
-        return $availableAttributes;
+        return $allAttributes->whereNotIn('id', $nonVariantAttributeIds);
     }
 }
